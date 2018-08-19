@@ -51,8 +51,17 @@ spring:
             hibernate.cache.hazelcast.use_lite_member: true
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
+            properties:
+                path:
+                    home: target/elastic
+                transport:
+                    tcp:
+                        connect_timeout:120s
+        jest:
+            uri: https://cb2ed297cc3f48aab6e4811b2f49bdef.us-west1.gcp.cloud.es.io:9243
+            username: elastic
+            password: wEIdHdz2539rFRQrHRv8kV44
+            multi-threaded: true
     liquibase:
         contexts: prod
     mail:

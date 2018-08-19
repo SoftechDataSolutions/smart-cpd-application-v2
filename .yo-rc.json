@@ -30,7 +30,9 @@
       "en"
     ],
     "clientFramework": "angularX",
-    "jhiPrefix": "jhi"
+    "jhiPrefix": "jhi",
+    "herokuDeployType": "jar",
+    "herokuAppName": "smartcpd-v-1"
   },
   "git-provider": "GitHub",
   "git-company": "SoftechDataSolutions",
