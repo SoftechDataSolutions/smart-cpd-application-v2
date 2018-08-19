@@ -1,0 +1,41 @@
+{
+    "name": "TimeCourseLog",
+    "fields": [
+        {
+            "fieldName": "loggedin",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "loggedout",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "timespent",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "customer",
+            "otherEntityName": "customer",
+            "otherEntityField": "normalized"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "course",
+            "otherEntityName": "course",
+            "otherEntityField": "title"
+        }
+    ],
+    "changelogDate": "20180819053515",
+    "entityTableName": "time_course_log",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": "elasticsearch"
+}

@@ -1,0 +1,100 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="smartCpdApp.course.home.title">Courses</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/course/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="smartCpdApp.course.home.createLabel">
+            Create new Course
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'smartCpdApp.course.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="courses">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="title"><span jhiTranslate="smartCpdApp.course.title">Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="section"><span jhiTranslate="smartCpdApp.course.section">Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="normCourses"><span jhiTranslate="smartCpdApp.course.normCourses">Norm Courses</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span jhiTranslate="smartCpdApp.course.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="amount"><span jhiTranslate="smartCpdApp.course.amount">Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="image"><span jhiTranslate="smartCpdApp.course.image">Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="startdate"><span jhiTranslate="smartCpdApp.course.startdate">Startdate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="enddate"><span jhiTranslate="smartCpdApp.course.enddate">Enddate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="point"><span jhiTranslate="smartCpdApp.course.point">Point</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="credit"><span jhiTranslate="smartCpdApp.course.credit">Credit</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="country"><span jhiTranslate="smartCpdApp.course.country">Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="state"><span jhiTranslate="smartCpdApp.course.state">State</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="topic.name"><span jhiTranslate="smartCpdApp.course.topic">Topic</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let course of courses ;trackBy: trackId">
+                <td><a [routerLink]="['/course', course.id, 'view' ]">{{course.id}}</a></td>
+                <td>{{course.title}}</td>
+                <td>{{course.section}}</td>
+                <td>{{course.normCourses}}</td>
+                <td>{{course.description}}</td>
+                <td>{{course.amount}}</td>
+                <td>
+                    <a *ngIf="course.image" (click)="openFile(course.imageContentType, course.image)" jhiTranslate="entity.action.open">open</a>
+                    <span *ngIf="course.image">{{course.imageContentType}}, {{byteSize(course.image)}}</span>
+                </td>
+                <td>{{course.startdate | date:'medium'}}</td>
+                <td>{{course.enddate | date:'medium'}}</td>
+                <td>{{course.point}}</td>
+                <td>{{course.credit}}</td>
+                <td>{{course.country}}</td>
+                <td>{{course.state}}</td>
+                <td>
+                    <div *ngIf="course.topic">
+                        <a [routerLink]="['../topic', course.topic?.id, 'view' ]" >{{course.topic?.name}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/course', course.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/course', course.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'course/'+ course.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -7,6 +7,22 @@
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "Entities",
+                "customer": "Customer",
+                "company": "Company",
+                "topic": "Topic",
+                "course": "Course",
+                "courseCartBridge": "Course Cart Bridge",
+                "section": "Section",
+                "quiz": "Quiz",
+                "question": "Question",
+                "choice": "Choice",
+                "courseHistory": "Course History",
+                "questionHistory": "Question History",
+                "sectionHistory": "Section History",
+                "quizHistory": "Quiz History",
+                "orders": "Orders",
+                "cart": "Cart",
+                "timeCourseLog": "Time Course Log",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
