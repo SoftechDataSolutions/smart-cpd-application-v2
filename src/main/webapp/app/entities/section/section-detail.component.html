@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="section">
+            <h2><span jhiTranslate="smartCpdApp.section.detail.title">Section</span> {{section.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="smartCpdApp.section.name">Name</span></dt>
+                <dd>
+                    <span>{{section.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.notes">Notes</span></dt>
+                <dd>
+                    <span>{{section.notes}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.normSection">Norm Section</span></dt>
+                <dd>
+                    <span>{{section.normSection}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.content">Content</span></dt>
+                <dd>
+                    <div *ngIf="section.content">
+                        <a (click)="openFile(section.contentContentType, section.content)" jhiTranslate="entity.action.open">open</a>
+                        {{section.contentContentType}}, {{byteSize(section.content)}}
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.textContent">Text Content</span></dt>
+                <dd>
+                    <span>{{section.textContent}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.videoUrl">Video Url</span></dt>
+                <dd>
+                    <span>{{section.videoUrl}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.quiz">Quiz</span></dt>
+                <dd>
+                    <div *ngIf="section.quiz">
+                        <a [routerLink]="['/quiz', section.quiz?.id, 'view']">{{section.quiz?.name}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.course">Course</span></dt>
+                <dd>
+                    <div *ngIf="section.course">
+                        <a [routerLink]="['/course', section.course?.id, 'view']">{{section.course?.normCourses}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/section', section.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
