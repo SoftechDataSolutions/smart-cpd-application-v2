@@ -15,7 +15,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     loadChildren: './admin/admin.module#SmartCpdAdminModule'
                 }
             ],
-            { useHash: true, enableTracing: DEBUG_INFO_ENABLED }
+            { useHash: false, enableTracing: DEBUG_INFO_ENABLED }
         )
     ],
     exports: [RouterModule]

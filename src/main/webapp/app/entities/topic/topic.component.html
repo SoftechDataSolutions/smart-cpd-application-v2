@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="smartCpdApp.topic.home.title">Topics</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-topic" [routerLink]="['/topic/new']">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-topic" [routerLink]="['/topic/new']" *jhiHasAnyAuthority="'ROLE_ADMIN'">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down"  jhiTranslate="smartCpdApp.topic.home.createLabel">
             Create new Topic
@@ -10,7 +10,7 @@
     </h2>
     <jhi-alert></jhi-alert>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-md-6 col-sm-12">
             <form name="searchForm" class="form-inline">
                 <div class="input-group w-100 mt-3">
                     <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'smartCpdApp.topic.home.search' | translate }}">
@@ -23,8 +23,22 @@
                 </div>
             </form>
         </div>
+        <div class="col-md-6 col-sm-12">
+            <span><strong>Sort by</strong></span>
+            <div jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+                <button type="button" class="btn btn-light" jhiSortBy="name">
+                    <span>Name</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="description">
+                    <span jhiTranslate="smartCpdApp.topic.description">Description</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+            </div>
+        </div>
     </div>
     <br/>
+    <a *jhiHasAnyAuthority="'ROLE_ADMIN'">
     <div class="table-responsive" *ngIf="topics">
         <table class="table table-striped">
             <thead>
@@ -72,5 +86,40 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    </a>
+    <div *ngIf="topics">
+        <a *jhiHasAnyAuthority="'ROLE_SUPER'">
+            <div class="list-group">
+                <!--api/_search/courses?query=test<a (click)="redirectToCourse(topic.name)" [routerLink]="['/course', topic.id, 'view']" class="list-group-item list-group-item-action flex-column align-items-start"-->
+                <div class="list-group-item list-group-item-action flex-column align-items-start"
+                     *ngFor="let topic of topics; trackBy: trackId" style="background-color: #f2f2f2; padding-bottom: 5px;">
+                    <div class="row">
+                        <div class="col-3 col-xs-12">
+                            <img class="img-responsive" [src]="'data:' + topic.imageContentType +
+                    ';base64,' + topic.image" style="max-height:150px;" alt="topic image"/>
+                        </div>
+                        <div class="col-6 col-xs-12">
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="row"><h1 class="mb-1">{{topic.name}}</h1></div>
+                            </div>
+                            <div class="row"></hr></div>
+                            <div class="row"><small class="mb-1">Description: <b>{{topic.description}}</b></small></div>
+                        </div>
+                        <div class="col-2 col-xs-12">
+                            <br><br>
+                            <div class="row">
+                                <button class="btn btn-dark float-right jh-create-entity create-topic" [routerLink]="['/topic', topic.id, 'view']" *jhiHasAnyAuthority="'ROLE_USER'">
+                                    <fa-icon [icon]="'eye'"></fa-icon>
+                                    <span class="hidden-sm-down">
+                                            View Details
+                                        </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
