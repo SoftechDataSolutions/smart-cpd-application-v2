@@ -1,7 +1,7 @@
 version: '2'
 services:
     smartcpd-elasticsearch:
-        image: elasticsearch:5.6.5
+        image: elasticsearch:6.2.4
         # volumes:
         #     - ~/volumes/jhipster/SmartCPD/elasticsearch/:/usr/share/elasticsearch/data/
         ports:

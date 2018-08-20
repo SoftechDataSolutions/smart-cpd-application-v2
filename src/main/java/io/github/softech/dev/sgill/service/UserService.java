@@ -61,6 +61,9 @@ public class UserService {
                 // activate given user for the registration key.
                 user.setActivated(true);
                 user.setActivationKey(null);
+                Set<Authority> authorities = new HashSet<>();
+                authorityRepository.findById(AuthoritiesConstants.SUPER).ifPresent(authorities::add);
+                user.setAuthorities(authorities);
                 userSearchRepository.save(user);
                 this.clearUserCaches(user);
                 log.debug("Activated user: {}", user);

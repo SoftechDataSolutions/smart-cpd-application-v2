@@ -1,0 +1,43 @@
+{
+    "name": "Orders",
+    "fields": [
+        {
+            "fieldName": "createddate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "amount",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "NOTIFICATIONS",
+            "fieldValues": "ORDERPROCESSING,COMPLETE,CANCELLLED,REFUND,ONHOLD"
+        },
+        {
+            "fieldName": "payment",
+            "fieldType": "PAYMENT",
+            "fieldValues": "PAYPAL,STRIPE"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "cart",
+            "otherEntityName": "cart",
+            "otherEntityField": "normCart",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "orders"
+        }
+    ],
+    "changelogDate": "20180819063652",
+    "entityTableName": "orders",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": "elasticsearch"
+}

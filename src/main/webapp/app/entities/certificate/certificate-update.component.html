@@ -1,0 +1,71 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-certificate-heading" jhiTranslate="smartCpdApp.certificate.home.createOrEditLabel">Create or edit a Certificate</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!certificate.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="certificate.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.timestamp" for="field_timestamp">Timestamp</label>
+                    <div class="d-flex">
+                        <input id="field_timestamp" type="datetime-local" class="form-control" name="timestamp" [(ngModel)]="timestamp"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.firstname" for="field_firstname">Firstname</label>
+                    <input type="text" class="form-control" name="firstname" id="field_firstname"
+                        [(ngModel)]="certificate.firstname" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.lastname" for="field_lastname">Lastname</label>
+                    <input type="text" class="form-control" name="lastname" id="field_lastname"
+                        [(ngModel)]="certificate.lastname" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.course" for="field_course">Course</label>
+                    <input type="text" class="form-control" name="course" id="field_course"
+                        [(ngModel)]="certificate.course" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.content" for="field_content">Content</label>
+                    <div>
+                        <div *ngIf="certificate.content" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(certificate.contentContentType, certificate.content)" jhiTranslate="entity.action.open">open</a><br>
+                            <span class="pull-left">{{certificate.contentContentType}}, {{byteSize(certificate.content)}}</span>
+                            <button type="button" (click)="certificate.content=null;certificate.contentContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_content" (change)="setFileData($event, certificate, 'content', false)" jhiTranslate="entity.action.addblob"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="content" id="field_content"
+                        [(ngModel)]="certificate.content" />
+                    <input type="hidden" class="form-control" name="contentContentType" id="field_contentContentType"
+                        [(ngModel)]="certificate.contentContentType" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.customer" for="field_customer">Customer</label>
+                    <select class="form-control" id="field_customer" name="customer" [(ngModel)]="certificate.customer" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="customerOption.id === certificate.customer?.id ? certificate.customer : customerOption" *ngFor="let customerOption of customers; trackBy: trackCustomerById">{{customerOption.normalized}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,200 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="smartCpdApp.course.home.title">Our Courses</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/course/new']" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="smartCpdApp.course.home.createLabel">
+            Create new Course
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'smartCpdApp.course.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <span><strong>Sort by</strong></span>
+            <div jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+                <button type="button" class="btn btn-light" jhiSortBy="normCourses">
+                    <span>Name</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="amount">
+                    <span jhiTranslate="smartCpdApp.course.amount">Price</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="credit">
+                    <span jhiTranslate="smartCpdApp.course.credit">Credits</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="topic.id">
+                    <span jhiTranslate="smartCpdApp.course.topic">Topic</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <a *jhiHasAnyAuthority="'ROLE_ADMIN'">
+    <div class="table-responsive" *ngIf="courses">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="title"><span jhiTranslate="smartCpdApp.course.title">Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="section"><span jhiTranslate="smartCpdApp.course.section">Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="normCourses"><span jhiTranslate="smartCpdApp.course.normCourses">Norm Courses</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span jhiTranslate="smartCpdApp.course.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="amount"><span jhiTranslate="smartCpdApp.course.amount">Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="image"><span jhiTranslate="smartCpdApp.course.image">Image</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="point"><span jhiTranslate="smartCpdApp.course.point">Point</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="credit"><span jhiTranslate="smartCpdApp.course.credit">Credit</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="country"><span jhiTranslate="smartCpdApp.course.country">Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="state"><span jhiTranslate="smartCpdApp.course.state">State</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="topic.name"><span jhiTranslate="smartCpdApp.course.topic">Topic</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let course of courses ;trackBy: trackId">
+                <td><a [routerLink]="['/course', course.id, 'view' ]">{{course.id}}</a></td>
+                <td>{{course.title}}</td>
+                <td>{{course.section}}</td>
+                <td>{{course.normCourses}}</td>
+                <td>{{course.description}}</td>
+                <td>{{course.amount}}</td>
+                <td>
+                    <a *ngIf="course.image" (click)="openFile(course.imageContentType, course.image)" jhiTranslate="entity.action.open">open</a>
+                    <span *ngIf="course.image">{{course.imageContentType}}, {{byteSize(course.image)}}</span>
+                </td>
+                <td>{{course.point}}</td>
+                <td>{{course.credit}}</td>
+                <td>{{course.country}}</td>
+                <td>{{course.state}}</td>
+                <td>
+                    <div *ngIf="course.topic">
+                        <a [routerLink]="['../topic', course.topic?.id, 'view' ]" >{{course.topic?.name}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/course', course.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/course', course.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'course/'+ course.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </a>
+    <div *ngIf="courses">
+        <a *jhiHasAnyAuthority="'ROLE_SUPER'">
+            <div class="list-group">
+                <!--api/_search/courses?query=test<a (click)="redirectToCourse(topic.name)" [routerLink]="['/course', topic.id, 'view']" class="list-group-item list-group-item-action flex-column align-items-start"-->
+                <div class="list-group-item list-group-item-action flex-column align-items-start"
+                   *ngFor="let course of courses; trackBy: trackId" style="background-color: #f2f2f2; padding-bottom: 5px;">
+                    <div class="row">
+                        <div class="col-3 col-xs-12">
+                            <img class="img-responsive" [src]="'data:' + course.imageContentType +
+                    ';base64,' + course.image" style="max-height:150px;" alt="topic image"/>
+                        </div>
+                        <div class="col-6 col-xs-12">
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="row"><h1 class="mb-1">{{course.normCourses}}</h1></div>
+                            </div>
+                            <div class="row"></hr></div>
+                            <div class="row"><small class="mb-1"><b>{{course.description}}</b></small></div>
+                            <div class="row"></hr></div>
+                            <div class="row"><small class="mb-1">Country: <b>{{course.country}}</b> State/Province:
+                                <b>{{course.state}}</b></small></div>
+                            <div class="row"><small class="mb-1">Topic: <b>{{course.topic.name}}</b></small></div>
+                            <div class="row"><small class="mb-1">Credits: <b>{{course.credit}}</b> Achievement Points:
+                                <b>{{course.point}}</b></small></div>
+                            <div class="row"><small class="mb-1">Price: <b>{{course.amount | currency:'USD'}}</b></small></div>
+                        </div>
+                        <div class="col-2 col-xs-12">
+                            <div class="row">
+                                    <button class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/cart/new']" *jhiHasAnyAuthority="'ROLE_USER'">
+                                        <fa-icon [icon]="'shopping-cart'"></fa-icon>
+                                        <span class="hidden-sm-down">
+                                            Add to Cart
+                                        </span>
+                                    </button>
+                            </div>
+                            <div class="row"><br><hr><br></div>
+                            <div class="row">
+                                <button class="btn btn-dark float-right jh-create-entity create-course" [routerLink]="['/course', course.id, 'view']" *jhiHasAnyAuthority="'ROLE_USER'">
+                                    <fa-icon [icon]="'eye'"></fa-icon>
+                                    <span class="hidden-sm-down">
+                                            View Details
+                                        </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><br>
+        </a>
+    </div>
+</div>
+
+
+    <!--
+    <div *ngIf="courses" *jhiHasAnyAuthority="'ROLE_USER'">
+        <div class="list-group">
+            <a [routerLink]="['/course', course.id]" class="list-group-item list-group-item-action flex-column align-items-start"
+               *ngFor="let course of courses; trackBy: trackId">
+                <div class="d-flex w-100 justify-content-between">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{course.normCourses}}</h5>
+                        <small
+                            *ngIf="course.topic">
+                            <a [routerLink]="['../topic',
+                                course.topic?.id ]" >
+                                {{course.topic?.id}}
+                            </a>
+                        </small>
+                    </div>
+                    <small class="mb-1">{{course.description}}</small>
+                    <p class="mb-1">Price: {{course.amount | currency:'USD'}}</p>
+                    <small>
+                        Country:
+                        <span jhiTranslate="smartCpdApp.course.country">{{course.country}}</span>
+
+                        State/Province:
+                        <span jhiTranslate="smartCpdApp.course.state">{{course.state}}</span>
+                    </small>
+                </div>
+            </a>
+        </div>
+    </div>-->
+</div>
