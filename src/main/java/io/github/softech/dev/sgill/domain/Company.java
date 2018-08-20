@@ -67,6 +67,12 @@ public class Company implements Serializable {
     @Column(name = "cycledate", nullable = false)
     private ZonedDateTime cycledate;
 
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "jhi_show")
+    private Boolean show;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -205,6 +211,32 @@ public class Company implements Serializable {
     public void setCycledate(ZonedDateTime cycledate) {
         this.cycledate = cycledate;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Company url(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Boolean isShow() {
+        return show;
+    }
+
+    public Company show(Boolean show) {
+        this.show = show;
+        return this;
+    }
+
+    public void setShow(Boolean show) {
+        this.show = show;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -241,6 +273,8 @@ public class Company implements Serializable {
             ", stateProvince='" + getStateProvince() + "'" +
             ", country='" + getCountry() + "'" +
             ", cycledate='" + getCycledate() + "'" +
+            ", url='" + getUrl() + "'" +
+            ", show='" + isShow() + "'" +
             "}";
     }
 }

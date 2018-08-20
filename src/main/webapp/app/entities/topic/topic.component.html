@@ -89,11 +89,11 @@
     </div>
     </a>
     <div *ngIf="topics">
-        <a *jhiHasAnyAuthority="'ROLE_SUPER'">
+        <a *jhiHasAnyAuthority="'ROLE_USER'">
             <div class="list-group">
                 <!--api/_search/courses?query=test<a (click)="redirectToCourse(topic.name)" [routerLink]="['/course', topic.id, 'view']" class="list-group-item list-group-item-action flex-column align-items-start"-->
                 <div class="list-group-item list-group-item-action flex-column align-items-start"
-                     *ngFor="let topic of topics; trackBy: trackId" style="background-color: #f2f2f2; padding-bottom: 5px;">
+                     *ngFor="let topic of topics; trackBy: trackId" style="background-color: #f2f2f2; margin-top: 5px;">
                     <div class="row">
                         <div class="col-3 col-xs-12">
                             <img class="img-responsive" [src]="'data:' + topic.imageContentType +

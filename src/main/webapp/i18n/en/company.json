@@ -3,7 +3,7 @@
     "smartCpdApp": {
         "company" : {
             "home": {
-                "title": "Companies",
+                "title": "Companies using our application",
                 "createLabel": "Create a new Company",
                 "createOrEditLabel": "Create or edit a Company",
                 "search": "Search for Company"
@@ -26,7 +26,9 @@
             "city": "City",
             "stateProvince": "State Province",
             "country": "Country",
-            "cycledate": "Cycledate"
+            "cycledate": "Cycledate",
+            "url": "Url",
+            "show": "Show"
         }
     }
 }

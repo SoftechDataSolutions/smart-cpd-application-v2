@@ -112,6 +112,98 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.phone" for="field_phone">Phone</label>
+                    <input type="text" class="form-control" name="phone" id="field_phone"
+                           [(ngModel)]="registerAccount.phone" required pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.streetaddress" for="field_streetaddress">Streetaddress</label>
+                    <input type="text" class="form-control" name="streetaddress" id="field_streetaddress"
+                           [(ngModel)]="registerAccount.streetaddress" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.postalcode" for="field_postalcode">Postalcode</label>
+                    <input type="text" class="form-control" name="postalcode" id="field_postalcode"
+                           [(ngModel)]="registerAccount.postalcode" required pattern="^\d{5}-\d{4}|\d{5}|[A-Z]\d[A-Z] \d[A-Z]\d$"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.city" for="field_city">City</label>
+                    <input type="text" class="form-control" name="city" id="field_city"
+                           [(ngModel)]="registerAccount.city" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.stateProvince" for="field_stateProvince">State Province</label>
+                    <input type="text" class="form-control" name="stateProvince" id="field_stateProvince"
+                           [(ngModel)]="registerAccount.stateProvince" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.country" for="field_country">Country</label>
+                    <input type="text" class="form-control" name="country" id="field_country"
+                           [(ngModel)]="registerAccount.country" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.profilePic" for="field_profilePic">Profile Pic</label>
+                    <div>
+                        <div *ngIf="registerAccount.profilePic" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(registerAccount.profilePicContentType, registerAccount.profilePic)" jhiTranslate="entity.action.open">open</a><br>
+                            <span class="pull-left">{{registerAccount.profilePicContentType}}, {{byteSize(registerAccount.profilePic)}}</span>
+                            <button type="button" (click)="registerAccount.profilePic=null;registerAccount.profilePicContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_profilePic" (change)="setFileData($event, customer, 'profilePic', false)" jhiTranslate="entity.action.addblob"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="profilePic" id="field_profilePic"
+                           [(ngModel)]="registerAccount.profilePic" />
+                    <input type="hidden" class="form-control" name="profilePicContentType" id="field_profilePicContentType"
+                           [(ngModel)]="registerAccount.profilePicContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.cycledate" for="field_cycledate">Cycledate</label>
+                    <div class="d-flex">
+                        <input id="field_cycledate" type="datetime-local" class="form-control" name="cycledate" [(ngModel)]="cycledate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.areaserviced" for="field_areaserviced">Areaserviced</label>
+                    <input type="text" class="form-control" name="areaserviced" id="field_areaserviced"
+                           [(ngModel)]="registerAccount.areaserviced" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.specialities" for="field_specialities">Specialities</label>
+                    <select class="form-control" name="specialities" [(ngModel)]="registerAccount.specialities" id="field_specialities" >
+                        <option value="RESIDENCE">{{'smartCpdApp.TYPES.RESIDENCE' | translate}}</option>
+                        <option value="COMMERCIAL">{{'smartCpdApp.TYPES.COMMERCIAL' | translate}}</option>
+                        <option value="INDUSTRIAL">{{'smartCpdApp.TYPES.INDUSTRIAL' | translate}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.trades" for="field_trades">Trades</label>
+                    <input type="text" class="form-control" name="trades" id="field_trades"
+                           [(ngModel)]="registerAccount.trades" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.monthYear" for="field_monthYear">Month Year</label>
+                    <input type="text" class="form-control" name="monthYear" id="field_monthYear"
+                           [(ngModel)]="registerAccount.monthYear" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.licenseNumber" for="field_licenseNumber">License Number</label>
+                    <input type="text" class="form-control" name="licenseNumber" id="field_licenseNumber"
+                           [(ngModel)]="registerAccount.licenseNumber" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.company" for="field_company">Company</label>
+                    <select class="form-control" id="field_company" name="company" [(ngModel)]="registerAccount.company" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="companyOption.id === customer.company?.id ? customer.company : companyOption" *ngFor="let companyOption of companies; trackBy: trackCompanyById">{{companyOption.name}}</option>
+                    </select>
+                </div>
+
                 <button type="submit" [disabled]="registerForm.form.invalid" class="btn btn-primary" jhiTranslate="register.form.button">Register</button>
             </form>
             <p></p>

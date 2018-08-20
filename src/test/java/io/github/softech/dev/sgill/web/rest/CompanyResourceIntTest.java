@@ -83,6 +83,12 @@ public class CompanyResourceIntTest {
     private static final ZonedDateTime DEFAULT_CYCLEDATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CYCLEDATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final String DEFAULT_URL = "AAAAAAAAAA";
+    private static final String UPDATED_URL = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_SHOW = false;
+    private static final Boolean UPDATED_SHOW = true;
+
     @Autowired
     private CompanyRepository companyRepository;
 
@@ -146,7 +152,9 @@ public class CompanyResourceIntTest {
             .city(DEFAULT_CITY)
             .stateProvince(DEFAULT_STATE_PROVINCE)
             .country(DEFAULT_COUNTRY)
-            .cycledate(DEFAULT_CYCLEDATE);
+            .cycledate(DEFAULT_CYCLEDATE)
+            .url(DEFAULT_URL)
+            .show(DEFAULT_SHOW);
         return company;
     }
 
@@ -180,6 +188,8 @@ public class CompanyResourceIntTest {
         assertThat(testCompany.getStateProvince()).isEqualTo(DEFAULT_STATE_PROVINCE);
         assertThat(testCompany.getCountry()).isEqualTo(DEFAULT_COUNTRY);
         assertThat(testCompany.getCycledate()).isEqualTo(DEFAULT_CYCLEDATE);
+        assertThat(testCompany.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testCompany.isShow()).isEqualTo(DEFAULT_SHOW);
 
         // Validate the Company in Elasticsearch
         verify(mockCompanySearchRepository, times(1)).save(testCompany);
@@ -389,7 +399,9 @@ public class CompanyResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))));
+            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))))
+            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
     
 
@@ -413,7 +425,9 @@ public class CompanyResourceIntTest {
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
             .andExpect(jsonPath("$.stateProvince").value(DEFAULT_STATE_PROVINCE.toString()))
             .andExpect(jsonPath("$.country").value(DEFAULT_COUNTRY.toString()))
-            .andExpect(jsonPath("$.cycledate").value(sameInstant(DEFAULT_CYCLEDATE)));
+            .andExpect(jsonPath("$.cycledate").value(sameInstant(DEFAULT_CYCLEDATE)))
+            .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
+            .andExpect(jsonPath("$.show").value(DEFAULT_SHOW.booleanValue()));
     }
 
     @Test
@@ -832,6 +846,84 @@ public class CompanyResourceIntTest {
         defaultCompanyShouldBeFound("cycledate.lessThan=" + UPDATED_CYCLEDATE);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByUrlIsEqualToSomething() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where url equals to DEFAULT_URL
+        defaultCompanyShouldBeFound("url.equals=" + DEFAULT_URL);
+
+        // Get all the companyList where url equals to UPDATED_URL
+        defaultCompanyShouldNotBeFound("url.equals=" + UPDATED_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByUrlIsInShouldWork() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where url in DEFAULT_URL or UPDATED_URL
+        defaultCompanyShouldBeFound("url.in=" + DEFAULT_URL + "," + UPDATED_URL);
+
+        // Get all the companyList where url equals to UPDATED_URL
+        defaultCompanyShouldNotBeFound("url.in=" + UPDATED_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByUrlIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where url is not null
+        defaultCompanyShouldBeFound("url.specified=true");
+
+        // Get all the companyList where url is null
+        defaultCompanyShouldNotBeFound("url.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByShowIsEqualToSomething() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where show equals to DEFAULT_SHOW
+        defaultCompanyShouldBeFound("show.equals=" + DEFAULT_SHOW);
+
+        // Get all the companyList where show equals to UPDATED_SHOW
+        defaultCompanyShouldNotBeFound("show.equals=" + UPDATED_SHOW);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByShowIsInShouldWork() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where show in DEFAULT_SHOW or UPDATED_SHOW
+        defaultCompanyShouldBeFound("show.in=" + DEFAULT_SHOW + "," + UPDATED_SHOW);
+
+        // Get all the companyList where show equals to UPDATED_SHOW
+        defaultCompanyShouldNotBeFound("show.in=" + UPDATED_SHOW);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCompaniesByShowIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        companyRepository.saveAndFlush(company);
+
+        // Get all the companyList where show is not null
+        defaultCompanyShouldBeFound("show.specified=true");
+
+        // Get all the companyList where show is null
+        defaultCompanyShouldNotBeFound("show.specified=false");
+    }
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -849,7 +941,9 @@ public class CompanyResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))));
+            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))))
+            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
 
     /**
@@ -895,7 +989,9 @@ public class CompanyResourceIntTest {
             .city(UPDATED_CITY)
             .stateProvince(UPDATED_STATE_PROVINCE)
             .country(UPDATED_COUNTRY)
-            .cycledate(UPDATED_CYCLEDATE);
+            .cycledate(UPDATED_CYCLEDATE)
+            .url(UPDATED_URL)
+            .show(UPDATED_SHOW);
 
         restCompanyMockMvc.perform(put("/api/companies")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -916,6 +1012,8 @@ public class CompanyResourceIntTest {
         assertThat(testCompany.getStateProvince()).isEqualTo(UPDATED_STATE_PROVINCE);
         assertThat(testCompany.getCountry()).isEqualTo(UPDATED_COUNTRY);
         assertThat(testCompany.getCycledate()).isEqualTo(UPDATED_CYCLEDATE);
+        assertThat(testCompany.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testCompany.isShow()).isEqualTo(UPDATED_SHOW);
 
         // Validate the Company in Elasticsearch
         verify(mockCompanySearchRepository, times(1)).save(testCompany);
@@ -984,7 +1082,9 @@ public class CompanyResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))));
+            .andExpect(jsonPath("$.[*].cycledate").value(hasItem(sameInstant(DEFAULT_CYCLEDATE))))
+            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
 
     @Test

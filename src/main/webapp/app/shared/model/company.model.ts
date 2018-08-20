@@ -12,6 +12,8 @@ export interface ICompany {
     stateProvince?: string;
     country?: string;
     cycledate?: Moment;
+    url?: string;
+    show?: boolean;
 }
 
 export class Company implements ICompany {
@@ -26,6 +28,10 @@ export class Company implements ICompany {
         public city?: string,
         public stateProvince?: string,
         public country?: string,
-        public cycledate?: Moment
-    ) {}
+        public cycledate?: Moment,
+        public url?: string,
+        public show?: boolean
+    ) {
+        this.show = this.show || false;
+    }
 }

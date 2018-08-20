@@ -36,7 +36,6 @@ public class Topic implements Serializable {
     
     @Lob
     @Column(name = "image", nullable = false)
-    @JsonIgnore
     private byte[] image;
 
     @Column(name = "image_content_type", nullable = false)

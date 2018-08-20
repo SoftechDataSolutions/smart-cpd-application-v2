@@ -48,6 +48,10 @@ public class CompanyCriteria implements Serializable {
 
     private ZonedDateTimeFilter cycledate;
 
+    private StringFilter url;
+
+    private BooleanFilter show;
+
     public CompanyCriteria() {
     }
 
@@ -139,6 +143,22 @@ public class CompanyCriteria implements Serializable {
         this.cycledate = cycledate;
     }
 
+    public StringFilter getUrl() {
+        return url;
+    }
+
+    public void setUrl(StringFilter url) {
+        this.url = url;
+    }
+
+    public BooleanFilter getShow() {
+        return show;
+    }
+
+    public void setShow(BooleanFilter show) {
+        this.show = show;
+    }
+
     @Override
     public String toString() {
         return "CompanyCriteria{" +
@@ -153,6 +173,8 @@ public class CompanyCriteria implements Serializable {
                 (stateProvince != null ? "stateProvince=" + stateProvince + ", " : "") +
                 (country != null ? "country=" + country + ", " : "") +
                 (cycledate != null ? "cycledate=" + cycledate + ", " : "") +
+                (url != null ? "url=" + url + ", " : "") +
+                (show != null ? "show=" + show + ", " : "") +
             "}";
     }
 

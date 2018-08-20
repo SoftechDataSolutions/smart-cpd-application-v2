@@ -61,7 +61,6 @@ public class Customer implements Serializable {
 
     @Lob
     @Column(name = "profile_pic")
-    @JsonIgnore
     private byte[] profilePic;
 
     @Column(name = "profile_pic_content_type")
