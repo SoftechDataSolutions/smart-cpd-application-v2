@@ -27,7 +27,6 @@ public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "normalized")
@@ -98,6 +97,13 @@ public class Customer implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private Company company;
+
+    @OneToOne
+    @MapsId
+    private User user;
+
+    public Customer() {
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -355,6 +361,15 @@ public class Customer implements Serializable {
         this.company = company;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public boolean equals(Object o) {

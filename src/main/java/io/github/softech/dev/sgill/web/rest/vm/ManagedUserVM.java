@@ -1,8 +1,16 @@
 package io.github.softech.dev.sgill.web.rest.vm;
 
+import io.github.softech.dev.sgill.domain.Company;
 import io.github.softech.dev.sgill.service.dto.UserDTO;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import io.github.softech.dev.sgill.domain.enumeration.TYPES;
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.
@@ -15,7 +23,6 @@ public class ManagedUserVM extends UserDTO {
 
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
-
     private String phone;
 
     private String streetaddress;
@@ -36,12 +43,6 @@ public class ManagedUserVM extends UserDTO {
 
     private String profilePicContentType;
 
-    private Instant registered;
-
-    private Instant lastactive;
-
-    private Integer points;
-
     private ZonedDateTime cycledate;
 
     private String areaserviced;
@@ -55,6 +56,8 @@ public class ManagedUserVM extends UserDTO {
     private String monthYear;
 
     private String licenseNumber;
+
+    private Long companyID;
 
     private Company company;
 
@@ -134,30 +137,6 @@ public class ManagedUserVM extends UserDTO {
         this.profilePicContentType = profilePicContentType;
     }
 
-    public Instant getRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(Instant registered) {
-        this.registered = registered;
-    }
-
-    public Instant getLastactive() {
-        return lastactive;
-    }
-
-    public void setLastactive(Instant lastactive) {
-        this.lastactive = lastactive;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
     public ZonedDateTime getCycledate() {
         return cycledate;
     }
@@ -204,6 +183,14 @@ public class ManagedUserVM extends UserDTO {
 
     public void setLicenseNumber(String licenseNumber) {
         this.licenseNumber = licenseNumber;
+    }
+
+    public Long getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(Long companyID) {
+        this.companyID = companyID;
     }
 
     public Company getCompany() {

@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Renderer, ElementRef } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiLanguageService } from 'ng-jhipster';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +12,6 @@ import { CustomerService } from 'app/entities/customer';
 import { ICustomer } from 'app/shared/model/customer.model';
 import { ICompany } from 'app/shared/model/company.model';
 import { CompanyService } from 'app/entities/company';
-import { HttpResponse } from '../../../../../../node_modules/@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
@@ -28,13 +27,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     errorEmailExists: string;
     errorUserExists: string;
     registerAccount: any;
-    private _customer: ICustomer;
-    company: ICompany;
-    companyOption: ICompany;
     success: boolean;
     modalRef: NgbModalRef;
     companies: ICompany[];
-    cycledate: string;
+    customer: ICustomer;
 
     constructor(
         private languageService: JhiLanguageService,
@@ -42,7 +38,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         private registerService: Register,
         private elementRef: ElementRef,
         private renderer: Renderer,
-        private customerService: CustomerService,
         private companyService: CompanyService,
         private activatedRoute: ActivatedRoute,
         private dataUtils: JhiDataUtils,
@@ -52,9 +47,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.success = false;
         this.registerAccount = {};
-        this.activatedRoute.data.subscribe(({ customer }) => {
-            this._customer = customer;
-        });
         this.companyService.query().subscribe(
             (res: HttpResponse<ICompany[]>) => {
                 this.companies = res.body;
@@ -107,20 +99,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         this.jhiAlertService.error(errorMessage, null, null);
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<ICustomer>>) {
-        result.subscribe((res: HttpResponse<ICustomer>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
-    }
-
-    save() {
-        this.success = true;
-        this.customer.cycledate = moment(this.cycledate, DATE_TIME_FORMAT);
-        if (this.customer.id !== undefined) {
-            this.subscribeToSaveResponse(this.customerService.update(this.customer));
-        } else {
-            this.subscribeToSaveResponse(this.customerService.create(this.customer));
-        }
-    }
-
     private onSaveSuccess() {
         this.success = false;
         this.previousState();
@@ -132,9 +110,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
     trackCompanyById(index: number, item: ICompany) {
         return item.id;
-    }
-    get customer() {
-        return this._customer;
     }
 
     openLogin() {

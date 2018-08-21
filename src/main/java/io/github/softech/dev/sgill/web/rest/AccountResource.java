@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import io.github.softech.dev.sgill.service.dto.PasswordChangeDTO;
+
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -53,6 +55,23 @@ public class AccountResource {
      * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already used
      * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already used
      */
+
+    @PostMapping("/register")
+    @Timed
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+        if (!checkPasswordLength(managedUserVM.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).ifPresent(u -> {throw new LoginAlreadyUsedException();});
+        userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getPhone(), managedUserVM.getStreetaddress(),
+            managedUserVM.getPostalcode(), managedUserVM.getCity(), managedUserVM.getStateProvince(),managedUserVM.getCountry(), managedUserVM.getCycledate(),
+            managedUserVM.getMonthYear(), managedUserVM.getLicenseNumber(), managedUserVM.getProfilePicContentType(), managedUserVM.getProfilePic(),
+            managedUserVM.getSpecialities(),managedUserVM.getTrades(),managedUserVM.getAreaserviced(),managedUserVM.getCompanyID());
+        mailService.sendActivationEmail(user);
+    }
+
     /*
     @PostMapping("/register")
     @Timed
@@ -63,26 +82,16 @@ public class AccountResource {
         }
         userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).ifPresent(u -> {throw new LoginAlreadyUsedException();});
         userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getPhone(), managedUserVM.getStreetaddress(), managedUserVM.getPostalcode(),
+            managedUserVM.getCity(), managedUserVM.getStateProvince(), managedUserVM.getCountry(), managedUserVM.getProfilePic(), managedUserVM.getProfilePicContentType(),
+            managedUserVM.getCycledate(), managedUserVM.getAreaserviced(), managedUserVM.getSpecialities(), managedUserVM.getTrades(), managedUserVM.getMonthYear(),
+            managedUserVM.getLicenseNumber(), managedUserVM.getCompany());
         mailService.sendActivationEmail(user);
     }*/
 
-    @PostMapping("/register")
-    @Timed
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-        userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).ifPresent(u -> {throw new LoginAlreadyUsedException();});
-        userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.g);
-        mailService.sendActivationEmail(user);
-    }
-
     /**
      * GET  /activate : activate the registered user.
-     *
+     *param
      * @param key the activation key
      * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be activated
      */

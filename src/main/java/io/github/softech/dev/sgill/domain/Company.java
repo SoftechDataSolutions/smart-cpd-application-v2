@@ -73,6 +73,9 @@ public class Company implements Serializable {
     @Column(name = "jhi_show")
     private Boolean show;
 
+    public Company() {
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;

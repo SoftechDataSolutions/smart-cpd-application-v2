@@ -1,16 +1,23 @@
 package io.github.softech.dev.sgill.service;
 
-import io.github.softech.dev.sgill.domain.Authority;
-import io.github.softech.dev.sgill.domain.User;
-import io.github.softech.dev.sgill.repository.AuthorityRepository;
 import io.github.softech.dev.sgill.config.Constants;
+import io.github.softech.dev.sgill.domain.Authority;
+import io.github.softech.dev.sgill.domain.Company;
+import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.domain.User;
+import io.github.softech.dev.sgill.domain.enumeration.TYPES;
+import io.github.softech.dev.sgill.repository.AuthorityRepository;
+import io.github.softech.dev.sgill.repository.CompanyRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.repository.UserRepository;
+import io.github.softech.dev.sgill.repository.search.CompanySearchRepository;
+import io.github.softech.dev.sgill.repository.search.CustomerSearchRepository;
 import io.github.softech.dev.sgill.repository.search.UserSearchRepository;
 import io.github.softech.dev.sgill.security.AuthoritiesConstants;
 import io.github.softech.dev.sgill.security.SecurityUtils;
-import io.github.softech.dev.sgill.service.util.RandomUtil;
 import io.github.softech.dev.sgill.service.dto.UserDTO;
-
+import io.github.softech.dev.sgill.service.util.RandomUtil;
+import io.github.softech.dev.sgill.web.rest.errors.InvalidPasswordException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -18,11 +25,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import io.github.softech.dev.sgill.web.rest.errors.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,16 +49,29 @@ public class UserService {
 
     private final UserSearchRepository userSearchRepository;
 
+    private final CustomerRepository customerRepository;
+
+    private final CustomerSearchRepository customerSearchRepository;
+
+    private final CompanyRepository companyRepository;
+
+    private final CompanySearchRepository companySearchRepository;
+
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, CacheManager cacheManager,
+                       CustomerRepository customerRepository, CustomerSearchRepository customerSearchRepository, CompanyRepository companyRepository, CompanySearchRepository companySearchRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.customerRepository = customerRepository;
+        this.customerSearchRepository = customerSearchRepository;
+        this.companyRepository = companyRepository;
+        this.companySearchRepository = companySearchRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -95,7 +115,7 @@ public class UserService {
                 return user;
             });
     }
-
+    /*
     public User registerUser(UserDTO userDTO, String password) {
 
         User newUser = new User();
@@ -119,6 +139,60 @@ public class UserService {
         userSearchRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }*/
+
+    public User registerUser(UserDTO userDTO, String password, String phone, String streetaddr, String postal, String city,
+                             String state, String country, ZonedDateTime cycledate, String birth, String license, String contentType,
+                             byte[] pic, TYPES specialities, String trades, String areaserviced, Long id) {
+
+        User newUser = new User();
+        String encryptedPassword = passwordEncoder.encode(password);
+        newUser.setLogin(userDTO.getLogin());
+        // new user gets initially a generated password
+        newUser.setPassword(encryptedPassword);
+        newUser.setFirstName(userDTO.getFirstName());
+        newUser.setLastName(userDTO.getLastName());
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setImageUrl(userDTO.getImageUrl());
+        newUser.setLangKey(userDTO.getLangKey());
+        // new user is not active
+        newUser.setActivated(false);
+        // new user gets registration key
+        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        Set<Authority> authorities = new HashSet<>();
+        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        userSearchRepository.save(newUser);
+        this.clearUserCaches(newUser);
+        log.debug("Created Information for User: {}", newUser);
+
+        Customer customer = new Customer();
+        customer.setUser(newUser);
+        customer.setPhone(phone);
+        customer.setNormalized(userDTO.getFirstName() + " "+ userDTO.getLastName());
+        customer.setStreetaddress(streetaddr);
+        customer.setPostalcode(postal);
+        customer.setCity(city);
+        customer.setStateProvince(state);
+        customer.setCountry(country);
+        customer.setCycledate(cycledate);
+        customer.setPoints(0);
+        customer.setRegistered(Instant.now());
+        customer.setLastactive(Instant.now());
+        customer.setMonthYear(birth);
+        customer.setLicenseNumber(license);
+        customer.setProfilePic(pic);
+        customer.setProfilePicContentType(contentType);
+        customer.setSpecialities(specialities);
+        customer.setTrades(trades);
+        customer.setAreaserviced(areaserviced);
+        Company reqdCompany = companyRepository.findById(id).get();
+        customer.setCompany(reqdCompany);
+        customerRepository.save(customer);
+        customerSearchRepository.save(customer);
+
         return newUser;
     }
 
