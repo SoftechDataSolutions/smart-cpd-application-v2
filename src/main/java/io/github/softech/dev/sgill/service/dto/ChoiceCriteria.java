@@ -32,6 +32,8 @@ public class ChoiceCriteria implements Serializable {
 
     private BooleanFilter isanswer;
 
+    private LongFilter questionId;
+
     public ChoiceCriteria() {
     }
 
@@ -59,12 +61,21 @@ public class ChoiceCriteria implements Serializable {
         this.isanswer = isanswer;
     }
 
+    public LongFilter getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(LongFilter questionId) {
+        this.questionId = questionId;
+    }
+
     @Override
     public String toString() {
         return "ChoiceCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (textChoice != null ? "textChoice=" + textChoice + ", " : "") +
                 (isanswer != null ? "isanswer=" + isanswer + ", " : "") +
+                (questionId != null ? "questionId=" + questionId + ", " : "") +
             "}";
     }
 

@@ -18,7 +18,8 @@
                 "title": "Choice"
             },
             "textChoice": "Text Choice",
-            "isanswer": "Isanswer"
+            "isanswer": "Isanswer",
+            "question": "Question"
         }
     }
 }

@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { JhiAlertService } from 'ng-jhipster';
 
 import { IChoice } from 'app/shared/model/choice.model';
 import { ChoiceService } from './choice.service';
+import { IQuestion } from 'app/shared/model/question.model';
+import { QuestionService } from 'app/entities/question';
 
 @Component({
     selector: 'jhi-choice-update',
@@ -14,13 +17,26 @@ export class ChoiceUpdateComponent implements OnInit {
     private _choice: IChoice;
     isSaving: boolean;
 
-    constructor(private choiceService: ChoiceService, private activatedRoute: ActivatedRoute) {}
+    questions: IQuestion[];
+
+    constructor(
+        private jhiAlertService: JhiAlertService,
+        private choiceService: ChoiceService,
+        private questionService: QuestionService,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ choice }) => {
             this.choice = choice;
         });
+        this.questionService.query().subscribe(
+            (res: HttpResponse<IQuestion[]>) => {
+                this.questions = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     previousState() {
@@ -47,6 +63,14 @@ export class ChoiceUpdateComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
+    }
+
+    private onError(errorMessage: string) {
+        this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    trackQuestionById(index: number, item: IQuestion) {
+        return item.id;
     }
     get choice() {
         return this._choice;

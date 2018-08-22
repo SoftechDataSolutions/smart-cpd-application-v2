@@ -19,7 +19,8 @@
             },
             "textQuestion": "Text Question",
             "difficulty": "Difficulty",
-            "choice": "Choice"
+            "choice": "Choice",
+            "quiz": "Quiz"
         }
     }
 }

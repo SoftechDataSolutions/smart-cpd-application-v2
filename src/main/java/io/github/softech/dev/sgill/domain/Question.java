@@ -1,6 +1,7 @@
 package io.github.softech.dev.sgill.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -38,6 +39,10 @@ public class Question implements Serializable {
     @OneToMany(mappedBy = "question")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Choice> choices = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("questions")
+    private Quiz quiz;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -97,6 +102,19 @@ public class Question implements Serializable {
 
     public void setChoices(Set<Choice> choices) {
         this.choices = choices;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public Question quiz(Quiz quiz) {
+        this.quiz = quiz;
+        return this;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

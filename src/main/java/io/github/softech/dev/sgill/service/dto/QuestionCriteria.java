@@ -34,6 +34,8 @@ public class QuestionCriteria implements Serializable {
 
     private LongFilter choiceId;
 
+    private LongFilter quizId;
+
     public QuestionCriteria() {
     }
 
@@ -69,6 +71,14 @@ public class QuestionCriteria implements Serializable {
         this.choiceId = choiceId;
     }
 
+    public LongFilter getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(LongFilter quizId) {
+        this.quizId = quizId;
+    }
+
     @Override
     public String toString() {
         return "QuestionCriteria{" +
@@ -76,6 +86,7 @@ public class QuestionCriteria implements Serializable {
                 (textQuestion != null ? "textQuestion=" + textQuestion + ", " : "") +
                 (difficulty != null ? "difficulty=" + difficulty + ", " : "") +
                 (choiceId != null ? "choiceId=" + choiceId + ", " : "") +
+                (quizId != null ? "quizId=" + quizId + ", " : "") +
             "}";
     }
 

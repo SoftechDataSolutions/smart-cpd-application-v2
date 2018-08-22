@@ -7,6 +7,12 @@
             "otherEntityName": "choice",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "question"
+        },
+        {
+            "relationshipName": "quiz",
+            "otherEntityName": "quiz",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
         }
     ],
     "fields": [

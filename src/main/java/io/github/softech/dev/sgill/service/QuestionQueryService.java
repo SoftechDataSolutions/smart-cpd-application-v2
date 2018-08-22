@@ -83,6 +83,9 @@ public class QuestionQueryService extends QueryService<Question> {
             if (criteria.getChoiceId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getChoiceId(), Question_.choices, Choice_.id));
             }
+            if (criteria.getQuizId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getQuizId(), Question_.quiz, Quiz_.id));
+            }
         }
         return specification;
     }
