@@ -1,17 +1,12 @@
 package io.github.softech.dev.sgill.service;
 
 import io.github.softech.dev.sgill.config.Constants;
-import io.github.softech.dev.sgill.domain.Authority;
-import io.github.softech.dev.sgill.domain.Company;
-import io.github.softech.dev.sgill.domain.Customer;
-import io.github.softech.dev.sgill.domain.User;
+import io.github.softech.dev.sgill.domain.*;
 import io.github.softech.dev.sgill.domain.enumeration.TYPES;
-import io.github.softech.dev.sgill.repository.AuthorityRepository;
-import io.github.softech.dev.sgill.repository.CompanyRepository;
-import io.github.softech.dev.sgill.repository.CustomerRepository;
-import io.github.softech.dev.sgill.repository.UserRepository;
+import io.github.softech.dev.sgill.repository.*;
 import io.github.softech.dev.sgill.repository.search.CompanySearchRepository;
 import io.github.softech.dev.sgill.repository.search.CustomerSearchRepository;
+import io.github.softech.dev.sgill.repository.search.ServicelistSearchRepository;
 import io.github.softech.dev.sgill.repository.search.UserSearchRepository;
 import io.github.softech.dev.sgill.security.AuthoritiesConstants;
 import io.github.softech.dev.sgill.security.SecurityUtils;
@@ -57,12 +52,17 @@ public class UserService {
 
     private final CompanySearchRepository companySearchRepository;
 
+    private final ServicelistRepository servicelistRepository;
+
+    private final ServicelistSearchRepository servicelistSearchRepository;
+
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository, AuthorityRepository authorityRepository, CacheManager cacheManager,
-                       CustomerRepository customerRepository, CustomerSearchRepository customerSearchRepository, CompanyRepository companyRepository, CompanySearchRepository companySearchRepository) {
+                       CustomerRepository customerRepository, CustomerSearchRepository customerSearchRepository, CompanyRepository companyRepository, CompanySearchRepository companySearchRepository,
+                           ServicelistRepository servicelistRepository,ServicelistSearchRepository servicelistSearchRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
@@ -72,6 +72,8 @@ public class UserService {
         this.customerSearchRepository = customerSearchRepository;
         this.companyRepository = companyRepository;
         this.companySearchRepository = companySearchRepository;
+        this.servicelistRepository = servicelistRepository;
+        this.servicelistSearchRepository = servicelistSearchRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -89,6 +91,10 @@ public class UserService {
                 log.debug("Activated user: {}", user);
                 return user;
             });
+    }
+
+    public void clearUserCache(User user){
+        this.clearUserCaches(user);
     }
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
@@ -143,8 +149,8 @@ public class UserService {
     }*/
 
     public User registerUser(UserDTO userDTO, String password, String phone, String streetaddr, String postal, String city,
-                             String state, String country, ZonedDateTime cycledate, String birth, String license, String contentType,
-                             byte[] pic, TYPES specialities, String trades, String areaserviced, Long id) {
+                             String state, String country, ZonedDateTime cycledate, String birth, String license
+                            , TYPES specialities, String trades, String areaserviced, Company company, Boolean show) {
 
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
@@ -183,15 +189,29 @@ public class UserService {
         customer.setLastactive(Instant.now());
         customer.setMonthYear(birth);
         customer.setLicenseNumber(license);
-        customer.setProfilePic(pic);
-        customer.setProfilePicContentType(contentType);
         customer.setSpecialities(specialities);
         customer.setTrades(trades);
         customer.setAreaserviced(areaserviced);
-        Company reqdCompany = companyRepository.findById(id).get();
-        customer.setCompany(reqdCompany);
+        //Company reqdCompany = companyRepository.findById(id).get();
+        customer.setCompany(company);
+        customer.setShow(show);
         customerRepository.save(customer);
         customerSearchRepository.save(customer);
+
+        if(show){
+            Servicelist servicelist = new Servicelist();
+            servicelist.setName(userDTO.getFirstName() + " "+ userDTO.getLastName());
+            servicelist.setSpeciality(specialities.toString());
+            servicelist.setTrades(trades);
+            servicelist.setAreas(areaserviced);
+            servicelist.setCustomer(customer);
+            servicelist.setPhone(phone);
+            servicelist.setEmail(newUser.getEmail());
+            servicelist.setCompany(company.getName());
+            servicelist.setUrl(company.getUrl());
+            servicelistRepository.save(servicelist);
+            servicelistSearchRepository.save(servicelist);
+        }
 
         return newUser;
     }
@@ -288,12 +308,19 @@ public class UserService {
     }
 
     public void deleteUser(String login) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
+            User user = userRepository.findOneByLogin(login).get();
+            Customer customer = customerRepository.findCustomersByUser(user);
+            Servicelist listing = servicelistRepository.findServicelistByCustomer(customer);
+            customerRepository.delete(customer);
+            customerSearchRepository.delete(customer);
+
+            servicelistRepository.delete(listing);
+            servicelistSearchRepository.delete(listing);
+
             userRepository.delete(user);
             userSearchRepository.delete(user);
             this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
-        });
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {

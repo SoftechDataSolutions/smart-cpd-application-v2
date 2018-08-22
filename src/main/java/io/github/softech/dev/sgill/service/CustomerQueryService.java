@@ -122,8 +122,14 @@ public class CustomerQueryService extends QueryService<Customer> {
             if (criteria.getLicenseNumber() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLicenseNumber(), Customer_.licenseNumber));
             }
+            if (criteria.getShow() != null) {
+                specification = specification.and(buildSpecification(criteria.getShow(), Customer_.show));
+            }
             if (criteria.getCompanyId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCompanyId(), Customer_.company, Company_.id));
+            }
+            if (criteria.getUserId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getUserId(), Customer_.user, User_.id));
             }
         }
         return specification;

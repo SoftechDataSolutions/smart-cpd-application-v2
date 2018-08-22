@@ -24,6 +24,7 @@
                 "orders": "Orders",
                 "cart": "Cart",
                 "timeCourseLog": "Time Course Log",
+                "servicelist": "Servicelist",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

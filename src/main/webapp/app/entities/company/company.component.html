@@ -97,22 +97,19 @@
                 <!--api/_search/courses?query=test<a (click)="redirectToCourse(topic.name)" [routerLink]="['/course', topic.id, 'view']" class="list-group-item list-group-item-action flex-column align-items-start"-->
                 <div *ngFor="let company of companies; trackBy: trackId">
                     <a *ngIf="company.show" class="list-group-item list-group-item-action flex-column align-items-start" href="{{company.url}}" style="margin-top: 5px; background-color: #f2f2f2;">
-                        <div class="row" style="padding-left: 15px;" >
-                            <div class="row">
-                                <div class="col-6 col-xs-12">
+                        <div class="row" style="padding-left: 15px;">
+                                <div class="col-8 col-xs-12">
                                     <div class="d-flex w-100 justify-content-between">
                                         <div class="row"><h1 class="mb-1" style="font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;">{{company.name}}</h1></div>
                                     </div>
                                 </div>
-                                <div class="col-2"></div>
                                 <div class="col-4 col-xs-12" style="margin-top: 10px;">
                                     <div class="row"><small class="mb-1">Address: <strong>{{company.streetAddress}}, {{company.city}}, {{company.country}} {{company.postalCode}}</strong></small></div>
                                     <div class="row"><small class="mb-1">Phone: <strong>{{company.phone}}</strong></small></div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <small class="mb-1"><strong>About the Company: </strong>{{company.description}}</small>
-                            </div>
+                        </div>
+                        <div class="row">
+                            <small class="mb-1"><strong>About the Company: </strong>{{company.description}}</small>
                         </div>
                     </a>
                 </div>

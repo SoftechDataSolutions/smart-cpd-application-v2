@@ -24,7 +24,6 @@
             "city": "City",
             "stateProvince": "State Province",
             "country": "Country",
-            "profilePic": "Profile Pic",
             "registered": "Registered",
             "lastactive": "Lastactive",
             "points": "Points",
@@ -34,7 +33,10 @@
             "trades": "Trades",
             "monthYear": "Month Year",
             "licenseNumber": "License Number",
-            "company": "Company"
+            "show": "Do you want your name, contact info and trades to be visible on our website",
+            "showdetail": "Show/Agree",
+            "company": "Company",
+            "user": "User"
         }
     }
 }

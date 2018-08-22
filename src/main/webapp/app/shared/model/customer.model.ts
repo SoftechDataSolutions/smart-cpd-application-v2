@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { ICompany } from 'app/shared/model//company.model';
+import { IUser } from 'app/core/user/user.model';
 
 export const enum TYPES {
     RESIDENCE = 'RESIDENCE',
@@ -16,8 +17,6 @@ export interface ICustomer {
     city?: string;
     stateProvince?: string;
     country?: string;
-    profilePicContentType?: string;
-    profilePic?: any;
     registered?: Moment;
     lastactive?: Moment;
     points?: number;
@@ -27,7 +26,9 @@ export interface ICustomer {
     trades?: string;
     monthYear?: string;
     licenseNumber?: string;
+    show?: boolean;
     company?: ICompany;
+    user?: IUser;
 }
 
 export class Customer implements ICustomer {
@@ -40,8 +41,6 @@ export class Customer implements ICustomer {
         public city?: string,
         public stateProvince?: string,
         public country?: string,
-        public profilePicContentType?: string,
-        public profilePic?: any,
         public registered?: Moment,
         public lastactive?: Moment,
         public points?: number,
@@ -51,6 +50,10 @@ export class Customer implements ICustomer {
         public trades?: string,
         public monthYear?: string,
         public licenseNumber?: string,
-        public company?: ICompany
-    ) {}
+        public show?: boolean,
+        public company?: ICompany,
+        public user?: IUser
+    ) {
+        this.show = this.show || false;
+    }
 }

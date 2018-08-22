@@ -131,6 +131,12 @@
                             <span jhiTranslate="global.menu.entities.timeCourseLog">Time Course Log</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="servicelist" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.servicelist">Servicelist</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

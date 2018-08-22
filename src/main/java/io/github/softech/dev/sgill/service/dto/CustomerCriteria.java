@@ -67,7 +67,11 @@ public class CustomerCriteria implements Serializable {
 
     private StringFilter licenseNumber;
 
+    private BooleanFilter show;
+
     private LongFilter companyId;
+
+    private LongFilter userId;
 
     public CustomerCriteria() {
     }
@@ -208,12 +212,28 @@ public class CustomerCriteria implements Serializable {
         this.licenseNumber = licenseNumber;
     }
 
+    public BooleanFilter getShow() {
+        return show;
+    }
+
+    public void setShow(BooleanFilter show) {
+        this.show = show;
+    }
+
     public LongFilter getCompanyId() {
         return companyId;
     }
 
     public void setCompanyId(LongFilter companyId) {
         this.companyId = companyId;
+    }
+
+    public LongFilter getUserId() {
+        return userId;
+    }
+
+    public void setUserId(LongFilter userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -236,7 +256,9 @@ public class CustomerCriteria implements Serializable {
                 (trades != null ? "trades=" + trades + ", " : "") +
                 (monthYear != null ? "monthYear=" + monthYear + ", " : "") +
                 (licenseNumber != null ? "licenseNumber=" + licenseNumber + ", " : "") +
+                (show != null ? "show=" + show + ", " : "") +
                 (companyId != null ? "companyId=" + companyId + ", " : "") +
+                (userId != null ? "userId=" + userId + ", " : "") +
             "}";
     }
 

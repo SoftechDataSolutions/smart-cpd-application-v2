@@ -4,12 +4,13 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
+import { JhiAlertService } from 'ng-jhipster';
 
 import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from './customer.service';
 import { ICompany } from 'app/shared/model/company.model';
 import { CompanyService } from 'app/entities/company';
+import { IUser, UserService } from 'app/core';
 
 @Component({
     selector: 'jhi-customer-update',
@@ -20,15 +21,17 @@ export class CustomerUpdateComponent implements OnInit {
     isSaving: boolean;
 
     companies: ICompany[];
+
+    users: IUser[];
     registered: string;
     lastactive: string;
     cycledate: string;
 
     constructor(
-        private dataUtils: JhiDataUtils,
         private jhiAlertService: JhiAlertService,
         private customerService: CustomerService,
         private companyService: CompanyService,
+        private userService: UserService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -43,18 +46,12 @@ export class CustomerUpdateComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
-    }
-
-    byteSize(field) {
-        return this.dataUtils.byteSize(field);
-    }
-
-    openFile(contentType, field) {
-        return this.dataUtils.openFile(contentType, field);
-    }
-
-    setFileData(event, entity, field, isImage) {
-        this.dataUtils.setFileData(event, entity, field, isImage);
+        this.userService.query().subscribe(
+            (res: HttpResponse<IUser[]>) => {
+                this.users = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     previousState() {
@@ -91,6 +88,10 @@ export class CustomerUpdateComponent implements OnInit {
     }
 
     trackCompanyById(index: number, item: ICompany) {
+        return item.id;
+    }
+
+    trackUserById(index: number, item: IUser) {
         return item.id;
     }
     get customer() {

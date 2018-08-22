@@ -89,24 +89,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.profilePic" for="field_profilePic">Profile Pic</label>
-                    <div>
-                        <div *ngIf="customer.profilePic" class="form-text text-danger clearfix">
-                            <a class="pull-left" (click)="openFile(customer.profilePicContentType, customer.profilePic)" jhiTranslate="entity.action.open">open</a><br>
-                            <span class="pull-left">{{customer.profilePicContentType}}, {{byteSize(customer.profilePic)}}</span>
-                            <button type="button" (click)="customer.profilePic=null;customer.profilePicContentType=null;"
-                                    class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon [icon]="'times'"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_profilePic" (change)="setFileData($event, customer, 'profilePic', false)" jhiTranslate="entity.action.addblob"/>
-                    </div>
-                    <input type="hidden" class="form-control" name="profilePic" id="field_profilePic"
-                        [(ngModel)]="customer.profilePic" />
-                    <input type="hidden" class="form-control" name="profilePicContentType" id="field_profilePicContentType"
-                        [(ngModel)]="customer.profilePicContentType" />
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.customer.registered" for="field_registered">Registered</label>
                     <div class="d-flex">
                         <input id="field_registered" type="datetime-local" class="form-control" name="registered" [(ngModel)]="registered"
@@ -166,6 +148,11 @@
                     <input type="text" class="form-control" name="licenseNumber" id="field_licenseNumber"
                         [(ngModel)]="customer.licenseNumber" />
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.show" for="field_show">Show</label>
+                    <input type="checkbox" class="form-control" name="show" id="field_show"
+                        [(ngModel)]="customer.show" />
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.customer.company" for="field_company">Company</label>
@@ -173,6 +160,19 @@
                         <option [ngValue]="null"></option>
                         <option [ngValue]="companyOption.id === customer.company?.id ? customer.company : companyOption" *ngFor="let companyOption of companies; trackBy: trackCompanyById">{{companyOption.name}}</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.user" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="customer.user"  required>
+                        <option *ngIf="!editForm.value.user" [ngValue]="null" selected></option>
+                        <option [ngValue]="userOption.id === customer.user?.id ? customer.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.user?.dirty && editForm.controls.user?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.user?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
                 </div>
             </div>
             <div>

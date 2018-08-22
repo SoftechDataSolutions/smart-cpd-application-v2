@@ -1,5 +1,25 @@
 {
-    "name": "Customer",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "company",
+            "otherEntityName": "company",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "customer"
+        }
+    ],
     "fields": [
         {
             "fieldName": "normalized",
@@ -52,11 +72,6 @@
             ]
         },
         {
-            "fieldName": "profilePic",
-            "fieldType": "byte[]",
-            "fieldTypeBlobContent": "any"
-        },
-        {
             "fieldName": "registered",
             "fieldType": "Instant"
         },
@@ -95,24 +110,17 @@
         {
             "fieldName": "licenseNumber",
             "fieldType": "String"
-        }
-    ],
-    "relationships": [
+        },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "company",
-            "otherEntityName": "company",
-            "otherEntityField": "name"
+            "fieldName": "show",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180819063638",
-    "entityTableName": "customer",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "customer",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

@@ -4,6 +4,7 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.domain.Company;
+import io.github.softech.dev.sgill.domain.User;
 import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.repository.search.CustomerSearchRepository;
 import io.github.softech.dev.sgill.service.CustomerService;
@@ -26,7 +27,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -78,11 +78,6 @@ public class CustomerResourceIntTest {
     private static final String DEFAULT_COUNTRY = "AAAAAAAAAA";
     private static final String UPDATED_COUNTRY = "BBBBBBBBBB";
 
-    private static final byte[] DEFAULT_PROFILE_PIC = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PROFILE_PIC = TestUtil.createByteArray(2, "1");
-    private static final String DEFAULT_PROFILE_PIC_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_PROFILE_PIC_CONTENT_TYPE = "image/png";
-
     private static final Instant DEFAULT_REGISTERED = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_REGISTERED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -109,6 +104,9 @@ public class CustomerResourceIntTest {
 
     private static final String DEFAULT_LICENSE_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_LICENSE_NUMBER = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_SHOW = false;
+    private static final Boolean UPDATED_SHOW = true;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -171,8 +169,6 @@ public class CustomerResourceIntTest {
             .city(DEFAULT_CITY)
             .stateProvince(DEFAULT_STATE_PROVINCE)
             .country(DEFAULT_COUNTRY)
-            .profilePic(DEFAULT_PROFILE_PIC)
-            .profilePicContentType(DEFAULT_PROFILE_PIC_CONTENT_TYPE)
             .registered(DEFAULT_REGISTERED)
             .lastactive(DEFAULT_LASTACTIVE)
             .points(DEFAULT_POINTS)
@@ -181,7 +177,13 @@ public class CustomerResourceIntTest {
             .specialities(DEFAULT_SPECIALITIES)
             .trades(DEFAULT_TRADES)
             .monthYear(DEFAULT_MONTH_YEAR)
-            .licenseNumber(DEFAULT_LICENSE_NUMBER);
+            .licenseNumber(DEFAULT_LICENSE_NUMBER)
+            .show(DEFAULT_SHOW);
+        // Add required entity
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        customer.setUser(user);
         return customer;
     }
 
@@ -212,8 +214,6 @@ public class CustomerResourceIntTest {
         assertThat(testCustomer.getCity()).isEqualTo(DEFAULT_CITY);
         assertThat(testCustomer.getStateProvince()).isEqualTo(DEFAULT_STATE_PROVINCE);
         assertThat(testCustomer.getCountry()).isEqualTo(DEFAULT_COUNTRY);
-        assertThat(testCustomer.getProfilePic()).isEqualTo(DEFAULT_PROFILE_PIC);
-        assertThat(testCustomer.getProfilePicContentType()).isEqualTo(DEFAULT_PROFILE_PIC_CONTENT_TYPE);
         assertThat(testCustomer.getRegistered()).isEqualTo(DEFAULT_REGISTERED);
         assertThat(testCustomer.getLastactive()).isEqualTo(DEFAULT_LASTACTIVE);
         assertThat(testCustomer.getPoints()).isEqualTo(DEFAULT_POINTS);
@@ -223,6 +223,7 @@ public class CustomerResourceIntTest {
         assertThat(testCustomer.getTrades()).isEqualTo(DEFAULT_TRADES);
         assertThat(testCustomer.getMonthYear()).isEqualTo(DEFAULT_MONTH_YEAR);
         assertThat(testCustomer.getLicenseNumber()).isEqualTo(DEFAULT_LICENSE_NUMBER);
+        assertThat(testCustomer.isShow()).isEqualTo(DEFAULT_SHOW);
 
         // Validate the Customer in Elasticsearch
         verify(mockCustomerSearchRepository, times(1)).save(testCustomer);
@@ -394,8 +395,6 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].profilePicContentType").value(hasItem(DEFAULT_PROFILE_PIC_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].profilePic").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PIC))))
             .andExpect(jsonPath("$.[*].registered").value(hasItem(DEFAULT_REGISTERED.toString())))
             .andExpect(jsonPath("$.[*].lastactive").value(hasItem(DEFAULT_LASTACTIVE.toString())))
             .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)))
@@ -404,7 +403,8 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].specialities").value(hasItem(DEFAULT_SPECIALITIES.toString())))
             .andExpect(jsonPath("$.[*].trades").value(hasItem(DEFAULT_TRADES.toString())))
             .andExpect(jsonPath("$.[*].monthYear").value(hasItem(DEFAULT_MONTH_YEAR.toString())))
-            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())));
+            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
     
 
@@ -426,8 +426,6 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
             .andExpect(jsonPath("$.stateProvince").value(DEFAULT_STATE_PROVINCE.toString()))
             .andExpect(jsonPath("$.country").value(DEFAULT_COUNTRY.toString()))
-            .andExpect(jsonPath("$.profilePicContentType").value(DEFAULT_PROFILE_PIC_CONTENT_TYPE))
-            .andExpect(jsonPath("$.profilePic").value(Base64Utils.encodeToString(DEFAULT_PROFILE_PIC)))
             .andExpect(jsonPath("$.registered").value(DEFAULT_REGISTERED.toString()))
             .andExpect(jsonPath("$.lastactive").value(DEFAULT_LASTACTIVE.toString()))
             .andExpect(jsonPath("$.points").value(DEFAULT_POINTS))
@@ -436,7 +434,8 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.specialities").value(DEFAULT_SPECIALITIES.toString()))
             .andExpect(jsonPath("$.trades").value(DEFAULT_TRADES.toString()))
             .andExpect(jsonPath("$.monthYear").value(DEFAULT_MONTH_YEAR.toString()))
-            .andExpect(jsonPath("$.licenseNumber").value(DEFAULT_LICENSE_NUMBER.toString()));
+            .andExpect(jsonPath("$.licenseNumber").value(DEFAULT_LICENSE_NUMBER.toString()))
+            .andExpect(jsonPath("$.show").value(DEFAULT_SHOW.booleanValue()));
     }
 
     @Test
@@ -1119,6 +1118,45 @@ public class CustomerResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllCustomersByShowIsEqualToSomething() throws Exception {
+        // Initialize the database
+        customerRepository.saveAndFlush(customer);
+
+        // Get all the customerList where show equals to DEFAULT_SHOW
+        defaultCustomerShouldBeFound("show.equals=" + DEFAULT_SHOW);
+
+        // Get all the customerList where show equals to UPDATED_SHOW
+        defaultCustomerShouldNotBeFound("show.equals=" + UPDATED_SHOW);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCustomersByShowIsInShouldWork() throws Exception {
+        // Initialize the database
+        customerRepository.saveAndFlush(customer);
+
+        // Get all the customerList where show in DEFAULT_SHOW or UPDATED_SHOW
+        defaultCustomerShouldBeFound("show.in=" + DEFAULT_SHOW + "," + UPDATED_SHOW);
+
+        // Get all the customerList where show equals to UPDATED_SHOW
+        defaultCustomerShouldNotBeFound("show.in=" + UPDATED_SHOW);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCustomersByShowIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        customerRepository.saveAndFlush(customer);
+
+        // Get all the customerList where show is not null
+        defaultCustomerShouldBeFound("show.specified=true");
+
+        // Get all the customerList where show is null
+        defaultCustomerShouldNotBeFound("show.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllCustomersByCompanyIsEqualToSomething() throws Exception {
         // Initialize the database
         Company company = CompanyResourceIntTest.createEntity(em);
@@ -1133,6 +1171,25 @@ public class CustomerResourceIntTest {
 
         // Get all the customerList where company equals to companyId + 1
         defaultCustomerShouldNotBeFound("companyId.equals=" + (companyId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCustomersByUserIsEqualToSomething() throws Exception {
+        // Initialize the database
+        User user = UserResourceIntTest.createEntity(em);
+        em.persist(user);
+        em.flush();
+        customer.setUser(user);
+        customerRepository.saveAndFlush(customer);
+        Long userId = user.getId();
+
+        // Get all the customerList where user equals to userId
+        defaultCustomerShouldBeFound("userId.equals=" + userId);
+
+        // Get all the customerList where user equals to userId + 1
+        defaultCustomerShouldNotBeFound("userId.equals=" + (userId + 1));
     }
 
     /**
@@ -1150,8 +1207,6 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].profilePicContentType").value(hasItem(DEFAULT_PROFILE_PIC_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].profilePic").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PIC))))
             .andExpect(jsonPath("$.[*].registered").value(hasItem(DEFAULT_REGISTERED.toString())))
             .andExpect(jsonPath("$.[*].lastactive").value(hasItem(DEFAULT_LASTACTIVE.toString())))
             .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)))
@@ -1160,7 +1215,8 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].specialities").value(hasItem(DEFAULT_SPECIALITIES.toString())))
             .andExpect(jsonPath("$.[*].trades").value(hasItem(DEFAULT_TRADES.toString())))
             .andExpect(jsonPath("$.[*].monthYear").value(hasItem(DEFAULT_MONTH_YEAR.toString())))
-            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())));
+            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
 
     /**
@@ -1204,8 +1260,6 @@ public class CustomerResourceIntTest {
             .city(UPDATED_CITY)
             .stateProvince(UPDATED_STATE_PROVINCE)
             .country(UPDATED_COUNTRY)
-            .profilePic(UPDATED_PROFILE_PIC)
-            .profilePicContentType(UPDATED_PROFILE_PIC_CONTENT_TYPE)
             .registered(UPDATED_REGISTERED)
             .lastactive(UPDATED_LASTACTIVE)
             .points(UPDATED_POINTS)
@@ -1214,7 +1268,8 @@ public class CustomerResourceIntTest {
             .specialities(UPDATED_SPECIALITIES)
             .trades(UPDATED_TRADES)
             .monthYear(UPDATED_MONTH_YEAR)
-            .licenseNumber(UPDATED_LICENSE_NUMBER);
+            .licenseNumber(UPDATED_LICENSE_NUMBER)
+            .show(UPDATED_SHOW);
 
         restCustomerMockMvc.perform(put("/api/customers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -1232,8 +1287,6 @@ public class CustomerResourceIntTest {
         assertThat(testCustomer.getCity()).isEqualTo(UPDATED_CITY);
         assertThat(testCustomer.getStateProvince()).isEqualTo(UPDATED_STATE_PROVINCE);
         assertThat(testCustomer.getCountry()).isEqualTo(UPDATED_COUNTRY);
-        assertThat(testCustomer.getProfilePic()).isEqualTo(UPDATED_PROFILE_PIC);
-        assertThat(testCustomer.getProfilePicContentType()).isEqualTo(UPDATED_PROFILE_PIC_CONTENT_TYPE);
         assertThat(testCustomer.getRegistered()).isEqualTo(UPDATED_REGISTERED);
         assertThat(testCustomer.getLastactive()).isEqualTo(UPDATED_LASTACTIVE);
         assertThat(testCustomer.getPoints()).isEqualTo(UPDATED_POINTS);
@@ -1243,6 +1296,7 @@ public class CustomerResourceIntTest {
         assertThat(testCustomer.getTrades()).isEqualTo(UPDATED_TRADES);
         assertThat(testCustomer.getMonthYear()).isEqualTo(UPDATED_MONTH_YEAR);
         assertThat(testCustomer.getLicenseNumber()).isEqualTo(UPDATED_LICENSE_NUMBER);
+        assertThat(testCustomer.isShow()).isEqualTo(UPDATED_SHOW);
 
         // Validate the Customer in Elasticsearch
         verify(mockCustomerSearchRepository, times(1)).save(testCustomer);
@@ -1309,8 +1363,6 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].stateProvince").value(hasItem(DEFAULT_STATE_PROVINCE.toString())))
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
-            .andExpect(jsonPath("$.[*].profilePicContentType").value(hasItem(DEFAULT_PROFILE_PIC_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].profilePic").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PIC))))
             .andExpect(jsonPath("$.[*].registered").value(hasItem(DEFAULT_REGISTERED.toString())))
             .andExpect(jsonPath("$.[*].lastactive").value(hasItem(DEFAULT_LASTACTIVE.toString())))
             .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)))
@@ -1319,7 +1371,8 @@ public class CustomerResourceIntTest {
             .andExpect(jsonPath("$.[*].specialities").value(hasItem(DEFAULT_SPECIALITIES.toString())))
             .andExpect(jsonPath("$.[*].trades").value(hasItem(DEFAULT_TRADES.toString())))
             .andExpect(jsonPath("$.[*].monthYear").value(hasItem(DEFAULT_MONTH_YEAR.toString())))
-            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())));
+            .andExpect(jsonPath("$.[*].licenseNumber").value(hasItem(DEFAULT_LICENSE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].show").value(hasItem(DEFAULT_SHOW.booleanValue())));
     }
 
     @Test

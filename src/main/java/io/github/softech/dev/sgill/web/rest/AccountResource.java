@@ -67,8 +67,8 @@ public class AccountResource {
         userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getPhone(), managedUserVM.getStreetaddress(),
             managedUserVM.getPostalcode(), managedUserVM.getCity(), managedUserVM.getStateProvince(),managedUserVM.getCountry(), managedUserVM.getCycledate(),
-            managedUserVM.getMonthYear(), managedUserVM.getLicenseNumber(), managedUserVM.getProfilePicContentType(), managedUserVM.getProfilePic(),
-            managedUserVM.getSpecialities(),managedUserVM.getTrades(),managedUserVM.getAreaserviced(),managedUserVM.getCompanyID());
+            managedUserVM.getMonthYear(), managedUserVM.getLicenseNumber(), managedUserVM.getSpecialities(),managedUserVM.getTrades(),managedUserVM.getAreaserviced(),
+            managedUserVM.getCompany(),managedUserVM.isShow());
         mailService.sendActivationEmail(user);
     }
 

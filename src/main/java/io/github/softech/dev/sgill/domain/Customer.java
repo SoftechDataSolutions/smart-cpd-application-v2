@@ -27,6 +27,7 @@ public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "normalized")
@@ -58,13 +59,6 @@ public class Customer implements Serializable {
     @Column(name = "country", nullable = false)
     private String country;
 
-    @Lob
-    @Column(name = "profile_pic")
-    private byte[] profilePic;
-
-    @Column(name = "profile_pic_content_type")
-    private String profilePicContentType;
-
     @Column(name = "registered")
     private Instant registered;
 
@@ -94,16 +88,17 @@ public class Customer implements Serializable {
     @Column(name = "license_number")
     private String licenseNumber;
 
+    @Column(name = "jhi_show")
+    private Boolean show;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private Company company;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(optional = false)
+    @NotNull
+    @JoinColumn(unique = true)
     private User user;
-
-    public Customer() {
-    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -203,32 +198,6 @@ public class Customer implements Serializable {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public byte[] getProfilePic() {
-        return profilePic;
-    }
-
-    public Customer profilePic(byte[] profilePic) {
-        this.profilePic = profilePic;
-        return this;
-    }
-
-    public void setProfilePic(byte[] profilePic) {
-        this.profilePic = profilePic;
-    }
-
-    public String getProfilePicContentType() {
-        return profilePicContentType;
-    }
-
-    public Customer profilePicContentType(String profilePicContentType) {
-        this.profilePicContentType = profilePicContentType;
-        return this;
-    }
-
-    public void setProfilePicContentType(String profilePicContentType) {
-        this.profilePicContentType = profilePicContentType;
     }
 
     public Instant getRegistered() {
@@ -348,6 +317,19 @@ public class Customer implements Serializable {
         this.licenseNumber = licenseNumber;
     }
 
+    public Boolean isShow() {
+        return show;
+    }
+
+    public Customer show(Boolean show) {
+        this.show = show;
+        return this;
+    }
+
+    public void setShow(Boolean show) {
+        this.show = show;
+    }
+
     public Company getCompany() {
         return company;
     }
@@ -360,16 +342,20 @@ public class Customer implements Serializable {
     public void setCompany(Company company) {
         this.company = company;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
-
 
     public User getUser() {
         return user;
     }
 
+    public Customer user(User user) {
+        this.user = user;
+        return this;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -402,8 +388,6 @@ public class Customer implements Serializable {
             ", city='" + getCity() + "'" +
             ", stateProvince='" + getStateProvince() + "'" +
             ", country='" + getCountry() + "'" +
-            ", profilePic='" + getProfilePic() + "'" +
-            ", profilePicContentType='" + getProfilePicContentType() + "'" +
             ", registered='" + getRegistered() + "'" +
             ", lastactive='" + getLastactive() + "'" +
             ", points=" + getPoints() +
@@ -413,6 +397,7 @@ public class Customer implements Serializable {
             ", trades='" + getTrades() + "'" +
             ", monthYear='" + getMonthYear() + "'" +
             ", licenseNumber='" + getLicenseNumber() + "'" +
+            ", show='" + isShow() + "'" +
             "}";
     }
 }

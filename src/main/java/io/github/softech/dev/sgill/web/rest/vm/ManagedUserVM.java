@@ -39,10 +39,6 @@ public class ManagedUserVM extends UserDTO {
     @NotNull
     private String country;
 
-    private byte[] profilePic;
-
-    private String profilePicContentType;
-
     private ZonedDateTime cycledate;
 
     private String areaserviced;
@@ -60,6 +56,8 @@ public class ManagedUserVM extends UserDTO {
     private Long companyID;
 
     private Company company;
+
+    private boolean show;
 
     public ManagedUserVM() {
         // Empty constructor needed for Jackson.
@@ -119,22 +117,6 @@ public class ManagedUserVM extends UserDTO {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public byte[] getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(byte[] profilePic) {
-        this.profilePic = profilePic;
-    }
-
-    public String getProfilePicContentType() {
-        return profilePicContentType;
-    }
-
-    public void setProfilePicContentType(String profilePicContentType) {
-        this.profilePicContentType = profilePicContentType;
     }
 
     public ZonedDateTime getCycledate() {
@@ -199,6 +181,14 @@ public class ManagedUserVM extends UserDTO {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
     }
 
     @Override

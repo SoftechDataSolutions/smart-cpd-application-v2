@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="smartCpdApp.customer.home.title">Customers</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-customer" [routerLink]="['/customer/new']">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-customer" [routerLink]="['/customer/new']" *jhiHasAnyAuthority="'ROLE_ADMIN'">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down"  jhiTranslate="smartCpdApp.customer.home.createLabel">
             Create new Customer
@@ -10,7 +10,7 @@
     </h2>
     <jhi-alert></jhi-alert>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-6 col-sm-12">
             <form name="searchForm" class="form-inline">
                 <div class="input-group w-100 mt-3">
                     <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'smartCpdApp.customer.home.search' | translate }}">
@@ -25,6 +25,7 @@
         </div>
     </div>
     <br/>
+    <a *jhiHasAnyAuthority="'ROLE_ADMIN'">
     <div class="table-responsive" *ngIf="customers">
         <table class="table table-striped">
             <thead>
@@ -37,7 +38,6 @@
             <th jhiSortBy="city"><span jhiTranslate="smartCpdApp.customer.city">City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="stateProvince"><span jhiTranslate="smartCpdApp.customer.stateProvince">State Province</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="country"><span jhiTranslate="smartCpdApp.customer.country">Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="profilePic"><span jhiTranslate="smartCpdApp.customer.profilePic">Profile Pic</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="registered"><span jhiTranslate="smartCpdApp.customer.registered">Registered</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="lastactive"><span jhiTranslate="smartCpdApp.customer.lastactive">Lastactive</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="points"><span jhiTranslate="smartCpdApp.customer.points">Points</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -47,7 +47,9 @@
             <th jhiSortBy="trades"><span jhiTranslate="smartCpdApp.customer.trades">Trades</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="monthYear"><span jhiTranslate="smartCpdApp.customer.monthYear">Month Year</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="licenseNumber"><span jhiTranslate="smartCpdApp.customer.licenseNumber">License Number</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="show"><span jhiTranslate="smartCpdApp.customer.showdetail">Show</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="company.name"><span jhiTranslate="smartCpdApp.customer.company">Company</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.login"><span jhiTranslate="smartCpdApp.customer.user">User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -61,10 +63,6 @@
                 <td>{{customer.city}}</td>
                 <td>{{customer.stateProvince}}</td>
                 <td>{{customer.country}}</td>
-                <td>
-                    <a *ngIf="customer.profilePic" (click)="openFile(customer.profilePicContentType, customer.profilePic)" jhiTranslate="entity.action.open">open</a>
-                    <span *ngIf="customer.profilePic">{{customer.profilePicContentType}}, {{byteSize(customer.profilePic)}}</span>
-                </td>
                 <td>{{customer.registered | date:'medium'}}</td>
                 <td>{{customer.lastactive | date:'medium'}}</td>
                 <td>{{customer.points}}</td>
@@ -74,10 +72,14 @@
                 <td>{{customer.trades}}</td>
                 <td>{{customer.monthYear}}</td>
                 <td>{{customer.licenseNumber}}</td>
+                <td>{{customer.show}}</td>
                 <td>
                     <div *ngIf="customer.company">
                         <a [routerLink]="['../company', customer.company?.id, 'view' ]" >{{customer.company?.name}}</a>
                     </div>
+                </td>
+                <td>
+                    {{customer.user?.login}}
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
@@ -107,4 +109,5 @@
             </tbody>
         </table>
     </div>
+    </a>
 </div>
