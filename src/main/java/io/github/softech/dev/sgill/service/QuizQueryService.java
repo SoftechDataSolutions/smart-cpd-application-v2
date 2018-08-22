@@ -83,6 +83,9 @@ public class QuizQueryService extends QueryService<Quiz> {
             if (criteria.getPassingscore() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPassingscore(), Quiz_.passingscore));
             }
+            if (criteria.getQuestionId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionId(), Quiz_.questions, Question_.id));
+            }
         }
         return specification;
     }

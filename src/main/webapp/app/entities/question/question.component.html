@@ -32,7 +32,6 @@
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="textQuestion"><span jhiTranslate="smartCpdApp.question.textQuestion">Text Question</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="difficulty"><span jhiTranslate="smartCpdApp.question.difficulty">Difficulty</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="quiz.name"><span jhiTranslate="smartCpdApp.question.quiz">Quiz</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -41,11 +40,6 @@
                 <td><a [routerLink]="['/question', question.id, 'view' ]">{{question.id}}</a></td>
                 <td>{{question.textQuestion}}</td>
                 <td>{{question.difficulty}}</td>
-                <td>
-                    <div *ngIf="question.quiz">
-                        <a [routerLink]="['../quiz', question.quiz?.id, 'view' ]" >{{question.quiz?.name}}</a>
-                    </div>
-                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

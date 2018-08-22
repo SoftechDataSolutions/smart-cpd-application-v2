@@ -3,7 +3,6 @@ package io.github.softech.dev.sgill.web.rest;
 import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Choice;
-import io.github.softech.dev.sgill.domain.Question;
 import io.github.softech.dev.sgill.repository.ChoiceRepository;
 import io.github.softech.dev.sgill.repository.search.ChoiceSearchRepository;
 import io.github.softech.dev.sgill.service.ChoiceService;
@@ -289,25 +288,6 @@ public class ChoiceResourceIntTest {
         // Get all the choiceList where isanswer is null
         defaultChoiceShouldNotBeFound("isanswer.specified=false");
     }
-
-    @Test
-    @Transactional
-    public void getAllChoicesByQuestionIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Question question = QuestionResourceIntTest.createEntity(em);
-        em.persist(question);
-        em.flush();
-        choice.setQuestion(question);
-        choiceRepository.saveAndFlush(choice);
-        Long questionId = question.getId();
-
-        // Get all the choiceList where question equals to questionId
-        defaultChoiceShouldBeFound("questionId.equals=" + questionId);
-
-        // Get all the choiceList where question equals to questionId + 1
-        defaultChoiceShouldNotBeFound("questionId.equals=" + (questionId + 1));
-    }
-
     /**
      * Executes the search, and checks that the default entity is returned
      */

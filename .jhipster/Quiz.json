@@ -1,5 +1,14 @@
 {
-    "name": "Quiz",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "question",
+            "otherEntityName": "question",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "quiz"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
@@ -17,15 +26,11 @@
             "fieldType": "Integer"
         }
     ],
-    "relationships": [],
     "changelogDate": "20180819063645",
-    "entityTableName": "quiz",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "quiz",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

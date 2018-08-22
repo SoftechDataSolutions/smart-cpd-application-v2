@@ -2,12 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { JhiAlertService } from 'ng-jhipster';
 
 import { IQuestion } from 'app/shared/model/question.model';
 import { QuestionService } from './question.service';
-import { IQuiz } from 'app/shared/model/quiz.model';
-import { QuizService } from 'app/entities/quiz';
 
 @Component({
     selector: 'jhi-question-update',
@@ -17,26 +14,13 @@ export class QuestionUpdateComponent implements OnInit {
     private _question: IQuestion;
     isSaving: boolean;
 
-    quizzes: IQuiz[];
-
-    constructor(
-        private jhiAlertService: JhiAlertService,
-        private questionService: QuestionService,
-        private quizService: QuizService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+    constructor(private questionService: QuestionService, private activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ question }) => {
             this.question = question;
         });
-        this.quizService.query().subscribe(
-            (res: HttpResponse<IQuiz[]>) => {
-                this.quizzes = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
     }
 
     previousState() {
@@ -63,14 +47,6 @@ export class QuestionUpdateComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
-    }
-
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
-    }
-
-    trackQuizById(index: number, item: IQuiz) {
-        return item.id;
     }
     get question() {
         return this._question;

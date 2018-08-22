@@ -80,9 +80,6 @@ public class ChoiceQueryService extends QueryService<Choice> {
             if (criteria.getIsanswer() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsanswer(), Choice_.isanswer));
             }
-            if (criteria.getQuestionId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionId(), Choice_.question, Question_.id));
-            }
         }
         return specification;
     }

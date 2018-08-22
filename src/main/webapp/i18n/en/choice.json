@@ -18,8 +18,7 @@
                 "title": "Choice"
             },
             "textChoice": "Text Choice",
-            "isanswer": "Isanswer",
-            "question": "Question"
+            "isanswer": "Isanswer"
         }
     }
 }

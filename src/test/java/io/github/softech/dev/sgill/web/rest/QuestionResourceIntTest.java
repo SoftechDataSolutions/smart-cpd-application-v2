@@ -3,7 +3,7 @@ package io.github.softech.dev.sgill.web.rest;
 import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Question;
-import io.github.softech.dev.sgill.domain.Quiz;
+import io.github.softech.dev.sgill.domain.Choice;
 import io.github.softech.dev.sgill.repository.QuestionRepository;
 import io.github.softech.dev.sgill.repository.search.QuestionSearchRepository;
 import io.github.softech.dev.sgill.service.QuestionService;
@@ -292,20 +292,20 @@ public class QuestionResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllQuestionsByQuizIsEqualToSomething() throws Exception {
+    public void getAllQuestionsByChoiceIsEqualToSomething() throws Exception {
         // Initialize the database
-        Quiz quiz = QuizResourceIntTest.createEntity(em);
-        em.persist(quiz);
+        Choice choice = ChoiceResourceIntTest.createEntity(em);
+        em.persist(choice);
         em.flush();
-        question.setQuiz(quiz);
+        question.addChoice(choice);
         questionRepository.saveAndFlush(question);
-        Long quizId = quiz.getId();
+        Long choiceId = choice.getId();
 
-        // Get all the questionList where quiz equals to quizId
-        defaultQuestionShouldBeFound("quizId.equals=" + quizId);
+        // Get all the questionList where choice equals to choiceId
+        defaultQuestionShouldBeFound("choiceId.equals=" + choiceId);
 
-        // Get all the questionList where quiz equals to quizId + 1
-        defaultQuestionShouldNotBeFound("quizId.equals=" + (quizId + 1));
+        // Get all the questionList where choice equals to choiceId + 1
+        defaultQuestionShouldNotBeFound("choiceId.equals=" + (choiceId + 1));
     }
 
     /**

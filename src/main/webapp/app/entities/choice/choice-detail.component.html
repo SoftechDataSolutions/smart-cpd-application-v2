@@ -13,12 +13,6 @@
                 <dd>
                     <span>{{choice.isanswer}}</span>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.choice.question">Question</span></dt>
-                <dd>
-                    <div *ngIf="choice.question">
-                        <a [routerLink]="['/question', choice.question?.id, 'view']">{{choice.question?.textQuestion}}</a>
-                    </div>
-                </dd>
             </dl>
 
             <button type="submit"

@@ -1,5 +1,7 @@
 {
-    "name": "Choice",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
     "fields": [
         {
             "fieldName": "textChoice",
@@ -13,22 +15,11 @@
             "fieldType": "Boolean"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "question",
-            "otherEntityName": "question",
-            "otherEntityField": "textQuestion"
-        }
-    ],
     "changelogDate": "20180819063647",
-    "entityTableName": "choice",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "choice",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

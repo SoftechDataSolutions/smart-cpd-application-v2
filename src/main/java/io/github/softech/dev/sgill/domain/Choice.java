@@ -1,6 +1,5 @@
 package io.github.softech.dev.sgill.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,10 +31,6 @@ public class Choice implements Serializable {
 
     @Column(name = "isanswer")
     private Boolean isanswer;
-
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Question question;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -70,19 +65,6 @@ public class Choice implements Serializable {
 
     public void setIsanswer(Boolean isanswer) {
         this.isanswer = isanswer;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public Choice question(Question question) {
-        this.question = question;
-        return this;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

@@ -1,5 +1,14 @@
 {
-    "name": "Question",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "choice",
+            "otherEntityName": "choice",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "question"
+        }
+    ],
     "fields": [
         {
             "fieldName": "textQuestion",
@@ -13,22 +22,11 @@
             "fieldType": "String"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "quiz",
-            "otherEntityName": "quiz",
-            "otherEntityField": "name"
-        }
-    ],
     "changelogDate": "20180819063646",
-    "entityTableName": "question",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "question",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

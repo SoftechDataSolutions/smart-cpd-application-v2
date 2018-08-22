@@ -1,5 +1,6 @@
 package io.github.softech.dev.sgill.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,6 +9,8 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -34,6 +37,10 @@ public class Quiz implements Serializable {
 
     @Column(name = "passingscore")
     private Integer passingscore;
+
+    @OneToMany(mappedBy = "quiz")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<Question> questions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -81,6 +88,31 @@ public class Quiz implements Serializable {
 
     public void setPassingscore(Integer passingscore) {
         this.passingscore = passingscore;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public Quiz questions(Set<Question> questions) {
+        this.questions = questions;
+        return this;
+    }
+
+    public Quiz addQuestion(Question question) {
+        this.questions.add(question);
+        question.setQuiz(this);
+        return this;
+    }
+
+    public Quiz removeQuestion(Question question) {
+        this.questions.remove(question);
+        question.setQuiz(null);
+        return this;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
