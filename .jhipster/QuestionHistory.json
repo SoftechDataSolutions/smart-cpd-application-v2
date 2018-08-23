@@ -1,15 +1,6 @@
 {
-    "name": "QuestionHistory",
-    "fields": [
-        {
-            "fieldName": "timestamp",
-            "fieldType": "Instant"
-        },
-        {
-            "fieldName": "correct",
-            "fieldType": "Boolean"
-        }
-    ],
+    "fluentMethods": true,
+    "clientRootFolder": "",
     "relationships": [
         {
             "relationshipType": "many-to-one",
@@ -22,16 +13,29 @@
             "relationshipName": "question",
             "otherEntityName": "question",
             "otherEntityField": "textQuestion"
+        },
+        {
+            "relationshipName": "choice",
+            "otherEntityName": "choice",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "textChoice"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "timestamp",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "correct",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180819063649",
-    "entityTableName": "question_history",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "question_history",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

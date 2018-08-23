@@ -15,7 +15,7 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity QuestionHistory.
+        Added the entity Questionhistory.
     -->
     <changeSet id="20180819063649-1" author="jhipster">
         <createTable tableName="question_history">
@@ -36,6 +36,10 @@
 
             <column name="question_id" type="bigint">
                 <constraints nullable="true" />
+            </column>
+
+            <column name="choice_id" type="bigint">
+                <constraints nullable="false" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->

@@ -4,21 +4,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!--
-        Added the constraints for entity QuestionHistory.
+        Added the constraints for entity Questionhistory.
     -->
     <changeSet id="20180819063649-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="customer_id"
                                  baseTableName="question_history"
-                                 constraintName="fk_question_history_customer_id"
+                                 constraintName="fk_questionhistory_customer_id"
                                  referencedColumnNames="id"
                                  referencedTableName="customer"/>
 
         <addForeignKeyConstraint baseColumnNames="question_id"
                                  baseTableName="question_history"
-                                 constraintName="fk_question_history_question_id"
+                                 constraintName="fk_questionhistory_question_id"
                                  referencedColumnNames="id"
                                  referencedTableName="question"/>
+
+        <addForeignKeyConstraint baseColumnNames="choice_id"
+                                 baseTableName="question_history"
+                                 constraintName="fk_questionhistory_choice_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="choice"/>
 
     </changeSet>
 </databaseChangeLog>

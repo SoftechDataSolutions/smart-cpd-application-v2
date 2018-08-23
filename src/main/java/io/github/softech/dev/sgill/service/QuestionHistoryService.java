@@ -13,15 +13,15 @@ import java.util.Optional;
 public interface QuestionHistoryService {
 
     /**
-     * Save a questionHistory.
+     * Save a questionhistory.
      *
-     * @param questionHistory the entity to save
+     * @param questionhistory the entity to save
      * @return the persisted entity
      */
-    QuestionHistory save(QuestionHistory questionHistory);
+    QuestionHistory save(QuestionHistory questionhistory);
 
     /**
-     * Get all the questionHistories.
+     * Get all the questionhistories.
      *
      * @param pageable the pagination information
      * @return the list of entities
@@ -30,7 +30,7 @@ public interface QuestionHistoryService {
 
 
     /**
-     * Get the "id" questionHistory.
+     * Get the "id" questionhistory.
      *
      * @param id the id of the entity
      * @return the entity
@@ -38,14 +38,14 @@ public interface QuestionHistoryService {
     Optional<QuestionHistory> findOne(Long id);
 
     /**
-     * Delete the "id" questionHistory.
+     * Delete the "id" questionhistory.
      *
      * @param id the id of the entity
      */
     void delete(Long id);
 
     /**
-     * Search for the questionHistory corresponding to the query.
+     * Search for the questionhistory corresponding to the query.
      *
      * @param query the query of the search
      * 

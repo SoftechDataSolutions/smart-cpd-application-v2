@@ -56,6 +56,9 @@ public class QuestionResourceIntTest {
     private static final String DEFAULT_DIFFICULTY = "AAAAAAAAAA";
     private static final String UPDATED_DIFFICULTY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_RESTUDY = "AAAAAAAAAA";
+    private static final String UPDATED_RESTUDY = "BBBBBBBBBB";
+
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -111,7 +114,8 @@ public class QuestionResourceIntTest {
     public static Question createEntity(EntityManager em) {
         Question question = new Question()
             .textQuestion(DEFAULT_TEXT_QUESTION)
-            .difficulty(DEFAULT_DIFFICULTY);
+            .difficulty(DEFAULT_DIFFICULTY)
+            .restudy(DEFAULT_RESTUDY);
         return question;
     }
 
@@ -137,6 +141,7 @@ public class QuestionResourceIntTest {
         Question testQuestion = questionList.get(questionList.size() - 1);
         assertThat(testQuestion.getTextQuestion()).isEqualTo(DEFAULT_TEXT_QUESTION);
         assertThat(testQuestion.getDifficulty()).isEqualTo(DEFAULT_DIFFICULTY);
+        assertThat(testQuestion.getRestudy()).isEqualTo(DEFAULT_RESTUDY);
 
         // Validate the Question in Elasticsearch
         verify(mockQuestionSearchRepository, times(1)).save(testQuestion);
@@ -194,7 +199,8 @@ public class QuestionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
-            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())));
+            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
     }
     
 
@@ -210,7 +216,8 @@ public class QuestionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(question.getId().intValue()))
             .andExpect(jsonPath("$.textQuestion").value(DEFAULT_TEXT_QUESTION.toString()))
-            .andExpect(jsonPath("$.difficulty").value(DEFAULT_DIFFICULTY.toString()));
+            .andExpect(jsonPath("$.difficulty").value(DEFAULT_DIFFICULTY.toString()))
+            .andExpect(jsonPath("$.restudy").value(DEFAULT_RESTUDY.toString()));
     }
 
     @Test
@@ -293,6 +300,45 @@ public class QuestionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllQuestionsByRestudyIsEqualToSomething() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where restudy equals to DEFAULT_RESTUDY
+        defaultQuestionShouldBeFound("restudy.equals=" + DEFAULT_RESTUDY);
+
+        // Get all the questionList where restudy equals to UPDATED_RESTUDY
+        defaultQuestionShouldNotBeFound("restudy.equals=" + UPDATED_RESTUDY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllQuestionsByRestudyIsInShouldWork() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where restudy in DEFAULT_RESTUDY or UPDATED_RESTUDY
+        defaultQuestionShouldBeFound("restudy.in=" + DEFAULT_RESTUDY + "," + UPDATED_RESTUDY);
+
+        // Get all the questionList where restudy equals to UPDATED_RESTUDY
+        defaultQuestionShouldNotBeFound("restudy.in=" + UPDATED_RESTUDY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllQuestionsByRestudyIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where restudy is not null
+        defaultQuestionShouldBeFound("restudy.specified=true");
+
+        // Get all the questionList where restudy is null
+        defaultQuestionShouldNotBeFound("restudy.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllQuestionsByChoiceIsEqualToSomething() throws Exception {
         // Initialize the database
         Choice choice = ChoiceResourceIntTest.createEntity(em);
@@ -337,7 +383,8 @@ public class QuestionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
-            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())));
+            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
     }
 
     /**
@@ -375,7 +422,8 @@ public class QuestionResourceIntTest {
         em.detach(updatedQuestion);
         updatedQuestion
             .textQuestion(UPDATED_TEXT_QUESTION)
-            .difficulty(UPDATED_DIFFICULTY);
+            .difficulty(UPDATED_DIFFICULTY)
+            .restudy(UPDATED_RESTUDY);
 
         restQuestionMockMvc.perform(put("/api/questions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -388,6 +436,7 @@ public class QuestionResourceIntTest {
         Question testQuestion = questionList.get(questionList.size() - 1);
         assertThat(testQuestion.getTextQuestion()).isEqualTo(UPDATED_TEXT_QUESTION);
         assertThat(testQuestion.getDifficulty()).isEqualTo(UPDATED_DIFFICULTY);
+        assertThat(testQuestion.getRestudy()).isEqualTo(UPDATED_RESTUDY);
 
         // Validate the Question in Elasticsearch
         verify(mockQuestionSearchRepository, times(1)).save(testQuestion);
@@ -448,7 +497,8 @@ public class QuestionResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
-            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())));
+            .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
     }
 
     @Test

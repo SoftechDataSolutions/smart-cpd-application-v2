@@ -31,13 +31,13 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
 
     private final Logger log = LoggerFactory.getLogger(QuestionHistoryQueryService.class);
 
-    private final QuestionHistoryRepository questionHistoryRepository;
+    private final QuestionHistoryRepository questionhistoryRepository;
 
-    private final QuestionHistorySearchRepository questionHistorySearchRepository;
+    private final QuestionHistorySearchRepository questionhistorySearchRepository;
 
-    public QuestionHistoryQueryService(QuestionHistoryRepository questionHistoryRepository, QuestionHistorySearchRepository questionHistorySearchRepository) {
-        this.questionHistoryRepository = questionHistoryRepository;
-        this.questionHistorySearchRepository = questionHistorySearchRepository;
+    public QuestionHistoryQueryService(QuestionHistoryRepository questionhistoryRepository, QuestionHistorySearchRepository questionhistorySearchRepository) {
+        this.questionhistoryRepository = questionhistoryRepository;
+        this.questionhistorySearchRepository = questionhistorySearchRepository;
     }
 
     /**
@@ -49,7 +49,7 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
     public List<QuestionHistory> findByCriteria(QuestionHistoryCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<QuestionHistory> specification = createSpecification(criteria);
-        return questionHistoryRepository.findAll(specification);
+        return questionhistoryRepository.findAll(specification);
     }
 
     /**
@@ -62,7 +62,7 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
     public Page<QuestionHistory> findByCriteria(QuestionHistoryCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<QuestionHistory> specification = createSpecification(criteria);
-        return questionHistoryRepository.findAll(specification, page);
+        return questionhistoryRepository.findAll(specification, page);
     }
 
     /**
@@ -85,6 +85,9 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
             }
             if (criteria.getQuestionId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionId(), QuestionHistory_.question, Question_.id));
+            }
+            if (criteria.getChoiceId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getChoiceId(), QuestionHistory_.choice, Choice_.id));
             }
         }
         return specification;

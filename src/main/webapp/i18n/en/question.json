@@ -19,6 +19,7 @@
             },
             "textQuestion": "Text Question",
             "difficulty": "Difficulty",
+            "restudy": "Restudy",
             "choice": "Choice",
             "quiz": "Quiz"
         }

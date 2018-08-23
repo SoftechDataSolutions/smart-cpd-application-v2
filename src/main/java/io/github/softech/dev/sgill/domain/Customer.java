@@ -1,5 +1,6 @@
 package io.github.softech.dev.sgill.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -63,6 +64,7 @@ public class Customer implements Serializable {
     private Instant registered;
 
     @Column(name = "lastactive")
+    @JsonIgnoreProperties
     private Instant lastactive;
 
     @Column(name = "points")
@@ -99,6 +101,9 @@ public class Customer implements Serializable {
     @NotNull
     @JoinColumn(unique = true)
     private User user;
+
+    public Customer() {
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

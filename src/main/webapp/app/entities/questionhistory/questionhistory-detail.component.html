@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="questionhistory">
+            <h2><span jhiTranslate="smartCpdApp.questionhistory.detail.title">Questionhistory</span> {{questionhistory.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="smartCpdApp.questionhistory.timestamp">Timestamp</span></dt>
+                <dd>
+                    <span>{{questionhistory.timestamp}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.questionhistory.correct">Correct</span></dt>
+                <dd>
+                    <span>{{questionhistory.correct}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.questionhistory.customer">Customer</span></dt>
+                <dd>
+                    <div *ngIf="questionhistory.customer">
+                        <a [routerLink]="['/customer', questionhistory.customer?.id, 'view']">{{questionhistory.customer?.normalized}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.questionhistory.question">Question</span></dt>
+                <dd>
+                    <div *ngIf="questionhistory.question">
+                        <a [routerLink]="['/question', questionhistory.question?.id, 'view']">{{questionhistory.question?.textQuestion}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.questionhistory.choice">Choice</span></dt>
+                <dd>
+                    <div *ngIf="questionhistory.choice">
+                        <a [routerLink]="['/choice', questionhistory.choice?.id, 'view']">{{questionhistory.choice?.textChoice}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/questionhistory', questionhistory.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

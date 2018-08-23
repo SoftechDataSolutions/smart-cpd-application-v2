@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
@@ -39,6 +40,11 @@ public class QuestionHistory implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private Question question;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties("")
+    private Choice choice;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -100,6 +106,19 @@ public class QuestionHistory implements Serializable {
     public void setQuestion(Question question) {
         this.question = question;
     }
+
+    public Choice getChoice() {
+        return choice;
+    }
+
+    public QuestionHistory choice(Choice choice) {
+        this.choice = choice;
+        return this;
+    }
+
+    public void setChoice(Choice choice) {
+        this.choice = choice;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -110,11 +129,11 @@ public class QuestionHistory implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionHistory questionHistory = (QuestionHistory) o;
-        if (questionHistory.getId() == null || getId() == null) {
+        QuestionHistory questionhistory = (QuestionHistory) o;
+        if (questionhistory.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), questionHistory.getId());
+        return Objects.equals(getId(), questionhistory.getId());
     }
 
     @Override

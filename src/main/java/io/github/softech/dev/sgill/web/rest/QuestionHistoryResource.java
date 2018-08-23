@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -36,117 +37,117 @@ public class QuestionHistoryResource {
 
     private final Logger log = LoggerFactory.getLogger(QuestionHistoryResource.class);
 
-    private static final String ENTITY_NAME = "questionHistory";
+    private static final String ENTITY_NAME = "questionhistory";
 
-    private final QuestionHistoryService questionHistoryService;
+    private final QuestionHistoryService questionhistoryService;
 
-    private final QuestionHistoryQueryService questionHistoryQueryService;
+    private final QuestionHistoryQueryService questionhistoryQueryService;
 
-    public QuestionHistoryResource(QuestionHistoryService questionHistoryService, QuestionHistoryQueryService questionHistoryQueryService) {
-        this.questionHistoryService = questionHistoryService;
-        this.questionHistoryQueryService = questionHistoryQueryService;
+    public QuestionHistoryResource(QuestionHistoryService questionhistoryService, QuestionHistoryQueryService questionhistoryQueryService) {
+        this.questionhistoryService = questionhistoryService;
+        this.questionhistoryQueryService = questionhistoryQueryService;
     }
 
     /**
-     * POST  /question-histories : Create a new questionHistory.
+     * POST  /questionhistories : Create a new questionhistory.
      *
-     * @param questionHistory the questionHistory to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new questionHistory, or with status 400 (Bad Request) if the questionHistory has already an ID
+     * @param questionhistory the questionhistory to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new questionhistory, or with status 400 (Bad Request) if the questionhistory has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/question-histories")
+    @PostMapping("/questionhistories")
     @Timed
-    public ResponseEntity<QuestionHistory> createQuestionHistory(@RequestBody QuestionHistory questionHistory) throws URISyntaxException {
-        log.debug("REST request to save QuestionHistory : {}", questionHistory);
-        if (questionHistory.getId() != null) {
-            throw new BadRequestAlertException("A new questionHistory cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<QuestionHistory> createQuestionHistory(@Valid @RequestBody QuestionHistory questionhistory) throws URISyntaxException {
+        log.debug("REST request to save QuestionHistory : {}", questionhistory);
+        if (questionhistory.getId() != null) {
+            throw new BadRequestAlertException("A new questionhistory cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        QuestionHistory result = questionHistoryService.save(questionHistory);
-        return ResponseEntity.created(new URI("/api/question-histories/" + result.getId()))
+        QuestionHistory result = questionhistoryService.save(questionhistory);
+        return ResponseEntity.created(new URI("/api/questionhistories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /question-histories : Updates an existing questionHistory.
+     * PUT  /questionhistories : Updates an existing questionhistory.
      *
-     * @param questionHistory the questionHistory to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated questionHistory,
-     * or with status 400 (Bad Request) if the questionHistory is not valid,
-     * or with status 500 (Internal Server Error) if the questionHistory couldn't be updated
+     * @param questionhistory the questionhistory to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated questionhistory,
+     * or with status 400 (Bad Request) if the questionhistory is not valid,
+     * or with status 500 (Internal Server Error) if the questionhistory couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/question-histories")
+    @PutMapping("/questionhistories")
     @Timed
-    public ResponseEntity<QuestionHistory> updateQuestionHistory(@RequestBody QuestionHistory questionHistory) throws URISyntaxException {
-        log.debug("REST request to update QuestionHistory : {}", questionHistory);
-        if (questionHistory.getId() == null) {
+    public ResponseEntity<QuestionHistory> updateQuestionHistory(@Valid @RequestBody QuestionHistory questionhistory) throws URISyntaxException {
+        log.debug("REST request to update QuestionHistory : {}", questionhistory);
+        if (questionhistory.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        QuestionHistory result = questionHistoryService.save(questionHistory);
+        QuestionHistory result = questionhistoryService.save(questionhistory);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, questionHistory.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, questionhistory.getId().toString()))
             .body(result);
     }
 
     /**
-     * GET  /question-histories : get all the questionHistories.
+     * GET  /questionhistories : get all the questionhistories.
      *
      * @param pageable the pagination information
      * @param criteria the criterias which the requested entities should match
-     * @return the ResponseEntity with status 200 (OK) and the list of questionHistories in body
+     * @return the ResponseEntity with status 200 (OK) and the list of questionhistories in body
      */
-    @GetMapping("/question-histories")
+    @GetMapping("/questionhistories")
     @Timed
-    public ResponseEntity<List<QuestionHistory>> getAllQuestionHistories(QuestionHistoryCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get QuestionHistories by criteria: {}", criteria);
-        Page<QuestionHistory> page = questionHistoryQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/question-histories");
+    public ResponseEntity<List<QuestionHistory>> getAllQuestionhistories(QuestionHistoryCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Questionhistories by criteria: {}", criteria);
+        Page<QuestionHistory> page = questionhistoryQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/questionhistories");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
-     * GET  /question-histories/:id : get the "id" questionHistory.
+     * GET  /questionhistories/:id : get the "id" questionhistory.
      *
-     * @param id the id of the questionHistory to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the questionHistory, or with status 404 (Not Found)
+     * @param id the id of the questionhistory to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the questionhistory, or with status 404 (Not Found)
      */
-    @GetMapping("/question-histories/{id}")
+    @GetMapping("/questionhistories/{id}")
     @Timed
     public ResponseEntity<QuestionHistory> getQuestionHistory(@PathVariable Long id) {
         log.debug("REST request to get QuestionHistory : {}", id);
-        Optional<QuestionHistory> questionHistory = questionHistoryService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(questionHistory);
+        Optional<QuestionHistory> questionhistory = questionhistoryService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(questionhistory);
     }
 
     /**
-     * DELETE  /question-histories/:id : delete the "id" questionHistory.
+     * DELETE  /questionhistories/:id : delete the "id" questionhistory.
      *
-     * @param id the id of the questionHistory to delete
+     * @param id the id of the questionhistory to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/question-histories/{id}")
+    @DeleteMapping("/questionhistories/{id}")
     @Timed
     public ResponseEntity<Void> deleteQuestionHistory(@PathVariable Long id) {
         log.debug("REST request to delete QuestionHistory : {}", id);
-        questionHistoryService.delete(id);
+        questionhistoryService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
     /**
-     * SEARCH  /_search/question-histories?query=:query : search for the questionHistory corresponding
+     * SEARCH  /_search/questionhistories?query=:query : search for the questionhistory corresponding
      * to the query.
      *
-     * @param query the query of the questionHistory search
+     * @param query the query of the questionhistory search
      * @param pageable the pagination information
      * @return the result of the search
      */
-    @GetMapping("/_search/question-histories")
+    @GetMapping("/_search/questionhistories")
     @Timed
-    public ResponseEntity<List<QuestionHistory>> searchQuestionHistories(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of QuestionHistories for query {}", query);
-        Page<QuestionHistory> page = questionHistoryService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/question-histories");
+    public ResponseEntity<List<QuestionHistory>> searchQuestionhistories(@RequestParam String query, Pageable pageable) {
+        log.debug("REST request to search for a page of Questionhistories for query {}", query);
+        Page<QuestionHistory> page = questionhistoryService.search(query, pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/questionhistories");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

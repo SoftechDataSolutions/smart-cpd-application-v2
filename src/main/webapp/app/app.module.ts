@@ -18,6 +18,7 @@ import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
+import { QuizFinalComponent } from './quiz-final/quiz-final.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,15 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         SmartCpdEntityModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
-    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+    declarations: [
+        JhiMainComponent,
+        NavbarComponent,
+        ErrorComponent,
+        PageRibbonComponent,
+        ActiveMenuDirective,
+        FooterComponent,
+        QuizFinalComponent
+    ],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,

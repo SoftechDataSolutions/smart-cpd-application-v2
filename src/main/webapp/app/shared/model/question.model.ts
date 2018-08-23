@@ -5,6 +5,7 @@ export interface IQuestion {
     id?: number;
     textQuestion?: string;
     difficulty?: string;
+    restudy?: string;
     choices?: IChoice[];
     quiz?: IQuiz;
 }
@@ -14,6 +15,7 @@ export class Question implements IQuestion {
         public id?: number,
         public textQuestion?: string,
         public difficulty?: string,
+        public restudy?: string,
         public choices?: IChoice[],
         public quiz?: IQuiz
     ) {}

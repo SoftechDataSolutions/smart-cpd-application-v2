@@ -15,10 +15,10 @@ import io.github.jhipster.service.filter.InstantFilter;
 
 
 /**
- * Criteria class for the QuestionHistory entity. This class is used in QuestionHistoryResource to
+ * Criteria class for the Questionhistory entity. This class is used in QuestionhistoryResource to
  * receive all the possible filtering options from the Http GET request parameters.
  * For example the following could be a valid requests:
- * <code> /question-histories?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
+ * <code> /questionhistories?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
@@ -35,6 +35,8 @@ public class QuestionHistoryCriteria implements Serializable {
     private LongFilter customerId;
 
     private LongFilter questionId;
+
+    private LongFilter choiceId;
 
     public QuestionHistoryCriteria() {
     }
@@ -79,6 +81,14 @@ public class QuestionHistoryCriteria implements Serializable {
         this.questionId = questionId;
     }
 
+    public LongFilter getChoiceId() {
+        return choiceId;
+    }
+
+    public void setChoiceId(LongFilter choiceId) {
+        this.choiceId = choiceId;
+    }
+
     @Override
     public String toString() {
         return "QuestionHistoryCriteria{" +
@@ -87,6 +97,7 @@ public class QuestionHistoryCriteria implements Serializable {
                 (correct != null ? "correct=" + correct + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (questionId != null ? "questionId=" + questionId + ", " : "") +
+                (choiceId != null ? "choiceId=" + choiceId + ", " : "") +
             "}";
     }
 

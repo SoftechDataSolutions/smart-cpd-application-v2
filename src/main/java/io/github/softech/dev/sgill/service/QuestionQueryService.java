@@ -80,6 +80,9 @@ public class QuestionQueryService extends QueryService<Question> {
             if (criteria.getDifficulty() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDifficulty(), Question_.difficulty));
             }
+            if (criteria.getRestudy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getRestudy(), Question_.restudy));
+            }
             if (criteria.getChoiceId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getChoiceId(), Question_.choices, Choice_.id));
             }

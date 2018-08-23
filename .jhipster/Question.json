@@ -26,6 +26,10 @@
         {
             "fieldName": "difficulty",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "restudy",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180819063646",

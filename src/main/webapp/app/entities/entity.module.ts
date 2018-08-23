@@ -18,6 +18,7 @@ import { SmartCpdOrdersModule } from './orders/orders.module';
 import { SmartCpdCartModule } from './cart/cart.module';
 import { SmartCpdTimeCourseLogModule } from './time-course-log/time-course-log.module';
 import { SmartCpdServicelistModule } from './servicelist/servicelist.module';
+import { SmartCpdQuestionhistoryModule } from './questionhistory/questionhistory.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -41,6 +42,7 @@ import { SmartCpdServicelistModule } from './servicelist/servicelist.module';
         SmartCpdCartModule,
         SmartCpdTimeCourseLogModule,
         SmartCpdServicelistModule,
+        SmartCpdQuestionhistoryModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

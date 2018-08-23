@@ -32,6 +32,8 @@ public class QuestionCriteria implements Serializable {
 
     private StringFilter difficulty;
 
+    private StringFilter restudy;
+
     private LongFilter choiceId;
 
     private LongFilter quizId;
@@ -63,6 +65,14 @@ public class QuestionCriteria implements Serializable {
         this.difficulty = difficulty;
     }
 
+    public StringFilter getRestudy() {
+        return restudy;
+    }
+
+    public void setRestudy(StringFilter restudy) {
+        this.restudy = restudy;
+    }
+
     public LongFilter getChoiceId() {
         return choiceId;
     }
@@ -85,6 +95,7 @@ public class QuestionCriteria implements Serializable {
                 (id != null ? "id=" + id + ", " : "") +
                 (textQuestion != null ? "textQuestion=" + textQuestion + ", " : "") +
                 (difficulty != null ? "difficulty=" + difficulty + ", " : "") +
+                (restudy != null ? "restudy=" + restudy + ", " : "") +
                 (choiceId != null ? "choiceId=" + choiceId + ", " : "") +
                 (quizId != null ? "quizId=" + quizId + ", " : "") +
             "}";

@@ -36,12 +36,15 @@ public class Question implements Serializable {
     @Column(name = "difficulty")
     private String difficulty;
 
+    @Column(name = "restudy")
+    private String restudy;
+
     @OneToMany(mappedBy = "question")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Choice> choices = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties("questions")
+    @JsonIgnoreProperties("")
     private Quiz quiz;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -77,6 +80,19 @@ public class Question implements Serializable {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getRestudy() {
+        return restudy;
+    }
+
+    public Question restudy(String restudy) {
+        this.restudy = restudy;
+        return this;
+    }
+
+    public void setRestudy(String restudy) {
+        this.restudy = restudy;
     }
 
     public Set<Choice> getChoices() {
@@ -144,6 +160,7 @@ public class Question implements Serializable {
             "id=" + getId() +
             ", textQuestion='" + getTextQuestion() + "'" +
             ", difficulty='" + getDifficulty() + "'" +
+            ", restudy='" + getRestudy() + "'" +
             "}";
     }
 }
