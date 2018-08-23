@@ -26,6 +26,10 @@
                 "timeCourseLog": "Time Course Log",
                 "servicelist": "Servicelist",
                 "questionhistory": "QuestionHistory",
+                "quizApp": "Quiz App",
+                "questionhistory": "QuestionHistory",
+                "questionhistory": "QuestionHistory",
+                "quizapp": "QuizApp",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

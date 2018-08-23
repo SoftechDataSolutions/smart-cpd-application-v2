@@ -10,19 +10,19 @@
         
         <addForeignKeyConstraint baseColumnNames="customer_id"
                                  baseTableName="question_history"
-                                 constraintName="fk_questionhistory_customer_id"
+                                 constraintName="fk_question_history_customer_id"
                                  referencedColumnNames="id"
                                  referencedTableName="customer"/>
 
         <addForeignKeyConstraint baseColumnNames="question_id"
                                  baseTableName="question_history"
-                                 constraintName="fk_questionhistory_question_id"
+                                 constraintName="fk_question_history_question_id"
                                  referencedColumnNames="id"
                                  referencedTableName="question"/>
 
         <addForeignKeyConstraint baseColumnNames="choice_id"
                                  baseTableName="question_history"
-                                 constraintName="fk_questionhistory_choice_id"
+                                 constraintName="fk_question_history_choice_id"
                                  referencedColumnNames="id"
                                  referencedTableName="choice"/>
 

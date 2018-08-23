@@ -5,20 +5,20 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
- * A QuestionHistory.
+ * A QuizApp.
  */
 @Entity
-@Table(name = "question_history")
+@Table(name = "quiz_app")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "questionhistory")
-public class QuestionHistory implements Serializable {
+@Document(indexName = "quizapp")
+public class QuizApp implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,23 +26,20 @@ public class QuestionHistory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "jhi_timestamp")
-    private Instant timestamp;
+    @Column(name = "jhi_option")
+    private String option;
 
-    @Column(name = "correct")
+    @NotNull
+    @Column(name = "correct", nullable = false)
     private Boolean correct;
 
     @ManyToOne
     @JsonIgnoreProperties("")
+    private Quiz quiz;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
     private Customer customer;
-
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Question question;
-
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Choice choice;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -53,24 +50,24 @@ public class QuestionHistory implements Serializable {
         this.id = id;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public String getOption() {
+        return option;
     }
 
-    public QuestionHistory timestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public QuizApp option(String option) {
+        this.option = option;
         return this;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setOption(String option) {
+        this.option = option;
     }
 
     public Boolean isCorrect() {
         return correct;
     }
 
-    public QuestionHistory correct(Boolean correct) {
+    public QuizApp correct(Boolean correct) {
         this.correct = correct;
         return this;
     }
@@ -79,43 +76,30 @@ public class QuestionHistory implements Serializable {
         this.correct = correct;
     }
 
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public QuizApp quiz(Quiz quiz) {
+        this.quiz = quiz;
+        return this;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
 
-    public QuestionHistory customer(Customer customer) {
+    public QuizApp customer(Customer customer) {
         this.customer = customer;
         return this;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public QuestionHistory question(Question question) {
-        this.question = question;
-        return this;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public Choice getChoice() {
-        return choice;
-    }
-
-    public QuestionHistory choice(Choice choice) {
-        this.choice = choice;
-        return this;
-    }
-
-    public void setChoice(Choice choice) {
-        this.choice = choice;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -127,11 +111,11 @@ public class QuestionHistory implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionHistory questionHistory = (QuestionHistory) o;
-        if (questionHistory.getId() == null || getId() == null) {
+        QuizApp quizApp = (QuizApp) o;
+        if (quizApp.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), questionHistory.getId());
+        return Objects.equals(getId(), quizApp.getId());
     }
 
     @Override
@@ -141,9 +125,9 @@ public class QuestionHistory implements Serializable {
 
     @Override
     public String toString() {
-        return "QuestionHistory{" +
+        return "QuizApp{" +
             "id=" + getId() +
-            ", timestamp='" + getTimestamp() + "'" +
+            ", option='" + getOption() + "'" +
             ", correct='" + isCorrect() + "'" +
             "}";
     }

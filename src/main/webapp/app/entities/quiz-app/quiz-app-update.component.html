@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-quiz-app-heading" jhiTranslate="smartCpdApp.quizApp.home.createOrEditLabel">Create or edit a Quiz App</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!quizApp.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="quizApp.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.option" for="field_option">Option</label>
+                    <input type="text" class="form-control" name="option" id="field_option"
+                        [(ngModel)]="quizApp.option" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.correct" for="field_correct">Correct</label>
+                    <input type="checkbox" class="form-control" name="correct" id="field_correct"
+                        [(ngModel)]="quizApp.correct" />
+                    <div [hidden]="!(editForm.controls.correct?.dirty && editForm.controls.correct?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.correct?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.quiz" for="field_quiz">Quiz</label>
+                    <select class="form-control" id="field_quiz" name="quiz" [(ngModel)]="quizApp.quiz" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="quizOption.id === quizApp.quiz?.id ? quizApp.quiz : quizOption" *ngFor="let quizOption of quizzes; trackBy: trackQuizById">{{quizOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.customer" for="field_customer">Customer</label>
+                    <select class="form-control" id="field_customer" name="customer" [(ngModel)]="quizApp.customer" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="customerOption.id === quizApp.customer?.id ? quizApp.customer : customerOption" *ngFor="let customerOption of customers; trackBy: trackCustomerById">{{customerOption.normalized}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

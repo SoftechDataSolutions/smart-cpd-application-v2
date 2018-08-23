@@ -132,9 +132,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="questionhistory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="quiz-app" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.questionhistory">Question History</span>
+                            <span jhiTranslate="global.menu.entities.quizApp">Quiz App</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="question-history" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon [icon]="'asterisk'" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.questionHistory">Question History</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

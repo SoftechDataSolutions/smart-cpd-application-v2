@@ -9,36 +9,34 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
-import io.github.jhipster.service.filter.InstantFilter;
+
 
 
 
 
 /**
- * Criteria class for the QuestionHistory entity. This class is used in QuestionHistoryResource to
+ * Criteria class for the QuizApp entity. This class is used in QuizAppResource to
  * receive all the possible filtering options from the Http GET request parameters.
  * For example the following could be a valid requests:
- * <code> /question-histories?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
+ * <code> /quiz-apps?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
-public class QuestionHistoryCriteria implements Serializable {
+public class QuizAppCriteria implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
     private LongFilter id;
 
-    private InstantFilter timestamp;
+    private StringFilter option;
 
     private BooleanFilter correct;
 
+    private LongFilter quizId;
+
     private LongFilter customerId;
 
-    private LongFilter questionId;
-
-    private LongFilter choiceId;
-
-    public QuestionHistoryCriteria() {
+    public QuizAppCriteria() {
     }
 
     public LongFilter getId() {
@@ -49,12 +47,12 @@ public class QuestionHistoryCriteria implements Serializable {
         this.id = id;
     }
 
-    public InstantFilter getTimestamp() {
-        return timestamp;
+    public StringFilter getOption() {
+        return option;
     }
 
-    public void setTimestamp(InstantFilter timestamp) {
-        this.timestamp = timestamp;
+    public void setOption(StringFilter option) {
+        this.option = option;
     }
 
     public BooleanFilter getCorrect() {
@@ -65,6 +63,14 @@ public class QuestionHistoryCriteria implements Serializable {
         this.correct = correct;
     }
 
+    public LongFilter getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(LongFilter quizId) {
+        this.quizId = quizId;
+    }
+
     public LongFilter getCustomerId() {
         return customerId;
     }
@@ -73,31 +79,14 @@ public class QuestionHistoryCriteria implements Serializable {
         this.customerId = customerId;
     }
 
-    public LongFilter getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(LongFilter questionId) {
-        this.questionId = questionId;
-    }
-
-    public LongFilter getChoiceId() {
-        return choiceId;
-    }
-
-    public void setChoiceId(LongFilter choiceId) {
-        this.choiceId = choiceId;
-    }
-
     @Override
     public String toString() {
-        return "QuestionHistoryCriteria{" +
+        return "QuizAppCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (timestamp != null ? "timestamp=" + timestamp + ", " : "") +
+                (option != null ? "option=" + option + ", " : "") +
                 (correct != null ? "correct=" + correct + ", " : "") +
+                (quizId != null ? "quizId=" + quizId + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
-                (questionId != null ? "questionId=" + questionId + ", " : "") +
-                (choiceId != null ? "choiceId=" + choiceId + ", " : "") +
             "}";
     }
 

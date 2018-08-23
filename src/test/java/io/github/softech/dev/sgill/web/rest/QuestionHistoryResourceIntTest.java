@@ -10,6 +10,7 @@ import io.github.softech.dev.sgill.repository.QuestionHistoryRepository;
 import io.github.softech.dev.sgill.repository.search.QuestionHistorySearchRepository;
 import io.github.softech.dev.sgill.service.QuestionHistoryService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
+import io.github.softech.dev.sgill.service.dto.QuestionHistoryCriteria;
 import io.github.softech.dev.sgill.service.QuestionHistoryQueryService;
 
 import org.junit.Before;
@@ -59,12 +60,12 @@ public class QuestionHistoryResourceIntTest {
     private static final Boolean UPDATED_CORRECT = true;
 
     @Autowired
-    private QuestionHistoryRepository questionhistoryRepository;
+    private QuestionHistoryRepository questionHistoryRepository;
 
     
 
     @Autowired
-    private QuestionHistoryService questionhistoryService;
+    private QuestionHistoryService questionHistoryService;
 
     /**
      * This repository is mocked in the io.github.softech.dev.sgill.repository.search test package.
@@ -75,7 +76,7 @@ public class QuestionHistoryResourceIntTest {
     private QuestionHistorySearchRepository mockQuestionHistorySearchRepository;
 
     @Autowired
-    private QuestionHistoryQueryService questionhistoryQueryService;
+    private QuestionHistoryQueryService questionHistoryQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -91,13 +92,13 @@ public class QuestionHistoryResourceIntTest {
 
     private MockMvc restQuestionHistoryMockMvc;
 
-    private QuestionHistory questionhistory;
+    private QuestionHistory questionHistory;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final QuestionHistoryResource questionhistoryResource = new QuestionHistoryResource(questionhistoryService, questionhistoryQueryService);
-        this.restQuestionHistoryMockMvc = MockMvcBuilders.standaloneSetup(questionhistoryResource)
+        final QuestionHistoryResource questionHistoryResource = new QuestionHistoryResource(questionHistoryService, questionHistoryQueryService);
+        this.restQuestionHistoryMockMvc = MockMvcBuilders.standaloneSetup(questionHistoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -111,37 +112,32 @@ public class QuestionHistoryResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static QuestionHistory createEntity(EntityManager em) {
-        QuestionHistory questionhistory = new QuestionHistory()
+        QuestionHistory questionHistory = new QuestionHistory()
             .timestamp(DEFAULT_TIMESTAMP)
             .correct(DEFAULT_CORRECT);
-        // Add required entity
-        Choice choice = ChoiceResourceIntTest.createEntity(em);
-        em.persist(choice);
-        em.flush();
-        questionhistory.setChoice(choice);
-        return questionhistory;
+        return questionHistory;
     }
 
     @Before
     public void initTest() {
-        questionhistory = createEntity(em);
+        questionHistory = createEntity(em);
     }
 
     @Test
     @Transactional
     public void createQuestionHistory() throws Exception {
-        int databaseSizeBeforeCreate = questionhistoryRepository.findAll().size();
+        int databaseSizeBeforeCreate = questionHistoryRepository.findAll().size();
 
         // Create the QuestionHistory
-        restQuestionHistoryMockMvc.perform(post("/api/questionhistories")
+        restQuestionHistoryMockMvc.perform(post("/api/question-histories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(questionhistory)))
+            .content(TestUtil.convertObjectToJsonBytes(questionHistory)))
             .andExpect(status().isCreated());
 
         // Validate the QuestionHistory in the database
-        List<QuestionHistory> questionhistoryList = questionhistoryRepository.findAll();
-        assertThat(questionhistoryList).hasSize(databaseSizeBeforeCreate + 1);
-        QuestionHistory testQuestionHistory = questionhistoryList.get(questionhistoryList.size() - 1);
+        List<QuestionHistory> questionHistoryList = questionHistoryRepository.findAll();
+        assertThat(questionHistoryList).hasSize(databaseSizeBeforeCreate + 1);
+        QuestionHistory testQuestionHistory = questionHistoryList.get(questionHistoryList.size() - 1);
         assertThat(testQuestionHistory.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
         assertThat(testQuestionHistory.isCorrect()).isEqualTo(DEFAULT_CORRECT);
 
@@ -152,36 +148,36 @@ public class QuestionHistoryResourceIntTest {
     @Test
     @Transactional
     public void createQuestionHistoryWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = questionhistoryRepository.findAll().size();
+        int databaseSizeBeforeCreate = questionHistoryRepository.findAll().size();
 
         // Create the QuestionHistory with an existing ID
-        questionhistory.setId(1L);
+        questionHistory.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restQuestionHistoryMockMvc.perform(post("/api/questionhistories")
+        restQuestionHistoryMockMvc.perform(post("/api/question-histories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(questionhistory)))
+            .content(TestUtil.convertObjectToJsonBytes(questionHistory)))
             .andExpect(status().isBadRequest());
 
         // Validate the QuestionHistory in the database
-        List<QuestionHistory> questionhistoryList = questionhistoryRepository.findAll();
-        assertThat(questionhistoryList).hasSize(databaseSizeBeforeCreate);
+        List<QuestionHistory> questionHistoryList = questionHistoryRepository.findAll();
+        assertThat(questionHistoryList).hasSize(databaseSizeBeforeCreate);
 
         // Validate the QuestionHistory in Elasticsearch
-        verify(mockQuestionHistorySearchRepository, times(0)).save(questionhistory);
+        verify(mockQuestionHistorySearchRepository, times(0)).save(questionHistory);
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistories() throws Exception {
+    public void getAllQuestionHistories() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList
-        restQuestionHistoryMockMvc.perform(get("/api/questionhistories?sort=id,desc"))
+        // Get all the questionHistoryList
+        restQuestionHistoryMockMvc.perform(get("/api/question-histories?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(questionhistory.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(questionHistory.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
     }
@@ -191,148 +187,148 @@ public class QuestionHistoryResourceIntTest {
     @Transactional
     public void getQuestionHistory() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get the questionhistory
-        restQuestionHistoryMockMvc.perform(get("/api/questionhistories/{id}", questionhistory.getId()))
+        // Get the questionHistory
+        restQuestionHistoryMockMvc.perform(get("/api/question-histories/{id}", questionHistory.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(questionhistory.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(questionHistory.getId().intValue()))
             .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
             .andExpect(jsonPath("$.correct").value(DEFAULT_CORRECT.booleanValue()));
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByTimestampIsEqualToSomething() throws Exception {
+    public void getAllQuestionHistoriesByTimestampIsEqualToSomething() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where timestamp equals to DEFAULT_TIMESTAMP
+        // Get all the questionHistoryList where timestamp equals to DEFAULT_TIMESTAMP
         defaultQuestionHistoryShouldBeFound("timestamp.equals=" + DEFAULT_TIMESTAMP);
 
-        // Get all the questionhistoryList where timestamp equals to UPDATED_TIMESTAMP
+        // Get all the questionHistoryList where timestamp equals to UPDATED_TIMESTAMP
         defaultQuestionHistoryShouldNotBeFound("timestamp.equals=" + UPDATED_TIMESTAMP);
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByTimestampIsInShouldWork() throws Exception {
+    public void getAllQuestionHistoriesByTimestampIsInShouldWork() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where timestamp in DEFAULT_TIMESTAMP or UPDATED_TIMESTAMP
+        // Get all the questionHistoryList where timestamp in DEFAULT_TIMESTAMP or UPDATED_TIMESTAMP
         defaultQuestionHistoryShouldBeFound("timestamp.in=" + DEFAULT_TIMESTAMP + "," + UPDATED_TIMESTAMP);
 
-        // Get all the questionhistoryList where timestamp equals to UPDATED_TIMESTAMP
+        // Get all the questionHistoryList where timestamp equals to UPDATED_TIMESTAMP
         defaultQuestionHistoryShouldNotBeFound("timestamp.in=" + UPDATED_TIMESTAMP);
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByTimestampIsNullOrNotNull() throws Exception {
+    public void getAllQuestionHistoriesByTimestampIsNullOrNotNull() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where timestamp is not null
+        // Get all the questionHistoryList where timestamp is not null
         defaultQuestionHistoryShouldBeFound("timestamp.specified=true");
 
-        // Get all the questionhistoryList where timestamp is null
+        // Get all the questionHistoryList where timestamp is null
         defaultQuestionHistoryShouldNotBeFound("timestamp.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByCorrectIsEqualToSomething() throws Exception {
+    public void getAllQuestionHistoriesByCorrectIsEqualToSomething() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where correct equals to DEFAULT_CORRECT
+        // Get all the questionHistoryList where correct equals to DEFAULT_CORRECT
         defaultQuestionHistoryShouldBeFound("correct.equals=" + DEFAULT_CORRECT);
 
-        // Get all the questionhistoryList where correct equals to UPDATED_CORRECT
+        // Get all the questionHistoryList where correct equals to UPDATED_CORRECT
         defaultQuestionHistoryShouldNotBeFound("correct.equals=" + UPDATED_CORRECT);
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByCorrectIsInShouldWork() throws Exception {
+    public void getAllQuestionHistoriesByCorrectIsInShouldWork() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where correct in DEFAULT_CORRECT or UPDATED_CORRECT
+        // Get all the questionHistoryList where correct in DEFAULT_CORRECT or UPDATED_CORRECT
         defaultQuestionHistoryShouldBeFound("correct.in=" + DEFAULT_CORRECT + "," + UPDATED_CORRECT);
 
-        // Get all the questionhistoryList where correct equals to UPDATED_CORRECT
+        // Get all the questionHistoryList where correct equals to UPDATED_CORRECT
         defaultQuestionHistoryShouldNotBeFound("correct.in=" + UPDATED_CORRECT);
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByCorrectIsNullOrNotNull() throws Exception {
+    public void getAllQuestionHistoriesByCorrectIsNullOrNotNull() throws Exception {
         // Initialize the database
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistoryRepository.saveAndFlush(questionHistory);
 
-        // Get all the questionhistoryList where correct is not null
+        // Get all the questionHistoryList where correct is not null
         defaultQuestionHistoryShouldBeFound("correct.specified=true");
 
-        // Get all the questionhistoryList where correct is null
+        // Get all the questionHistoryList where correct is null
         defaultQuestionHistoryShouldNotBeFound("correct.specified=false");
     }
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByCustomerIsEqualToSomething() throws Exception {
+    public void getAllQuestionHistoriesByCustomerIsEqualToSomething() throws Exception {
         // Initialize the database
         Customer customer = CustomerResourceIntTest.createEntity(em);
         em.persist(customer);
         em.flush();
-        questionhistory.setCustomer(customer);
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistory.setCustomer(customer);
+        questionHistoryRepository.saveAndFlush(questionHistory);
         Long customerId = customer.getId();
 
-        // Get all the questionhistoryList where customer equals to customerId
+        // Get all the questionHistoryList where customer equals to customerId
         defaultQuestionHistoryShouldBeFound("customerId.equals=" + customerId);
 
-        // Get all the questionhistoryList where customer equals to customerId + 1
+        // Get all the questionHistoryList where customer equals to customerId + 1
         defaultQuestionHistoryShouldNotBeFound("customerId.equals=" + (customerId + 1));
     }
 
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByQuestionIsEqualToSomething() throws Exception {
+    public void getAllQuestionHistoriesByQuestionIsEqualToSomething() throws Exception {
         // Initialize the database
         Question question = QuestionResourceIntTest.createEntity(em);
         em.persist(question);
         em.flush();
-        questionhistory.setQuestion(question);
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistory.setQuestion(question);
+        questionHistoryRepository.saveAndFlush(questionHistory);
         Long questionId = question.getId();
 
-        // Get all the questionhistoryList where question equals to questionId
+        // Get all the questionHistoryList where question equals to questionId
         defaultQuestionHistoryShouldBeFound("questionId.equals=" + questionId);
 
-        // Get all the questionhistoryList where question equals to questionId + 1
+        // Get all the questionHistoryList where question equals to questionId + 1
         defaultQuestionHistoryShouldNotBeFound("questionId.equals=" + (questionId + 1));
     }
 
 
     @Test
     @Transactional
-    public void getAllQuestionhistoriesByChoiceIsEqualToSomething() throws Exception {
+    public void getAllQuestionHistoriesByChoiceIsEqualToSomething() throws Exception {
         // Initialize the database
         Choice choice = ChoiceResourceIntTest.createEntity(em);
         em.persist(choice);
         em.flush();
-        questionhistory.setChoice(choice);
-        questionhistoryRepository.saveAndFlush(questionhistory);
+        questionHistory.setChoice(choice);
+        questionHistoryRepository.saveAndFlush(questionHistory);
         Long choiceId = choice.getId();
 
-        // Get all the questionhistoryList where choice equals to choiceId
+        // Get all the questionHistoryList where choice equals to choiceId
         defaultQuestionHistoryShouldBeFound("choiceId.equals=" + choiceId);
 
-        // Get all the questionhistoryList where choice equals to choiceId + 1
+        // Get all the questionHistoryList where choice equals to choiceId + 1
         defaultQuestionHistoryShouldNotBeFound("choiceId.equals=" + (choiceId + 1));
     }
 
@@ -340,10 +336,10 @@ public class QuestionHistoryResourceIntTest {
      * Executes the search, and checks that the default entity is returned
      */
     private void defaultQuestionHistoryShouldBeFound(String filter) throws Exception {
-        restQuestionHistoryMockMvc.perform(get("/api/questionhistories?sort=id,desc&" + filter))
+        restQuestionHistoryMockMvc.perform(get("/api/question-histories?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(questionhistory.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(questionHistory.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
     }
@@ -352,7 +348,7 @@ public class QuestionHistoryResourceIntTest {
      * Executes the search, and checks that the default entity is not returned
      */
     private void defaultQuestionHistoryShouldNotBeFound(String filter) throws Exception {
-        restQuestionHistoryMockMvc.perform(get("/api/questionhistories?sort=id,desc&" + filter))
+        restQuestionHistoryMockMvc.perform(get("/api/question-histories?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
@@ -362,8 +358,8 @@ public class QuestionHistoryResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingQuestionHistory() throws Exception {
-        // Get the questionhistory
-        restQuestionHistoryMockMvc.perform(get("/api/questionhistories/{id}", Long.MAX_VALUE))
+        // Get the questionHistory
+        restQuestionHistoryMockMvc.perform(get("/api/question-histories/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -371,29 +367,29 @@ public class QuestionHistoryResourceIntTest {
     @Transactional
     public void updateQuestionHistory() throws Exception {
         // Initialize the database
-        questionhistoryService.save(questionhistory);
+        questionHistoryService.save(questionHistory);
         // As the test used the service layer, reset the Elasticsearch mock repository
         reset(mockQuestionHistorySearchRepository);
 
-        int databaseSizeBeforeUpdate = questionhistoryRepository.findAll().size();
+        int databaseSizeBeforeUpdate = questionHistoryRepository.findAll().size();
 
-        // Update the questionhistory
-        QuestionHistory updatedQuestionHistory = questionhistoryRepository.findById(questionhistory.getId()).get();
+        // Update the questionHistory
+        QuestionHistory updatedQuestionHistory = questionHistoryRepository.findById(questionHistory.getId()).get();
         // Disconnect from session so that the updates on updatedQuestionHistory are not directly saved in db
         em.detach(updatedQuestionHistory);
         updatedQuestionHistory
             .timestamp(UPDATED_TIMESTAMP)
             .correct(UPDATED_CORRECT);
 
-        restQuestionHistoryMockMvc.perform(put("/api/questionhistories")
+        restQuestionHistoryMockMvc.perform(put("/api/question-histories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedQuestionHistory)))
             .andExpect(status().isOk());
 
         // Validate the QuestionHistory in the database
-        List<QuestionHistory> questionhistoryList = questionhistoryRepository.findAll();
-        assertThat(questionhistoryList).hasSize(databaseSizeBeforeUpdate);
-        QuestionHistory testQuestionHistory = questionhistoryList.get(questionhistoryList.size() - 1);
+        List<QuestionHistory> questionHistoryList = questionHistoryRepository.findAll();
+        assertThat(questionHistoryList).hasSize(databaseSizeBeforeUpdate);
+        QuestionHistory testQuestionHistory = questionHistoryList.get(questionHistoryList.size() - 1);
         assertThat(testQuestionHistory.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
         assertThat(testQuestionHistory.isCorrect()).isEqualTo(UPDATED_CORRECT);
 
@@ -404,57 +400,57 @@ public class QuestionHistoryResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingQuestionHistory() throws Exception {
-        int databaseSizeBeforeUpdate = questionhistoryRepository.findAll().size();
+        int databaseSizeBeforeUpdate = questionHistoryRepository.findAll().size();
 
         // Create the QuestionHistory
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException 
-        restQuestionHistoryMockMvc.perform(put("/api/questionhistories")
+        restQuestionHistoryMockMvc.perform(put("/api/question-histories")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(questionhistory)))
+            .content(TestUtil.convertObjectToJsonBytes(questionHistory)))
             .andExpect(status().isBadRequest());
 
         // Validate the QuestionHistory in the database
-        List<QuestionHistory> questionhistoryList = questionhistoryRepository.findAll();
-        assertThat(questionhistoryList).hasSize(databaseSizeBeforeUpdate);
+        List<QuestionHistory> questionHistoryList = questionHistoryRepository.findAll();
+        assertThat(questionHistoryList).hasSize(databaseSizeBeforeUpdate);
 
         // Validate the QuestionHistory in Elasticsearch
-        verify(mockQuestionHistorySearchRepository, times(0)).save(questionhistory);
+        verify(mockQuestionHistorySearchRepository, times(0)).save(questionHistory);
     }
 
     @Test
     @Transactional
     public void deleteQuestionHistory() throws Exception {
         // Initialize the database
-        questionhistoryService.save(questionhistory);
+        questionHistoryService.save(questionHistory);
 
-        int databaseSizeBeforeDelete = questionhistoryRepository.findAll().size();
+        int databaseSizeBeforeDelete = questionHistoryRepository.findAll().size();
 
-        // Get the questionhistory
-        restQuestionHistoryMockMvc.perform(delete("/api/questionhistories/{id}", questionhistory.getId())
+        // Get the questionHistory
+        restQuestionHistoryMockMvc.perform(delete("/api/question-histories/{id}", questionHistory.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<QuestionHistory> questionhistoryList = questionhistoryRepository.findAll();
-        assertThat(questionhistoryList).hasSize(databaseSizeBeforeDelete - 1);
+        List<QuestionHistory> questionHistoryList = questionHistoryRepository.findAll();
+        assertThat(questionHistoryList).hasSize(databaseSizeBeforeDelete - 1);
 
         // Validate the QuestionHistory in Elasticsearch
-        verify(mockQuestionHistorySearchRepository, times(1)).deleteById(questionhistory.getId());
+        verify(mockQuestionHistorySearchRepository, times(1)).deleteById(questionHistory.getId());
     }
 
     @Test
     @Transactional
     public void searchQuestionHistory() throws Exception {
         // Initialize the database
-        questionhistoryService.save(questionhistory);
-        when(mockQuestionHistorySearchRepository.search(queryStringQuery("id:" + questionhistory.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(questionhistory), PageRequest.of(0, 1), 1));
-        // Search the questionhistory
-        restQuestionHistoryMockMvc.perform(get("/api/_search/questionhistories?query=id:" + questionhistory.getId()))
+        questionHistoryService.save(questionHistory);
+        when(mockQuestionHistorySearchRepository.search(queryStringQuery("id:" + questionHistory.getId()), PageRequest.of(0, 20)))
+            .thenReturn(new PageImpl<>(Collections.singletonList(questionHistory), PageRequest.of(0, 1), 1));
+        // Search the questionHistory
+        restQuestionHistoryMockMvc.perform(get("/api/_search/question-histories?query=id:" + questionHistory.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(questionhistory.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(questionHistory.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
     }
@@ -463,14 +459,14 @@ public class QuestionHistoryResourceIntTest {
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(QuestionHistory.class);
-        QuestionHistory questionhistory1 = new QuestionHistory();
-        questionhistory1.setId(1L);
-        QuestionHistory questionhistory2 = new QuestionHistory();
-        questionhistory2.setId(questionhistory1.getId());
-        assertThat(questionhistory1).isEqualTo(questionhistory2);
-        questionhistory2.setId(2L);
-        assertThat(questionhistory1).isNotEqualTo(questionhistory2);
-        questionhistory1.setId(null);
-        assertThat(questionhistory1).isNotEqualTo(questionhistory2);
+        QuestionHistory questionHistory1 = new QuestionHistory();
+        questionHistory1.setId(1L);
+        QuestionHistory questionHistory2 = new QuestionHistory();
+        questionHistory2.setId(questionHistory1.getId());
+        assertThat(questionHistory1).isEqualTo(questionHistory2);
+        questionHistory2.setId(2L);
+        assertThat(questionHistory1).isNotEqualTo(questionHistory2);
+        questionHistory1.setId(null);
+        assertThat(questionHistory1).isNotEqualTo(questionHistory2);
     }
 }

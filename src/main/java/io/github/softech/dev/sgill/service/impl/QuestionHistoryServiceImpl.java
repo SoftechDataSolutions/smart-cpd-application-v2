@@ -1,6 +1,5 @@
 package io.github.softech.dev.sgill.service.impl;
 
-import io.github.softech.dev.sgill.repository.search.QuestionHistorySearchRepository;
 import io.github.softech.dev.sgill.service.QuestionHistoryService;
 import io.github.softech.dev.sgill.domain.QuestionHistory;
 import io.github.softech.dev.sgill.repository.QuestionHistoryRepository;
@@ -27,30 +26,30 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
 
     private final Logger log = LoggerFactory.getLogger(QuestionHistoryServiceImpl.class);
 
-    private final QuestionHistoryRepository questionhistoryRepository;
+    private final QuestionHistoryRepository questionHistoryRepository;
 
-    private final QuestionHistorySearchRepository questionhistorySearchRepository;
+    private final QuestionHistorySearchRepository questionHistorySearchRepository;
 
-    public QuestionHistoryServiceImpl(QuestionHistoryRepository questionhistoryRepository, QuestionHistorySearchRepository questionhistorySearchRepository) {
-        this.questionhistoryRepository = questionhistoryRepository;
-        this.questionhistorySearchRepository = questionhistorySearchRepository;
+    public QuestionHistoryServiceImpl(QuestionHistoryRepository questionHistoryRepository, QuestionHistorySearchRepository questionHistorySearchRepository) {
+        this.questionHistoryRepository = questionHistoryRepository;
+        this.questionHistorySearchRepository = questionHistorySearchRepository;
     }
 
     /**
-     * Save a questionhistory.
+     * Save a questionHistory.
      *
-     * @param questionhistory the entity to save
+     * @param questionHistory the entity to save
      * @return the persisted entity
      */
     @Override
-    public QuestionHistory save(QuestionHistory questionhistory) {
-        log.debug("Request to save QuestionHistory : {}", questionhistory);        QuestionHistory result = questionhistoryRepository.save(questionhistory);
-        questionhistorySearchRepository.save(result);
+    public QuestionHistory save(QuestionHistory questionHistory) {
+        log.debug("Request to save QuestionHistory : {}", questionHistory);        QuestionHistory result = questionHistoryRepository.save(questionHistory);
+        questionHistorySearchRepository.save(result);
         return result;
     }
 
     /**
-     * Get all the questionhistories.
+     * Get all the questionHistories.
      *
      * @param pageable the pagination information
      * @return the list of entities
@@ -58,13 +57,13 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
     @Override
     @Transactional(readOnly = true)
     public Page<QuestionHistory> findAll(Pageable pageable) {
-        log.debug("Request to get all Questionhistories");
-        return questionhistoryRepository.findAll(pageable);
+        log.debug("Request to get all QuestionHistories");
+        return questionHistoryRepository.findAll(pageable);
     }
 
 
     /**
-     * Get one questionhistory by id.
+     * Get one questionHistory by id.
      *
      * @param id the id of the entity
      * @return the entity
@@ -73,23 +72,23 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
     @Transactional(readOnly = true)
     public Optional<QuestionHistory> findOne(Long id) {
         log.debug("Request to get QuestionHistory : {}", id);
-        return questionhistoryRepository.findById(id);
+        return questionHistoryRepository.findById(id);
     }
 
     /**
-     * Delete the questionhistory by id.
+     * Delete the questionHistory by id.
      *
      * @param id the id of the entity
      */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete QuestionHistory : {}", id);
-        questionhistoryRepository.deleteById(id);
-        questionhistorySearchRepository.deleteById(id);
+        questionHistoryRepository.deleteById(id);
+        questionHistorySearchRepository.deleteById(id);
     }
 
     /**
-     * Search for the questionhistory corresponding to the query.
+     * Search for the questionHistory corresponding to the query.
      *
      * @param query the query of the search
      * @param pageable the pagination information
@@ -98,6 +97,6 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
     @Override
     @Transactional(readOnly = true)
     public Page<QuestionHistory> search(String query, Pageable pageable) {
-        log.debug("Request to search for a page of Questionhistories for query {}", query);
-        return questionhistorySearchRepository.search(queryStringQuery(query), pageable);    }
+        log.debug("Request to search for a page of QuestionHistories for query {}", query);
+        return questionHistorySearchRepository.search(queryStringQuery(query), pageable);    }
 }

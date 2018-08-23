@@ -1,21 +1,21 @@
 
 {
     "smartCpdApp": {
-        "questionhistory" : {
+        "questionHistory" : {
             "home": {
-                "title": "Questionhistories",
-                "createLabel": "Create a new QuestionHistory",
-                "createOrEditLabel": "Create or edit a QuestionHistory",
-                "search": "Search for QuestionHistory"
+                "title": "Question Histories",
+                "createLabel": "Create a new Question History",
+                "createOrEditLabel": "Create or edit a Question History",
+                "search": "Search for Question History"
             },
-            "created": "A new QuestionHistory is created with identifier {{ param }}",
-            "updated": "A QuestionHistory is updated with identifier {{ param }}",
-            "deleted": "A QuestionHistory is deleted with identifier {{ param }}",
+            "created": "A new Question History is created with identifier {{ param }}",
+            "updated": "A Question History is updated with identifier {{ param }}",
+            "deleted": "A Question History is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete QuestionHistory {{ id }}?"
+                "question": "Are you sure you want to delete Question History {{ id }}?"
             },
             "detail": {
-                "title": "QuestionHistory"
+                "title": "Question History"
             },
             "timestamp": "Timestamp",
             "correct": "Correct",

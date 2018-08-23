@@ -1,0 +1,38 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "quiz",
+            "otherEntityName": "quiz",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "customer",
+            "otherEntityName": "customer",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "normalized"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "option",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "correct",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20180823211934",
+    "dto": "no",
+    "searchEngine": "elasticsearch",
+    "service": "serviceImpl",
+    "entityTableName": "quiz_app",
+    "jpaMetamodelFiltering": true,
+    "pagination": "infinite-scroll"
+}
