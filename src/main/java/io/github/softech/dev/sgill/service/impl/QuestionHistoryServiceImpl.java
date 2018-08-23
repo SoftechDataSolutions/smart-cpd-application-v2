@@ -1,10 +1,10 @@
 package io.github.softech.dev.sgill.service.impl;
 
 import io.github.softech.dev.sgill.repository.search.QuestionHistorySearchRepository;
-import io.github.softech.dev.sgill.service.QuestionhistoryService;
-import io.github.softech.dev.sgill.domain.Questionhistory;
+import io.github.softech.dev.sgill.service.QuestionHistoryService;
+import io.github.softech.dev.sgill.domain.QuestionHistory;
 import io.github.softech.dev.sgill.repository.QuestionHistoryRepository;
-import io.github.softech.dev.sgill.repository.search.QuestionhistorySearchRepository;
+import io.github.softech.dev.sgill.repository.search.QuestionHistorySearchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
- * Service Implementation for managing Questionhistory.
+ * Service Implementation for managing QuestionHistory.
  */
 @Service
 @Transactional
@@ -31,7 +31,7 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
 
     private final QuestionHistorySearchRepository questionhistorySearchRepository;
 
-    public QuestionhistoryServiceImpl(QuestionHistoryRepository questionhistoryRepository, QuestionHistorySearchRepository questionhistorySearchRepository) {
+    public QuestionHistoryServiceImpl(QuestionHistoryRepository questionhistoryRepository, QuestionHistorySearchRepository questionhistorySearchRepository) {
         this.questionhistoryRepository = questionhistoryRepository;
         this.questionhistorySearchRepository = questionhistorySearchRepository;
     }
@@ -43,8 +43,8 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
      * @return the persisted entity
      */
     @Override
-    public Questionhistory save(Questionhistory questionhistory) {
-        log.debug("Request to save Questionhistory : {}", questionhistory);        Questionhistory result = questionhistoryRepository.save(questionhistory);
+    public QuestionHistory save(QuestionHistory questionhistory) {
+        log.debug("Request to save QuestionHistory : {}", questionhistory);        QuestionHistory result = questionhistoryRepository.save(questionhistory);
         questionhistorySearchRepository.save(result);
         return result;
     }
@@ -57,7 +57,7 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Questionhistory> findAll(Pageable pageable) {
+    public Page<QuestionHistory> findAll(Pageable pageable) {
         log.debug("Request to get all Questionhistories");
         return questionhistoryRepository.findAll(pageable);
     }
@@ -71,8 +71,8 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<Questionhistory> findOne(Long id) {
-        log.debug("Request to get Questionhistory : {}", id);
+    public Optional<QuestionHistory> findOne(Long id) {
+        log.debug("Request to get QuestionHistory : {}", id);
         return questionhistoryRepository.findById(id);
     }
 
@@ -83,7 +83,7 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Questionhistory : {}", id);
+        log.debug("Request to delete QuestionHistory : {}", id);
         questionhistoryRepository.deleteById(id);
         questionhistorySearchRepository.deleteById(id);
     }
@@ -97,7 +97,7 @@ public class QuestionHistoryServiceImpl implements QuestionHistoryService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Questionhistory> search(String query, Pageable pageable) {
+    public Page<QuestionHistory> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Questionhistories for query {}", query);
         return questionhistorySearchRepository.search(queryStringQuery(query), pageable);    }
 }
