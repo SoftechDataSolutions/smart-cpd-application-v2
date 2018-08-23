@@ -5,20 +5,20 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Data } from '@angular/router';
 
 import { SmartCpdTestModule } from '../../../test.module';
-import { QuestionhistoryComponent } from 'app/entities/questionhistory/questionhistory.component';
-import { QuestionhistoryService } from 'app/entities/questionhistory/questionhistory.service';
-import { Questionhistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryComponent } from 'app/entities/questionhistory/questionhistory.component';
+import { QuestionHistoryService } from 'app/entities/questionhistory/questionhistory.service';
+import { QuestionHistory } from 'app/shared/model/questionhistory.model';
 
 describe('Component Tests', () => {
-    describe('Questionhistory Management Component', () => {
-        let comp: QuestionhistoryComponent;
-        let fixture: ComponentFixture<QuestionhistoryComponent>;
-        let service: QuestionhistoryService;
+    describe('QuestionHistory Management Component', () => {
+        let comp: QuestionHistoryComponent;
+        let fixture: ComponentFixture<QuestionHistoryComponent>;
+        let service: QuestionHistoryService;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SmartCpdTestModule],
-                declarations: [QuestionhistoryComponent],
+                declarations: [QuestionHistoryComponent],
                 providers: [
                     {
                         provide: ActivatedRoute,
@@ -37,12 +37,12 @@ describe('Component Tests', () => {
                     }
                 ]
             })
-                .overrideTemplate(QuestionhistoryComponent, '')
+                .overrideTemplate(QuestionHistoryComponent, '')
                 .compileComponents();
 
-            fixture = TestBed.createComponent(QuestionhistoryComponent);
+            fixture = TestBed.createComponent(QuestionHistoryComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(QuestionhistoryService);
+            service = fixture.debugElement.injector.get(QuestionHistoryService);
         });
 
         it('Should call load all on init', () => {
@@ -51,7 +51,7 @@ describe('Component Tests', () => {
             spyOn(service, 'query').and.returnValue(
                 of(
                     new HttpResponse({
-                        body: [new Questionhistory(123)],
+                        body: [new QuestionHistory(123)],
                         headers
                     })
                 )
@@ -71,7 +71,7 @@ describe('Component Tests', () => {
             spyOn(service, 'query').and.returnValue(
                 of(
                     new HttpResponse({
-                        body: [new Questionhistory(123)],
+                        body: [new QuestionHistory(123)],
                         headers
                     })
                 )
@@ -91,7 +91,7 @@ describe('Component Tests', () => {
             spyOn(service, 'query').and.returnValue(
                 of(
                     new HttpResponse({
-                        body: [new Questionhistory(123)],
+                        body: [new QuestionHistory(123)],
                         headers
                     })
                 )

@@ -1,14 +1,14 @@
 /* tslint:disable max-line-length */
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { QuestionhistoryService } from 'app/entities/questionhistory/questionhistory.service';
-import { Questionhistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryService } from 'app/entities/questionhistory/questionhistory.service';
+import { QuestionHistory } from 'app/shared/model/questionhistory.model';
 import { SERVER_API_URL } from 'app/app.constants';
 
 describe('Service Tests', () => {
-    describe('Questionhistory Service', () => {
+    describe('QuestionHistory Service', () => {
         let injector: TestBed;
-        let service: QuestionhistoryService;
+        let service: QuestionHistoryService;
         let httpMock: HttpTestingController;
 
         beforeEach(() => {
@@ -16,7 +16,7 @@ describe('Service Tests', () => {
                 imports: [HttpClientTestingModule]
             });
             injector = getTestBed();
-            service = injector.get(QuestionhistoryService);
+            service = injector.get(QuestionHistoryService);
             httpMock = injector.get(HttpTestingController);
         });
 
@@ -30,8 +30,8 @@ describe('Service Tests', () => {
                 expect(req.request.url).toEqual(resourceUrl + '/' + 123);
             });
 
-            it('should create a Questionhistory', () => {
-                service.create(new Questionhistory(null)).subscribe(received => {
+            it('should create a QuestionHistory', () => {
+                service.create(new QuestionHistory(null)).subscribe(received => {
                     expect(received.body.id).toEqual(null);
                 });
 
@@ -39,8 +39,8 @@ describe('Service Tests', () => {
                 req.flush({ id: null });
             });
 
-            it('should update a Questionhistory', () => {
-                service.update(new Questionhistory(123)).subscribe(received => {
+            it('should update a QuestionHistory', () => {
+                service.update(new QuestionHistory(123)).subscribe(received => {
                     expect(received.body.id).toEqual(123);
                 });
 
@@ -48,7 +48,7 @@ describe('Service Tests', () => {
                 req.flush({ id: 123 });
             });
 
-            it('should return a Questionhistory', () => {
+            it('should return a QuestionHistory', () => {
                 service.find(123).subscribe(received => {
                     expect(received.body.id).toEqual(123);
                 });
@@ -57,16 +57,16 @@ describe('Service Tests', () => {
                 req.flush({ id: 123 });
             });
 
-            it('should return a list of Questionhistory', () => {
+            it('should return a list of QuestionHistory', () => {
                 service.query(null).subscribe(received => {
                     expect(received.body[0].id).toEqual(123);
                 });
 
                 const req = httpMock.expectOne({ method: 'GET' });
-                req.flush([new Questionhistory(123)]);
+                req.flush([new QuestionHistory(123)]);
             });
 
-            it('should delete a Questionhistory', () => {
+            it('should delete a QuestionHistory', () => {
                 service.delete(123).subscribe(received => {
                     expect(received.url).toContain('/' + 123);
                 });

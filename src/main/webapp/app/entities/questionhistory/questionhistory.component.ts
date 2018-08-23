@@ -4,18 +4,18 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IQuestionhistory } from 'app/shared/model/questionhistory.model';
+import { IQuestionHistory } from 'app/shared/model/questionhistory.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { QuestionhistoryService } from './questionhistory.service';
+import { QuestionHistoryService } from './questionhistory.service';
 
 @Component({
     selector: 'jhi-questionhistory',
     templateUrl: './questionhistory.component.html'
 })
-export class QuestionhistoryComponent implements OnInit, OnDestroy {
-    questionhistories: IQuestionhistory[];
+export class QuestionHistoryComponent implements OnInit, OnDestroy {
+    questionhistories: IQuestionHistory[];
     currentAccount: any;
     eventSubscriber: Subscription;
     itemsPerPage: number;
@@ -28,7 +28,7 @@ export class QuestionhistoryComponent implements OnInit, OnDestroy {
     currentSearch: string;
 
     constructor(
-        private questionhistoryService: QuestionhistoryService,
+        private questionhistoryService: QuestionHistoryService,
         private jhiAlertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private parseLinks: JhiParseLinks,
@@ -59,7 +59,7 @@ export class QuestionhistoryComponent implements OnInit, OnDestroy {
                     sort: this.sort()
                 })
                 .subscribe(
-                    (res: HttpResponse<IQuestionhistory[]>) => this.paginateQuestionhistories(res.body, res.headers),
+                    (res: HttpResponse<IQuestionHistory[]>) => this.paginateQuestionhistories(res.body, res.headers),
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
@@ -71,7 +71,7 @@ export class QuestionhistoryComponent implements OnInit, OnDestroy {
                 sort: this.sort()
             })
             .subscribe(
-                (res: HttpResponse<IQuestionhistory[]>) => this.paginateQuestionhistories(res.body, res.headers),
+                (res: HttpResponse<IQuestionHistory[]>) => this.paginateQuestionhistories(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
     }
@@ -126,7 +126,7 @@ export class QuestionhistoryComponent implements OnInit, OnDestroy {
         this.eventManager.destroy(this.eventSubscriber);
     }
 
-    trackId(index: number, item: IQuestionhistory) {
+    trackId(index: number, item: IQuestionHistory) {
         return item.id;
     }
 
@@ -142,7 +142,7 @@ export class QuestionhistoryComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private paginateQuestionhistories(data: IQuestionhistory[], headers: HttpHeaders) {
+    private paginateQuestionhistories(data: IQuestionHistory[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         for (let i = 0; i < data.length; i++) {

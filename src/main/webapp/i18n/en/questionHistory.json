@@ -4,18 +4,18 @@
         "questionhistory" : {
             "home": {
                 "title": "Questionhistories",
-                "createLabel": "Create a new Questionhistory",
-                "createOrEditLabel": "Create or edit a Questionhistory",
-                "search": "Search for Questionhistory"
+                "createLabel": "Create a new QuestionHistory",
+                "createOrEditLabel": "Create or edit a QuestionHistory",
+                "search": "Search for QuestionHistory"
             },
-            "created": "A new Questionhistory is created with identifier {{ param }}",
-            "updated": "A Questionhistory is updated with identifier {{ param }}",
-            "deleted": "A Questionhistory is deleted with identifier {{ param }}",
+            "created": "A new QuestionHistory is created with identifier {{ param }}",
+            "updated": "A QuestionHistory is updated with identifier {{ param }}",
+            "deleted": "A QuestionHistory is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Questionhistory {{ id }}?"
+                "question": "Are you sure you want to delete QuestionHistory {{ id }}?"
             },
             "detail": {
-                "title": "Questionhistory"
+                "title": "QuestionHistory"
             },
             "timestamp": "Timestamp",
             "correct": "Correct",

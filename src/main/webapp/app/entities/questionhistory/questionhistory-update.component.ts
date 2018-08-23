@@ -6,8 +6,8 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiAlertService } from 'ng-jhipster';
 
-import { IQuestionhistory } from 'app/shared/model/questionhistory.model';
-import { QuestionhistoryService } from './questionhistory.service';
+import { IQuestionHistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryService } from './questionhistory.service';
 import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
 import { IQuestion } from 'app/shared/model/question.model';
@@ -19,8 +19,8 @@ import { ChoiceService } from 'app/entities/choice';
     selector: 'jhi-questionhistory-update',
     templateUrl: './questionhistory-update.component.html'
 })
-export class QuestionhistoryUpdateComponent implements OnInit {
-    private _questionhistory: IQuestionhistory;
+export class QuestionHistoryUpdateComponent implements OnInit {
+    private _questionhistory: IQuestionHistory;
     isSaving: boolean;
 
     customers: ICustomer[];
@@ -32,7 +32,7 @@ export class QuestionhistoryUpdateComponent implements OnInit {
 
     constructor(
         private jhiAlertService: JhiAlertService,
-        private questionhistoryService: QuestionhistoryService,
+        private questionhistoryService: QuestionHistoryService,
         private customerService: CustomerService,
         private questionService: QuestionService,
         private choiceService: ChoiceService,
@@ -78,8 +78,8 @@ export class QuestionhistoryUpdateComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IQuestionhistory>>) {
-        result.subscribe((res: HttpResponse<IQuestionhistory>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<HttpResponse<IQuestionHistory>>) {
+        result.subscribe((res: HttpResponse<IQuestionHistory>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
     }
 
     private onSaveSuccess() {
@@ -110,7 +110,7 @@ export class QuestionhistoryUpdateComponent implements OnInit {
         return this._questionhistory;
     }
 
-    set questionhistory(questionhistory: IQuestionhistory) {
+    set questionhistory(questionhistory: IQuestionHistory) {
         this._questionhistory = questionhistory;
         this.timestamp = moment(questionhistory.timestamp).format(DATE_TIME_FORMAT);
     }

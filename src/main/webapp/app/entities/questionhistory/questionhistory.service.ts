@@ -7,42 +7,42 @@ import { map } from 'rxjs/operators';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
-import { IQuestionhistory } from 'app/shared/model/questionhistory.model';
+import { IQuestionHistory } from 'app/shared/model/questionhistory.model';
 
-type EntityResponseType = HttpResponse<IQuestionhistory>;
-type EntityArrayResponseType = HttpResponse<IQuestionhistory[]>;
+type EntityResponseType = HttpResponse<IQuestionHistory>;
+type EntityArrayResponseType = HttpResponse<IQuestionHistory[]>;
 
 @Injectable({ providedIn: 'root' })
-export class QuestionhistoryService {
+export class QuestionHistoryService {
     private resourceUrl = SERVER_API_URL + 'api/questionhistories';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/questionhistories';
 
     constructor(private http: HttpClient) {}
 
-    create(questionhistory: IQuestionhistory): Observable<EntityResponseType> {
+    create(questionhistory: IQuestionHistory): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(questionhistory);
         return this.http
-            .post<IQuestionhistory>(this.resourceUrl, copy, { observe: 'response' })
+            .post<IQuestionHistory>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    update(questionhistory: IQuestionhistory): Observable<EntityResponseType> {
+    update(questionhistory: IQuestionHistory): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(questionhistory);
         return this.http
-            .put<IQuestionhistory>(this.resourceUrl, copy, { observe: 'response' })
+            .put<IQuestionHistory>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
     find(id: number): Observable<EntityResponseType> {
         return this.http
-            .get<IQuestionhistory>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .get<IQuestionHistory>(`${this.resourceUrl}/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http
-            .get<IQuestionhistory[]>(this.resourceUrl, { params: options, observe: 'response' })
+            .get<IQuestionHistory[]>(this.resourceUrl, { params: options, observe: 'response' })
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
@@ -53,12 +53,12 @@ export class QuestionhistoryService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http
-            .get<IQuestionhistory[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
+            .get<IQuestionHistory[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    private convertDateFromClient(questionhistory: IQuestionhistory): IQuestionhistory {
-        const copy: IQuestionhistory = Object.assign({}, questionhistory, {
+    private convertDateFromClient(questionhistory: IQuestionHistory): IQuestionHistory {
+        const copy: IQuestionHistory = Object.assign({}, questionhistory, {
             timestamp: questionhistory.timestamp != null && questionhistory.timestamp.isValid() ? questionhistory.timestamp.toJSON() : null
         });
         return copy;
@@ -70,7 +70,7 @@ export class QuestionhistoryService {
     }
 
     private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-        res.body.forEach((questionhistory: IQuestionhistory) => {
+        res.body.forEach((questionhistory: IQuestionHistory) => {
             questionhistory.timestamp = questionhistory.timestamp != null ? moment(questionhistory.timestamp) : null;
         });
         return res;

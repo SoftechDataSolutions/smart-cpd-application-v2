@@ -4,27 +4,27 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { SmartCpdTestModule } from '../../../test.module';
-import { QuestionhistoryUpdateComponent } from 'app/entities/questionhistory/questionhistory-update.component';
-import { QuestionhistoryService } from 'app/entities/questionhistory/questionhistory.service';
-import { Questionhistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryUpdateComponent } from 'app/entities/questionhistory/questionhistory-update.component';
+import { QuestionHistoryService } from 'app/entities/questionhistory/questionhistory.service';
+import { QuestionHistory } from 'app/shared/model/questionhistory.model';
 
 describe('Component Tests', () => {
-    describe('Questionhistory Management Update Component', () => {
-        let comp: QuestionhistoryUpdateComponent;
-        let fixture: ComponentFixture<QuestionhistoryUpdateComponent>;
-        let service: QuestionhistoryService;
+    describe('QuestionHistory Management Update Component', () => {
+        let comp: QuestionHistoryUpdateComponent;
+        let fixture: ComponentFixture<QuestionHistoryUpdateComponent>;
+        let service: QuestionHistoryService;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SmartCpdTestModule],
-                declarations: [QuestionhistoryUpdateComponent]
+                declarations: [QuestionHistoryUpdateComponent]
             })
-                .overrideTemplate(QuestionhistoryUpdateComponent, '')
+                .overrideTemplate(QuestionHistoryUpdateComponent, '')
                 .compileComponents();
 
-            fixture = TestBed.createComponent(QuestionhistoryUpdateComponent);
+            fixture = TestBed.createComponent(QuestionHistoryUpdateComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(QuestionhistoryService);
+            service = fixture.debugElement.injector.get(QuestionHistoryService);
         });
 
         describe('save', () => {
@@ -32,7 +32,7 @@ describe('Component Tests', () => {
                 'Should call update service on save for existing entity',
                 fakeAsync(() => {
                     // GIVEN
-                    const entity = new Questionhistory(123);
+                    const entity = new QuestionHistory(123);
                     spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
                     comp.questionhistory = entity;
                     // WHEN
@@ -49,7 +49,7 @@ describe('Component Tests', () => {
                 'Should call create service on save for new entity',
                 fakeAsync(() => {
                     // GIVEN
-                    const entity = new Questionhistory();
+                    const entity = new QuestionHistory();
                     spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
                     comp.questionhistory = entity;
                     // WHEN

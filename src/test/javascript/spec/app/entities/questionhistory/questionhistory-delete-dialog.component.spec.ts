@@ -5,27 +5,27 @@ import { Observable, of } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { SmartCpdTestModule } from '../../../test.module';
-import { QuestionhistoryDeleteDialogComponent } from 'app/entities/questionhistory/questionhistory-delete-dialog.component';
-import { QuestionhistoryService } from 'app/entities/questionhistory/questionhistory.service';
+import { QuestionHistoryDeleteDialogComponent } from 'app/entities/questionhistory/questionhistory-delete-dialog.component';
+import { QuestionHistoryService } from 'app/entities/questionhistory/questionhistory.service';
 
 describe('Component Tests', () => {
-    describe('Questionhistory Management Delete Component', () => {
-        let comp: QuestionhistoryDeleteDialogComponent;
-        let fixture: ComponentFixture<QuestionhistoryDeleteDialogComponent>;
-        let service: QuestionhistoryService;
+    describe('QuestionHistory Management Delete Component', () => {
+        let comp: QuestionHistoryDeleteDialogComponent;
+        let fixture: ComponentFixture<QuestionHistoryDeleteDialogComponent>;
+        let service: QuestionHistoryService;
         let mockEventManager: any;
         let mockActiveModal: any;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SmartCpdTestModule],
-                declarations: [QuestionhistoryDeleteDialogComponent]
+                declarations: [QuestionHistoryDeleteDialogComponent]
             })
-                .overrideTemplate(QuestionhistoryDeleteDialogComponent, '')
+                .overrideTemplate(QuestionHistoryDeleteDialogComponent, '')
                 .compileComponents();
-            fixture = TestBed.createComponent(QuestionhistoryDeleteDialogComponent);
+            fixture = TestBed.createComponent(QuestionHistoryDeleteDialogComponent);
             comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(QuestionhistoryService);
+            service = fixture.debugElement.injector.get(QuestionHistoryService);
             mockEventManager = fixture.debugElement.injector.get(JhiEventManager);
             mockActiveModal = fixture.debugElement.injector.get(NgbActiveModal);
         });

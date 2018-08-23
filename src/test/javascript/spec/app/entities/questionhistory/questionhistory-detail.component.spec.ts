@@ -4,24 +4,24 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { SmartCpdTestModule } from '../../../test.module';
-import { QuestionhistoryDetailComponent } from 'app/entities/questionhistory/questionhistory-detail.component';
-import { Questionhistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryDetailComponent } from 'app/entities/questionhistory/questionhistory-detail.component';
+import { QuestionHistory } from 'app/shared/model/questionhistory.model';
 
 describe('Component Tests', () => {
-    describe('Questionhistory Management Detail Component', () => {
-        let comp: QuestionhistoryDetailComponent;
-        let fixture: ComponentFixture<QuestionhistoryDetailComponent>;
-        const route = ({ data: of({ questionhistory: new Questionhistory(123) }) } as any) as ActivatedRoute;
+    describe('QuestionHistory Management Detail Component', () => {
+        let comp: QuestionHistoryDetailComponent;
+        let fixture: ComponentFixture<QuestionHistoryDetailComponent>;
+        const route = ({ data: of({ questionhistory: new QuestionHistory(123) }) } as any) as ActivatedRoute;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [SmartCpdTestModule],
-                declarations: [QuestionhistoryDetailComponent],
+                declarations: [QuestionHistoryDetailComponent],
                 providers: [{ provide: ActivatedRoute, useValue: route }]
             })
-                .overrideTemplate(QuestionhistoryDetailComponent, '')
+                .overrideTemplate(QuestionHistoryDetailComponent, '')
                 .compileComponents();
-            fixture = TestBed.createComponent(QuestionhistoryDetailComponent);
+            fixture = TestBed.createComponent(QuestionHistoryDetailComponent);
             comp = fixture.componentInstance;
         });
 

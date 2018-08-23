@@ -4,31 +4,31 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@a
 import { UserRouteAccessService } from 'app/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Questionhistory } from 'app/shared/model/questionhistory.model';
-import { QuestionhistoryService } from './questionhistory.service';
-import { QuestionhistoryComponent } from './questionhistory.component';
-import { QuestionhistoryDetailComponent } from './questionhistory-detail.component';
-import { QuestionhistoryUpdateComponent } from './questionhistory-update.component';
-import { QuestionhistoryDeletePopupComponent } from './questionhistory-delete-dialog.component';
-import { IQuestionhistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistory } from 'app/shared/model/questionhistory.model';
+import { QuestionHistoryService } from './questionhistory.service';
+import { QuestionHistoryComponent } from './questionhistory.component';
+import { QuestionHistoryDetailComponent } from './questionhistory-detail.component';
+import { QuestionHistoryUpdateComponent } from './questionhistory-update.component';
+import { QuestionHistoryDeletePopupComponent } from './questionhistory-delete-dialog.component';
+import { IQuestionHistory } from 'app/shared/model/questionhistory.model';
 
 @Injectable({ providedIn: 'root' })
-export class QuestionhistoryResolve implements Resolve<IQuestionhistory> {
-    constructor(private service: QuestionhistoryService) {}
+export class QuestionHistoryResolve implements Resolve<IQuestionHistory> {
+    constructor(private service: QuestionHistoryService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.find(id).pipe(map((questionhistory: HttpResponse<Questionhistory>) => questionhistory.body));
+            return this.service.find(id).pipe(map((questionhistory: HttpResponse<QuestionHistory>) => questionhistory.body));
         }
-        return of(new Questionhistory());
+        return of(new QuestionHistory());
     }
 }
 
 export const questionhistoryRoute: Routes = [
     {
         path: 'questionhistory',
-        component: QuestionhistoryComponent,
+        component: QuestionHistoryComponent,
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'smartCpdApp.questionhistory.home.title'
@@ -37,9 +37,9 @@ export const questionhistoryRoute: Routes = [
     },
     {
         path: 'questionhistory/:id/view',
-        component: QuestionhistoryDetailComponent,
+        component: QuestionHistoryDetailComponent,
         resolve: {
-            questionhistory: QuestionhistoryResolve
+            questionhistory: QuestionHistoryResolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -49,9 +49,9 @@ export const questionhistoryRoute: Routes = [
     },
     {
         path: 'questionhistory/new',
-        component: QuestionhistoryUpdateComponent,
+        component: QuestionHistoryUpdateComponent,
         resolve: {
-            questionhistory: QuestionhistoryResolve
+            questionhistory: QuestionHistoryResolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -61,9 +61,9 @@ export const questionhistoryRoute: Routes = [
     },
     {
         path: 'questionhistory/:id/edit',
-        component: QuestionhistoryUpdateComponent,
+        component: QuestionHistoryUpdateComponent,
         resolve: {
-            questionhistory: QuestionhistoryResolve
+            questionhistory: QuestionHistoryResolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -76,9 +76,9 @@ export const questionhistoryRoute: Routes = [
 export const questionhistoryPopupRoute: Routes = [
     {
         path: 'questionhistory/:id/delete',
-        component: QuestionhistoryDeletePopupComponent,
+        component: QuestionHistoryDeletePopupComponent,
         resolve: {
-            questionhistory: QuestionhistoryResolve
+            questionhistory: QuestionHistoryResolve
         },
         data: {
             authorities: ['ROLE_USER'],

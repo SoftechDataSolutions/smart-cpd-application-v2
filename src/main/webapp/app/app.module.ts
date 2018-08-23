@@ -18,7 +18,7 @@ import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
-import { QuizFinalComponent } from './quiz-final/quiz-final.component';
+/*import { QuizFinalComponent } from './quiz-final/quiz-final.component';*/
 
 @NgModule({
     imports: [
@@ -38,8 +38,8 @@ import { QuizFinalComponent } from './quiz-final/quiz-final.component';
         ErrorComponent,
         PageRibbonComponent,
         ActiveMenuDirective,
-        FooterComponent,
-        QuizFinalComponent
+        FooterComponent
+        /*QuizFinalComponent*/
     ],
     providers: [
         {

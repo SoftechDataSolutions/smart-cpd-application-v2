@@ -3,11 +3,11 @@ import { RouterModule } from '@angular/router';
 
 import { SmartCpdSharedModule } from 'app/shared';
 import {
-    QuestionhistoryComponent,
-    QuestionhistoryDetailComponent,
-    QuestionhistoryUpdateComponent,
-    QuestionhistoryDeletePopupComponent,
-    QuestionhistoryDeleteDialogComponent,
+    QuestionHistoryComponent,
+    QuestionHistoryDetailComponent,
+    QuestionHistoryUpdateComponent,
+    QuestionHistoryDeletePopupComponent,
+    QuestionHistoryDeleteDialogComponent,
     questionhistoryRoute,
     questionhistoryPopupRoute
 } from './';
@@ -17,18 +17,18 @@ const ENTITY_STATES = [...questionhistoryRoute, ...questionhistoryPopupRoute];
 @NgModule({
     imports: [SmartCpdSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
-        QuestionhistoryComponent,
-        QuestionhistoryDetailComponent,
-        QuestionhistoryUpdateComponent,
-        QuestionhistoryDeleteDialogComponent,
-        QuestionhistoryDeletePopupComponent
+        QuestionHistoryComponent,
+        QuestionHistoryDetailComponent,
+        QuestionHistoryUpdateComponent,
+        QuestionHistoryDeleteDialogComponent,
+        QuestionHistoryDeletePopupComponent
     ],
     entryComponents: [
-        QuestionhistoryComponent,
-        QuestionhistoryUpdateComponent,
-        QuestionhistoryDeleteDialogComponent,
-        QuestionhistoryDeletePopupComponent
+        QuestionHistoryComponent,
+        QuestionHistoryUpdateComponent,
+        QuestionHistoryDeleteDialogComponent,
+        QuestionHistoryDeletePopupComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SmartCpdQuestionhistoryModule {}
+export class SmartCpdQuestionHistoryModule {}

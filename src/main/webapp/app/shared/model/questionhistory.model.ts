@@ -3,7 +3,7 @@ import { ICustomer } from 'app/shared/model//customer.model';
 import { IQuestion } from 'app/shared/model//question.model';
 import { IChoice } from 'app/shared/model//choice.model';
 
-export interface IQuestionhistory {
+export interface IQuestionHistory {
     id?: number;
     timestamp?: Moment;
     correct?: boolean;
@@ -12,7 +12,7 @@ export interface IQuestionhistory {
     choice?: IChoice;
 }
 
-export class Questionhistory implements IQuestionhistory {
+export class QuestionHistory implements IQuestionHistory {
     constructor(
         public id?: number,
         public timestamp?: Moment,

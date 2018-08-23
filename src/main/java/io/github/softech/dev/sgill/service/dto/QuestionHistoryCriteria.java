@@ -15,7 +15,7 @@ import io.github.jhipster.service.filter.InstantFilter;
 
 
 /**
- * Criteria class for the Questionhistory entity. This class is used in QuestionhistoryResource to
+ * Criteria class for the QuestionHistory entity. This class is used in QuestionHistoryResource to
  * receive all the possible filtering options from the Http GET request parameters.
  * For example the following could be a valid requests:
  * <code> /questionhistories?id.greaterThan=5&amp;attr1.contains=something&amp;attr2.specified=false</code>
