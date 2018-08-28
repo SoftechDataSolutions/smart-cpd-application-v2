@@ -9,6 +9,8 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -71,6 +73,13 @@ public class Course implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private Topic topic;
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "course_tags",
+               joinColumns = @JoinColumn(name = "courses_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
+    private Set<Tags> tags = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -235,6 +244,29 @@ public class Course implements Serializable {
 
     public void setTopic(Topic topic) {
         this.topic = topic;
+    }
+
+    public Set<Tags> getTags() {
+        return tags;
+    }
+
+    public Course tags(Set<Tags> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public Course addTags(Tags tags) {
+        this.tags.add(tags);
+        return this;
+    }
+
+    public Course removeTags(Tags tags) {
+        this.tags.remove(tags);
+        return this;
+    }
+
+    public void setTags(Set<Tags> tags) {
+        this.tags = tags;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

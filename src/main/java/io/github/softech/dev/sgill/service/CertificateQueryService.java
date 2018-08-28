@@ -77,17 +77,11 @@ public class CertificateQueryService extends QueryService<Certificate> {
             if (criteria.getTimestamp() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTimestamp(), Certificate_.timestamp));
             }
-            if (criteria.getFirstname() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getFirstname(), Certificate_.firstname));
-            }
-            if (criteria.getLastname() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getLastname(), Certificate_.lastname));
-            }
-            if (criteria.getCourse() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getCourse(), Certificate_.course));
-            }
             if (criteria.getCustomerId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCustomerId(), Certificate_.customer, Customer_.id));
+            }
+            if (criteria.getCoursesId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getCoursesId(), Certificate_.courses, Course_.id));
             }
         }
         return specification;

@@ -5,7 +5,6 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.QuestionHistory;
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.domain.Question;
-import io.github.softech.dev.sgill.domain.Choice;
 import io.github.softech.dev.sgill.repository.QuestionHistoryRepository;
 import io.github.softech.dev.sgill.repository.search.QuestionHistorySearchRepository;
 import io.github.softech.dev.sgill.service.QuestionHistoryService;
@@ -311,25 +310,6 @@ public class QuestionHistoryResourceIntTest {
 
         // Get all the questionHistoryList where question equals to questionId + 1
         defaultQuestionHistoryShouldNotBeFound("questionId.equals=" + (questionId + 1));
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllQuestionHistoriesByChoiceIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Choice choice = ChoiceResourceIntTest.createEntity(em);
-        em.persist(choice);
-        em.flush();
-        questionHistory.setChoice(choice);
-        questionHistoryRepository.saveAndFlush(questionHistory);
-        Long choiceId = choice.getId();
-
-        // Get all the questionHistoryList where choice equals to choiceId
-        defaultQuestionHistoryShouldBeFound("choiceId.equals=" + choiceId);
-
-        // Get all the questionHistoryList where choice equals to choiceId + 1
-        defaultQuestionHistoryShouldNotBeFound("choiceId.equals=" + (choiceId + 1));
     }
 
     /**

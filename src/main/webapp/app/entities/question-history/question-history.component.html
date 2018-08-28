@@ -34,7 +34,6 @@
             <th jhiSortBy="correct"><span jhiTranslate="smartCpdApp.questionHistory.correct">Correct</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.questionHistory.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="question.textQuestion"><span jhiTranslate="smartCpdApp.questionHistory.question">Question</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="choice.textChoice"><span jhiTranslate="smartCpdApp.questionHistory.choice">Choice</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -51,11 +50,6 @@
                 <td>
                     <div *ngIf="questionHistory.question">
                         <a [routerLink]="['../question', questionHistory.question?.id, 'view' ]" >{{questionHistory.question?.textQuestion}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="questionHistory.choice">
-                        <a [routerLink]="['../choice', questionHistory.choice?.id, 'view' ]" >{{questionHistory.choice?.textChoice}}</a>
                     </div>
                 </td>
                 <td class="text-right">

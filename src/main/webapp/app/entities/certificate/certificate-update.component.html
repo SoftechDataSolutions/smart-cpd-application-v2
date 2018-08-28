@@ -17,37 +17,22 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.firstname" for="field_firstname">Firstname</label>
-                    <input type="text" class="form-control" name="firstname" id="field_firstname"
-                        [(ngModel)]="certificate.firstname" />
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.lastname" for="field_lastname">Lastname</label>
-                    <input type="text" class="form-control" name="lastname" id="field_lastname"
-                        [(ngModel)]="certificate.lastname" />
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.course" for="field_course">Course</label>
-                    <input type="text" class="form-control" name="course" id="field_course"
-                        [(ngModel)]="certificate.course" />
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.content" for="field_content">Content</label>
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.pdf" for="field_pdf">Pdf</label>
                     <div>
-                        <div *ngIf="certificate.content" class="form-text text-danger clearfix">
-                            <a class="pull-left" (click)="openFile(certificate.contentContentType, certificate.content)" jhiTranslate="entity.action.open">open</a><br>
-                            <span class="pull-left">{{certificate.contentContentType}}, {{byteSize(certificate.content)}}</span>
-                            <button type="button" (click)="certificate.content=null;certificate.contentContentType=null;"
+                        <div *ngIf="certificate.pdf" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(certificate.pdfContentType, certificate.pdf)" jhiTranslate="entity.action.open">open</a><br>
+                            <span class="pull-left">{{certificate.pdfContentType}}, {{byteSize(certificate.pdf)}}</span>
+                            <button type="button" (click)="certificate.pdf=null;certificate.pdfContentType=null;"
                                     class="btn btn-secondary btn-xs pull-right">
                                 <fa-icon [icon]="'times'"></fa-icon>
                             </button>
                         </div>
-                        <input type="file" id="file_content" (change)="setFileData($event, certificate, 'content', false)" jhiTranslate="entity.action.addblob"/>
+                        <input type="file" id="file_pdf" (change)="setFileData($event, certificate, 'pdf', false)" jhiTranslate="entity.action.addblob"/>
                     </div>
-                    <input type="hidden" class="form-control" name="content" id="field_content"
-                        [(ngModel)]="certificate.content" />
-                    <input type="hidden" class="form-control" name="contentContentType" id="field_contentContentType"
-                        [(ngModel)]="certificate.contentContentType" />
+                    <input type="hidden" class="form-control" name="pdf" id="field_pdf"
+                        [(ngModel)]="certificate.pdf" />
+                    <input type="hidden" class="form-control" name="pdfContentType" id="field_pdfContentType"
+                        [(ngModel)]="certificate.pdfContentType" />
                 </div>
 
                 <div class="form-group">
@@ -55,6 +40,13 @@
                     <select class="form-control" id="field_customer" name="customer" [(ngModel)]="certificate.customer" >
                         <option [ngValue]="null"></option>
                         <option [ngValue]="customerOption.id === certificate.customer?.id ? certificate.customer : customerOption" *ngFor="let customerOption of customers; trackBy: trackCustomerById">{{customerOption.normalized}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.courses" for="field_courses">Courses</label>
+                    <select class="form-control" id="field_courses" name="courses" [(ngModel)]="certificate.courses" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="courseOption.id === certificate.courses?.id ? certificate.courses : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
                     </select>
                 </div>
             </div>

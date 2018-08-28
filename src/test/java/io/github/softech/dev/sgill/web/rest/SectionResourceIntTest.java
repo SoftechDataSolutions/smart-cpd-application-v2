@@ -5,6 +5,7 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.Quiz;
 import io.github.softech.dev.sgill.domain.Course;
+import io.github.softech.dev.sgill.domain.Tags;
 import io.github.softech.dev.sgill.repository.SectionRepository;
 import io.github.softech.dev.sgill.repository.search.SectionSearchRepository;
 import io.github.softech.dev.sgill.service.SectionService;
@@ -15,6 +16,7 @@ import io.github.softech.dev.sgill.service.SectionQueryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,16 +68,22 @@ public class SectionResourceIntTest {
     private static final String DEFAULT_CONTENT_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_CONTENT_CONTENT_TYPE = "image/png";
 
-    private static final String DEFAULT_TEXT_CONTENT = "AAAAAAAAAA";
-    private static final String UPDATED_TEXT_CONTENT = "BBBBBBBBBB";
-
     private static final String DEFAULT_VIDEO_URL = "AAAAAAAAAA";
     private static final String UPDATED_VIDEO_URL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TEXTCONTENT = "AAAAAAAAAA";
+    private static final String UPDATED_TEXTCONTENT = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
+
     @Autowired
     private SectionRepository sectionRepository;
-
+    @Mock
+    private SectionRepository sectionRepositoryMock;
     
+    @Mock
+    private SectionService sectionServiceMock;
 
     @Autowired
     private SectionService sectionService;
@@ -130,8 +139,9 @@ public class SectionResourceIntTest {
             .normSection(DEFAULT_NORM_SECTION)
             .content(DEFAULT_CONTENT)
             .contentContentType(DEFAULT_CONTENT_CONTENT_TYPE)
-            .textContent(DEFAULT_TEXT_CONTENT)
-            .videoUrl(DEFAULT_VIDEO_URL);
+            .videoUrl(DEFAULT_VIDEO_URL)
+            .textcontent(DEFAULT_TEXTCONTENT)
+            .type(DEFAULT_TYPE);
         return section;
     }
 
@@ -160,8 +170,9 @@ public class SectionResourceIntTest {
         assertThat(testSection.getNormSection()).isEqualTo(DEFAULT_NORM_SECTION);
         assertThat(testSection.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testSection.getContentContentType()).isEqualTo(DEFAULT_CONTENT_CONTENT_TYPE);
-        assertThat(testSection.getTextContent()).isEqualTo(DEFAULT_TEXT_CONTENT);
         assertThat(testSection.getVideoUrl()).isEqualTo(DEFAULT_VIDEO_URL);
+        assertThat(testSection.getTextcontent()).isEqualTo(DEFAULT_TEXTCONTENT);
+        assertThat(testSection.getType()).isEqualTo(DEFAULT_TYPE);
 
         // Validate the Section in Elasticsearch
         verify(mockSectionSearchRepository, times(1)).save(testSection);
@@ -209,6 +220,24 @@ public class SectionResourceIntTest {
 
     @Test
     @Transactional
+    public void checkTypeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sectionRepository.findAll().size();
+        // set the field null
+        section.setType(null);
+
+        // Create the Section, which fails.
+
+        restSectionMockMvc.perform(post("/api/sections")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(section)))
+            .andExpect(status().isBadRequest());
+
+        List<Section> sectionList = sectionRepository.findAll();
+        assertThat(sectionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllSections() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
@@ -223,10 +252,41 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].normSection").value(hasItem(DEFAULT_NORM_SECTION.toString())))
             .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
-            .andExpect(jsonPath("$.[*].textContent").value(hasItem(DEFAULT_TEXT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())));
+            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
+            .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
     
+    public void getAllSectionsWithEagerRelationshipsIsEnabled() throws Exception {
+        SectionResource sectionResource = new SectionResource(sectionServiceMock, sectionQueryService);
+        when(sectionServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restSectionMockMvc = MockMvcBuilders.standaloneSetup(sectionResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restSectionMockMvc.perform(get("/api/sections?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(sectionServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    public void getAllSectionsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        SectionResource sectionResource = new SectionResource(sectionServiceMock, sectionQueryService);
+            when(sectionServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restSectionMockMvc = MockMvcBuilders.standaloneSetup(sectionResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restSectionMockMvc.perform(get("/api/sections?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(sectionServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
 
     @Test
     @Transactional
@@ -244,8 +304,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.normSection").value(DEFAULT_NORM_SECTION.toString()))
             .andExpect(jsonPath("$.contentContentType").value(DEFAULT_CONTENT_CONTENT_TYPE))
             .andExpect(jsonPath("$.content").value(Base64Utils.encodeToString(DEFAULT_CONTENT)))
-            .andExpect(jsonPath("$.textContent").value(DEFAULT_TEXT_CONTENT.toString()))
-            .andExpect(jsonPath("$.videoUrl").value(DEFAULT_VIDEO_URL.toString()));
+            .andExpect(jsonPath("$.videoUrl").value(DEFAULT_VIDEO_URL.toString()))
+            .andExpect(jsonPath("$.textcontent").value(DEFAULT_TEXTCONTENT.toString()))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
@@ -367,45 +428,6 @@ public class SectionResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllSectionsByTextContentIsEqualToSomething() throws Exception {
-        // Initialize the database
-        sectionRepository.saveAndFlush(section);
-
-        // Get all the sectionList where textContent equals to DEFAULT_TEXT_CONTENT
-        defaultSectionShouldBeFound("textContent.equals=" + DEFAULT_TEXT_CONTENT);
-
-        // Get all the sectionList where textContent equals to UPDATED_TEXT_CONTENT
-        defaultSectionShouldNotBeFound("textContent.equals=" + UPDATED_TEXT_CONTENT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllSectionsByTextContentIsInShouldWork() throws Exception {
-        // Initialize the database
-        sectionRepository.saveAndFlush(section);
-
-        // Get all the sectionList where textContent in DEFAULT_TEXT_CONTENT or UPDATED_TEXT_CONTENT
-        defaultSectionShouldBeFound("textContent.in=" + DEFAULT_TEXT_CONTENT + "," + UPDATED_TEXT_CONTENT);
-
-        // Get all the sectionList where textContent equals to UPDATED_TEXT_CONTENT
-        defaultSectionShouldNotBeFound("textContent.in=" + UPDATED_TEXT_CONTENT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllSectionsByTextContentIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        sectionRepository.saveAndFlush(section);
-
-        // Get all the sectionList where textContent is not null
-        defaultSectionShouldBeFound("textContent.specified=true");
-
-        // Get all the sectionList where textContent is null
-        defaultSectionShouldNotBeFound("textContent.specified=false");
-    }
-
-    @Test
-    @Transactional
     public void getAllSectionsByVideoUrlIsEqualToSomething() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
@@ -445,6 +467,45 @@ public class SectionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllSectionsByTypeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where type equals to DEFAULT_TYPE
+        defaultSectionShouldBeFound("type.equals=" + DEFAULT_TYPE);
+
+        // Get all the sectionList where type equals to UPDATED_TYPE
+        defaultSectionShouldNotBeFound("type.equals=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTypeIsInShouldWork() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where type in DEFAULT_TYPE or UPDATED_TYPE
+        defaultSectionShouldBeFound("type.in=" + DEFAULT_TYPE + "," + UPDATED_TYPE);
+
+        // Get all the sectionList where type equals to UPDATED_TYPE
+        defaultSectionShouldNotBeFound("type.in=" + UPDATED_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTypeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where type is not null
+        defaultSectionShouldBeFound("type.specified=true");
+
+        // Get all the sectionList where type is null
+        defaultSectionShouldNotBeFound("type.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllSectionsByQuizIsEqualToSomething() throws Exception {
         // Initialize the database
         Quiz quiz = QuizResourceIntTest.createEntity(em);
@@ -480,6 +541,25 @@ public class SectionResourceIntTest {
         defaultSectionShouldNotBeFound("courseId.equals=" + (courseId + 1));
     }
 
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTagsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Tags tags = TagsResourceIntTest.createEntity(em);
+        em.persist(tags);
+        em.flush();
+        section.addTags(tags);
+        sectionRepository.saveAndFlush(section);
+        Long tagsId = tags.getId();
+
+        // Get all the sectionList where tags equals to tagsId
+        defaultSectionShouldBeFound("tagsId.equals=" + tagsId);
+
+        // Get all the sectionList where tags equals to tagsId + 1
+        defaultSectionShouldNotBeFound("tagsId.equals=" + (tagsId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -493,8 +573,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].normSection").value(hasItem(DEFAULT_NORM_SECTION.toString())))
             .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
-            .andExpect(jsonPath("$.[*].textContent").value(hasItem(DEFAULT_TEXT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())));
+            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
+            .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
 
     /**
@@ -536,8 +617,9 @@ public class SectionResourceIntTest {
             .normSection(UPDATED_NORM_SECTION)
             .content(UPDATED_CONTENT)
             .contentContentType(UPDATED_CONTENT_CONTENT_TYPE)
-            .textContent(UPDATED_TEXT_CONTENT)
-            .videoUrl(UPDATED_VIDEO_URL);
+            .videoUrl(UPDATED_VIDEO_URL)
+            .textcontent(UPDATED_TEXTCONTENT)
+            .type(UPDATED_TYPE);
 
         restSectionMockMvc.perform(put("/api/sections")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -553,8 +635,9 @@ public class SectionResourceIntTest {
         assertThat(testSection.getNormSection()).isEqualTo(UPDATED_NORM_SECTION);
         assertThat(testSection.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testSection.getContentContentType()).isEqualTo(UPDATED_CONTENT_CONTENT_TYPE);
-        assertThat(testSection.getTextContent()).isEqualTo(UPDATED_TEXT_CONTENT);
         assertThat(testSection.getVideoUrl()).isEqualTo(UPDATED_VIDEO_URL);
+        assertThat(testSection.getTextcontent()).isEqualTo(UPDATED_TEXTCONTENT);
+        assertThat(testSection.getType()).isEqualTo(UPDATED_TYPE);
 
         // Validate the Section in Elasticsearch
         verify(mockSectionSearchRepository, times(1)).save(testSection);
@@ -619,8 +702,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].normSection").value(hasItem(DEFAULT_NORM_SECTION.toString())))
             .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
-            .andExpect(jsonPath("$.[*].textContent").value(hasItem(DEFAULT_TEXT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())));
+            .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
+            .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
 
     @Test

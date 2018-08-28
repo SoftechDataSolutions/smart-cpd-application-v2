@@ -40,10 +40,6 @@ public class QuestionHistory implements Serializable {
     @JsonIgnoreProperties("")
     private Question question;
 
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Choice choice;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -103,19 +99,6 @@ public class QuestionHistory implements Serializable {
 
     public void setQuestion(Question question) {
         this.question = question;
-    }
-
-    public Choice getChoice() {
-        return choice;
-    }
-
-    public QuestionHistory choice(Choice choice) {
-        this.choice = choice;
-        return this;
-    }
-
-    public void setChoice(Choice choice) {
-        this.choice = choice;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

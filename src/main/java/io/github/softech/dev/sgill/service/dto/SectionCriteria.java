@@ -34,13 +34,15 @@ public class SectionCriteria implements Serializable {
 
     private StringFilter normSection;
 
-    private StringFilter textContent;
-
     private StringFilter videoUrl;
+
+    private StringFilter type;
 
     private LongFilter quizId;
 
     private LongFilter courseId;
+
+    private LongFilter tagsId;
 
     public SectionCriteria() {
     }
@@ -77,20 +79,20 @@ public class SectionCriteria implements Serializable {
         this.normSection = normSection;
     }
 
-    public StringFilter getTextContent() {
-        return textContent;
-    }
-
-    public void setTextContent(StringFilter textContent) {
-        this.textContent = textContent;
-    }
-
     public StringFilter getVideoUrl() {
         return videoUrl;
     }
 
     public void setVideoUrl(StringFilter videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public StringFilter getType() {
+        return type;
+    }
+
+    public void setType(StringFilter type) {
+        this.type = type;
     }
 
     public LongFilter getQuizId() {
@@ -109,6 +111,14 @@ public class SectionCriteria implements Serializable {
         this.courseId = courseId;
     }
 
+    public LongFilter getTagsId() {
+        return tagsId;
+    }
+
+    public void setTagsId(LongFilter tagsId) {
+        this.tagsId = tagsId;
+    }
+
     @Override
     public String toString() {
         return "SectionCriteria{" +
@@ -116,10 +126,11 @@ public class SectionCriteria implements Serializable {
                 (name != null ? "name=" + name + ", " : "") +
                 (notes != null ? "notes=" + notes + ", " : "") +
                 (normSection != null ? "normSection=" + normSection + ", " : "") +
-                (textContent != null ? "textContent=" + textContent + ", " : "") +
                 (videoUrl != null ? "videoUrl=" + videoUrl + ", " : "") +
+                (type != null ? "type=" + type + ", " : "") +
                 (quizId != null ? "quizId=" + quizId + ", " : "") +
                 (courseId != null ? "courseId=" + courseId + ", " : "") +
+                (tagsId != null ? "tagsId=" + tagsId + ", " : "") +
             "}";
     }
 

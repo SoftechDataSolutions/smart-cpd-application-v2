@@ -21,10 +21,12 @@
             "notes": "Notes",
             "normSection": "Norm Section",
             "content": "Content",
-            "textContent": "Text Content",
             "videoUrl": "Video Url",
+            "textcontent": "Textcontent",
+            "type": "Type",
             "quiz": "Quiz",
-            "course": "Course"
+            "course": "Course",
+            "tags": "Tags"
         }
     }
 }

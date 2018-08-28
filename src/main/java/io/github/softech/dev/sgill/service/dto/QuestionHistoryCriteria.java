@@ -36,8 +36,6 @@ public class QuestionHistoryCriteria implements Serializable {
 
     private LongFilter questionId;
 
-    private LongFilter choiceId;
-
     public QuestionHistoryCriteria() {
     }
 
@@ -81,14 +79,6 @@ public class QuestionHistoryCriteria implements Serializable {
         this.questionId = questionId;
     }
 
-    public LongFilter getChoiceId() {
-        return choiceId;
-    }
-
-    public void setChoiceId(LongFilter choiceId) {
-        this.choiceId = choiceId;
-    }
-
     @Override
     public String toString() {
         return "QuestionHistoryCriteria{" +
@@ -97,7 +87,6 @@ public class QuestionHistoryCriteria implements Serializable {
                 (correct != null ? "correct=" + correct + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (questionId != null ? "questionId=" + questionId + ", " : "") +
-                (choiceId != null ? "choiceId=" + choiceId + ", " : "") +
             "}";
     }
 

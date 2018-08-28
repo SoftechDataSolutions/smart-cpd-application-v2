@@ -12,8 +12,6 @@ import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
 import { IQuestion } from 'app/shared/model/question.model';
 import { QuestionService } from 'app/entities/question';
-import { IChoice } from 'app/shared/model/choice.model';
-import { ChoiceService } from 'app/entities/choice';
 
 @Component({
     selector: 'jhi-question-history-update',
@@ -26,8 +24,6 @@ export class QuestionHistoryUpdateComponent implements OnInit {
     customers: ICustomer[];
 
     questions: IQuestion[];
-
-    choices: IChoice[];
     timestamp: string;
 
     constructor(
@@ -35,7 +31,6 @@ export class QuestionHistoryUpdateComponent implements OnInit {
         private questionHistoryService: QuestionHistoryService,
         private customerService: CustomerService,
         private questionService: QuestionService,
-        private choiceService: ChoiceService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -53,12 +48,6 @@ export class QuestionHistoryUpdateComponent implements OnInit {
         this.questionService.query().subscribe(
             (res: HttpResponse<IQuestion[]>) => {
                 this.questions = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
-        this.choiceService.query().subscribe(
-            (res: HttpResponse<IChoice[]>) => {
-                this.choices = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -100,10 +89,6 @@ export class QuestionHistoryUpdateComponent implements OnInit {
     }
 
     trackQuestionById(index: number, item: IQuestion) {
-        return item.id;
-    }
-
-    trackChoiceById(index: number, item: IChoice) {
         return item.id;
     }
     get questionHistory() {

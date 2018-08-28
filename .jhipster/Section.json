@@ -1,5 +1,30 @@
 {
-    "name": "Section",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "quiz",
+            "otherEntityName": "quiz",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "section"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "course",
+            "otherEntityName": "course",
+            "otherEntityField": "normCourses"
+        },
+        {
+            "relationshipName": "tags",
+            "otherEntityName": "tags",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "section"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
@@ -25,38 +50,27 @@
             ]
         },
         {
-            "fieldName": "textContent",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "videoUrl",
             "fieldType": "String"
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-one",
-            "relationshipName": "quiz",
-            "otherEntityName": "quiz",
-            "otherEntityField": "name",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "section"
         },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "course",
-            "otherEntityName": "course",
-            "otherEntityField": "normCourses"
+            "fieldName": "textcontent",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20180819063644",
-    "entityTableName": "section",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "section",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

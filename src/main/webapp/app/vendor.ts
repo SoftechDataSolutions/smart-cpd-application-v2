@@ -81,4 +81,7 @@ library.add(faAsterisk);
 library.add(faShoppingCart);
 library.add(faEye);
 
+import 'quill/dist/quill.js';
+import '../../../../node_modules/fullcalendar/dist/fullcalendar.js';
+import 'chart.js/src/chart.js';
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

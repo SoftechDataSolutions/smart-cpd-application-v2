@@ -83,17 +83,20 @@ public class SectionQueryService extends QueryService<Section> {
             if (criteria.getNormSection() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getNormSection(), Section_.normSection));
             }
-            if (criteria.getTextContent() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getTextContent(), Section_.textContent));
-            }
             if (criteria.getVideoUrl() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getVideoUrl(), Section_.videoUrl));
+            }
+            if (criteria.getType() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getType(), Section_.type));
             }
             if (criteria.getQuizId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getQuizId(), Section_.quiz, Quiz_.id));
             }
             if (criteria.getCourseId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCourseId(), Section_.course, Course_.id));
+            }
+            if (criteria.getTagsId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getTagsId(), Section_.tags, Tags_.id));
             }
         }
         return specification;

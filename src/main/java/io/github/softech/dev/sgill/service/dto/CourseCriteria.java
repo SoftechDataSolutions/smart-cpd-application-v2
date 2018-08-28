@@ -48,6 +48,8 @@ public class CourseCriteria implements Serializable {
 
     private LongFilter topicId;
 
+    private LongFilter tagsId;
+
     public CourseCriteria() {
     }
 
@@ -139,6 +141,14 @@ public class CourseCriteria implements Serializable {
         this.topicId = topicId;
     }
 
+    public LongFilter getTagsId() {
+        return tagsId;
+    }
+
+    public void setTagsId(LongFilter tagsId) {
+        this.tagsId = tagsId;
+    }
+
     @Override
     public String toString() {
         return "CourseCriteria{" +
@@ -153,6 +163,7 @@ public class CourseCriteria implements Serializable {
                 (country != null ? "country=" + country + ", " : "") +
                 (state != null ? "state=" + state + ", " : "") +
                 (topicId != null ? "topicId=" + topicId + ", " : "") +
+                (tagsId != null ? "tagsId=" + tagsId + ", " : "") +
             "}";
     }
 

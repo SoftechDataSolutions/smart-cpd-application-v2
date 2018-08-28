@@ -27,7 +27,8 @@
             "credit": "Credit",
             "country": "Country",
             "state": "State",
-            "topic": "Topic"
+            "topic": "Topic",
+            "tags": "Tags"
         }
     }
 }

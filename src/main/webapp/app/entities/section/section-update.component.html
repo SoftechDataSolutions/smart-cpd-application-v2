@@ -55,14 +55,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.textContent" for="field_textContent">Text Content</label>
-                    <input type="text" class="form-control" name="textContent" id="field_textContent"
-                        [(ngModel)]="section.textContent" />
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.videoUrl" for="field_videoUrl">Video Url</label>
                     <input type="text" class="form-control" name="videoUrl" id="field_videoUrl"
                         [(ngModel)]="section.videoUrl" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.textcontent" for="field_textcontent">Textcontent</label>
+                    <p-editor id="field_textcontent" name="textcontent" [(ngModel)]="section.textcontent" styleClass="editor-dimensions"></p-editor>
+                    <!--<textarea class="form-control" name="textcontent" id="field_textcontent"
+                        [(ngModel)]="section.textcontent" ></textarea>-->
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                        [(ngModel)]="section.type" required/>
+                    <div [hidden]="!(editForm.controls.type?.dirty && editForm.controls.type?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.type?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -77,6 +89,12 @@
                     <select class="form-control" id="field_course" name="course" [(ngModel)]="section.course" >
                         <option [ngValue]="null"></option>
                         <option [ngValue]="courseOption.id === section.course?.id ? section.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label jhiTranslate="smartCpdApp.section.tags" for="field_tags">Tags</label>
+                    <select class="form-control" id="field_tags" multiple name="tags" [(ngModel)]="section.tags">
+                        <option [ngValue]="getSelected(section.tags, tagsOption)" *ngFor="let tagsOption of tags; trackBy: trackTagsById">{{tagsOption.name}}</option>
                     </select>
                 </div>
             </div>

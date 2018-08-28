@@ -4,6 +4,7 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.Topic;
+import io.github.softech.dev.sgill.domain.Tags;
 import io.github.softech.dev.sgill.repository.CourseRepository;
 import io.github.softech.dev.sgill.repository.search.CourseSearchRepository;
 import io.github.softech.dev.sgill.service.CourseService;
@@ -14,6 +15,7 @@ import io.github.softech.dev.sgill.service.CourseQueryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,8 +87,11 @@ public class CourseResourceIntTest {
 
     @Autowired
     private CourseRepository courseRepository;
-
+    @Mock
+    private CourseRepository courseRepositoryMock;
     
+    @Mock
+    private CourseService courseServiceMock;
 
     @Autowired
     private CourseService courseService;
@@ -358,6 +364,36 @@ public class CourseResourceIntTest {
             .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())));
     }
     
+    public void getAllCoursesWithEagerRelationshipsIsEnabled() throws Exception {
+        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService);
+        when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    public void getAllCoursesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService);
+            when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restCourseMockMvc.perform(get("/api/courses?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(courseServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
 
     @Test
     @Transactional
@@ -777,6 +813,25 @@ public class CourseResourceIntTest {
 
         // Get all the courseList where topic equals to topicId + 1
         defaultCourseShouldNotBeFound("topicId.equals=" + (topicId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCoursesByTagsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Tags tags = TagsResourceIntTest.createEntity(em);
+        em.persist(tags);
+        em.flush();
+        course.addTags(tags);
+        courseRepository.saveAndFlush(course);
+        Long tagsId = tags.getId();
+
+        // Get all the courseList where tags equals to tagsId
+        defaultCourseShouldBeFound("tagsId.equals=" + tagsId);
+
+        // Get all the courseList where tags equals to tagsId + 1
+        defaultCourseShouldNotBeFound("tagsId.equals=" + (tagsId + 1));
     }
 
     /**

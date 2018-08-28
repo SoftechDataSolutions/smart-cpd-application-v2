@@ -4,6 +4,7 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Certificate;
 import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.repository.CertificateRepository;
 import io.github.softech.dev.sgill.repository.search.CertificateSearchRepository;
 import io.github.softech.dev.sgill.service.CertificateService;
@@ -55,19 +56,10 @@ public class CertificateResourceIntTest {
     private static final Instant DEFAULT_TIMESTAMP = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final String DEFAULT_FIRSTNAME = "AAAAAAAAAA";
-    private static final String UPDATED_FIRSTNAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_LASTNAME = "AAAAAAAAAA";
-    private static final String UPDATED_LASTNAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_COURSE = "AAAAAAAAAA";
-    private static final String UPDATED_COURSE = "BBBBBBBBBB";
-
-    private static final byte[] DEFAULT_CONTENT = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_CONTENT = TestUtil.createByteArray(2, "1");
-    private static final String DEFAULT_CONTENT_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_CONTENT_CONTENT_TYPE = "image/png";
+    private static final byte[] DEFAULT_PDF = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_PDF = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_PDF_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_PDF_CONTENT_TYPE = "image/png";
 
     @Autowired
     private CertificateRepository certificateRepository;
@@ -124,11 +116,8 @@ public class CertificateResourceIntTest {
     public static Certificate createEntity(EntityManager em) {
         Certificate certificate = new Certificate()
             .timestamp(DEFAULT_TIMESTAMP)
-            .firstname(DEFAULT_FIRSTNAME)
-            .lastname(DEFAULT_LASTNAME)
-            .course(DEFAULT_COURSE)
-            .content(DEFAULT_CONTENT)
-            .contentContentType(DEFAULT_CONTENT_CONTENT_TYPE);
+            .pdf(DEFAULT_PDF)
+            .pdfContentType(DEFAULT_PDF_CONTENT_TYPE);
         return certificate;
     }
 
@@ -153,11 +142,8 @@ public class CertificateResourceIntTest {
         assertThat(certificateList).hasSize(databaseSizeBeforeCreate + 1);
         Certificate testCertificate = certificateList.get(certificateList.size() - 1);
         assertThat(testCertificate.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
-        assertThat(testCertificate.getFirstname()).isEqualTo(DEFAULT_FIRSTNAME);
-        assertThat(testCertificate.getLastname()).isEqualTo(DEFAULT_LASTNAME);
-        assertThat(testCertificate.getCourse()).isEqualTo(DEFAULT_COURSE);
-        assertThat(testCertificate.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testCertificate.getContentContentType()).isEqualTo(DEFAULT_CONTENT_CONTENT_TYPE);
+        assertThat(testCertificate.getPdf()).isEqualTo(DEFAULT_PDF);
+        assertThat(testCertificate.getPdfContentType()).isEqualTo(DEFAULT_PDF_CONTENT_TYPE);
 
         // Validate the Certificate in Elasticsearch
         verify(mockCertificateSearchRepository, times(1)).save(testCertificate);
@@ -197,11 +183,8 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].firstname").value(hasItem(DEFAULT_FIRSTNAME.toString())))
-            .andExpect(jsonPath("$.[*].lastname").value(hasItem(DEFAULT_LASTNAME.toString())))
-            .andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())))
-            .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))));
+            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
     }
     
 
@@ -217,11 +200,8 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(certificate.getId().intValue()))
             .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
-            .andExpect(jsonPath("$.firstname").value(DEFAULT_FIRSTNAME.toString()))
-            .andExpect(jsonPath("$.lastname").value(DEFAULT_LASTNAME.toString()))
-            .andExpect(jsonPath("$.course").value(DEFAULT_COURSE.toString()))
-            .andExpect(jsonPath("$.contentContentType").value(DEFAULT_CONTENT_CONTENT_TYPE))
-            .andExpect(jsonPath("$.content").value(Base64Utils.encodeToString(DEFAULT_CONTENT)));
+            .andExpect(jsonPath("$.pdfContentType").value(DEFAULT_PDF_CONTENT_TYPE))
+            .andExpect(jsonPath("$.pdf").value(Base64Utils.encodeToString(DEFAULT_PDF)));
     }
 
     @Test
@@ -265,123 +245,6 @@ public class CertificateResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllCertificatesByFirstnameIsEqualToSomething() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where firstname equals to DEFAULT_FIRSTNAME
-        defaultCertificateShouldBeFound("firstname.equals=" + DEFAULT_FIRSTNAME);
-
-        // Get all the certificateList where firstname equals to UPDATED_FIRSTNAME
-        defaultCertificateShouldNotBeFound("firstname.equals=" + UPDATED_FIRSTNAME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByFirstnameIsInShouldWork() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where firstname in DEFAULT_FIRSTNAME or UPDATED_FIRSTNAME
-        defaultCertificateShouldBeFound("firstname.in=" + DEFAULT_FIRSTNAME + "," + UPDATED_FIRSTNAME);
-
-        // Get all the certificateList where firstname equals to UPDATED_FIRSTNAME
-        defaultCertificateShouldNotBeFound("firstname.in=" + UPDATED_FIRSTNAME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByFirstnameIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where firstname is not null
-        defaultCertificateShouldBeFound("firstname.specified=true");
-
-        // Get all the certificateList where firstname is null
-        defaultCertificateShouldNotBeFound("firstname.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByLastnameIsEqualToSomething() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where lastname equals to DEFAULT_LASTNAME
-        defaultCertificateShouldBeFound("lastname.equals=" + DEFAULT_LASTNAME);
-
-        // Get all the certificateList where lastname equals to UPDATED_LASTNAME
-        defaultCertificateShouldNotBeFound("lastname.equals=" + UPDATED_LASTNAME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByLastnameIsInShouldWork() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where lastname in DEFAULT_LASTNAME or UPDATED_LASTNAME
-        defaultCertificateShouldBeFound("lastname.in=" + DEFAULT_LASTNAME + "," + UPDATED_LASTNAME);
-
-        // Get all the certificateList where lastname equals to UPDATED_LASTNAME
-        defaultCertificateShouldNotBeFound("lastname.in=" + UPDATED_LASTNAME);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByLastnameIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where lastname is not null
-        defaultCertificateShouldBeFound("lastname.specified=true");
-
-        // Get all the certificateList where lastname is null
-        defaultCertificateShouldNotBeFound("lastname.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByCourseIsEqualToSomething() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where course equals to DEFAULT_COURSE
-        defaultCertificateShouldBeFound("course.equals=" + DEFAULT_COURSE);
-
-        // Get all the certificateList where course equals to UPDATED_COURSE
-        defaultCertificateShouldNotBeFound("course.equals=" + UPDATED_COURSE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByCourseIsInShouldWork() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where course in DEFAULT_COURSE or UPDATED_COURSE
-        defaultCertificateShouldBeFound("course.in=" + DEFAULT_COURSE + "," + UPDATED_COURSE);
-
-        // Get all the certificateList where course equals to UPDATED_COURSE
-        defaultCertificateShouldNotBeFound("course.in=" + UPDATED_COURSE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificatesByCourseIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        certificateRepository.saveAndFlush(certificate);
-
-        // Get all the certificateList where course is not null
-        defaultCertificateShouldBeFound("course.specified=true");
-
-        // Get all the certificateList where course is null
-        defaultCertificateShouldNotBeFound("course.specified=false");
-    }
-
-    @Test
-    @Transactional
     public void getAllCertificatesByCustomerIsEqualToSomething() throws Exception {
         // Initialize the database
         Customer customer = CustomerResourceIntTest.createEntity(em);
@@ -398,6 +261,25 @@ public class CertificateResourceIntTest {
         defaultCertificateShouldNotBeFound("customerId.equals=" + (customerId + 1));
     }
 
+
+    @Test
+    @Transactional
+    public void getAllCertificatesByCoursesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Course courses = CourseResourceIntTest.createEntity(em);
+        em.persist(courses);
+        em.flush();
+        certificate.setCourses(courses);
+        certificateRepository.saveAndFlush(certificate);
+        Long coursesId = courses.getId();
+
+        // Get all the certificateList where courses equals to coursesId
+        defaultCertificateShouldBeFound("coursesId.equals=" + coursesId);
+
+        // Get all the certificateList where courses equals to coursesId + 1
+        defaultCertificateShouldNotBeFound("coursesId.equals=" + (coursesId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -407,11 +289,8 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].firstname").value(hasItem(DEFAULT_FIRSTNAME.toString())))
-            .andExpect(jsonPath("$.[*].lastname").value(hasItem(DEFAULT_LASTNAME.toString())))
-            .andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())))
-            .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))));
+            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
     }
 
     /**
@@ -449,11 +328,8 @@ public class CertificateResourceIntTest {
         em.detach(updatedCertificate);
         updatedCertificate
             .timestamp(UPDATED_TIMESTAMP)
-            .firstname(UPDATED_FIRSTNAME)
-            .lastname(UPDATED_LASTNAME)
-            .course(UPDATED_COURSE)
-            .content(UPDATED_CONTENT)
-            .contentContentType(UPDATED_CONTENT_CONTENT_TYPE);
+            .pdf(UPDATED_PDF)
+            .pdfContentType(UPDATED_PDF_CONTENT_TYPE);
 
         restCertificateMockMvc.perform(put("/api/certificates")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -465,11 +341,8 @@ public class CertificateResourceIntTest {
         assertThat(certificateList).hasSize(databaseSizeBeforeUpdate);
         Certificate testCertificate = certificateList.get(certificateList.size() - 1);
         assertThat(testCertificate.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
-        assertThat(testCertificate.getFirstname()).isEqualTo(UPDATED_FIRSTNAME);
-        assertThat(testCertificate.getLastname()).isEqualTo(UPDATED_LASTNAME);
-        assertThat(testCertificate.getCourse()).isEqualTo(UPDATED_COURSE);
-        assertThat(testCertificate.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testCertificate.getContentContentType()).isEqualTo(UPDATED_CONTENT_CONTENT_TYPE);
+        assertThat(testCertificate.getPdf()).isEqualTo(UPDATED_PDF);
+        assertThat(testCertificate.getPdfContentType()).isEqualTo(UPDATED_PDF_CONTENT_TYPE);
 
         // Validate the Certificate in Elasticsearch
         verify(mockCertificateSearchRepository, times(1)).save(testCertificate);
@@ -530,11 +403,8 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].firstname").value(hasItem(DEFAULT_FIRSTNAME.toString())))
-            .andExpect(jsonPath("$.[*].lastname").value(hasItem(DEFAULT_LASTNAME.toString())))
-            .andExpect(jsonPath("$.[*].course").value(hasItem(DEFAULT_COURSE.toString())))
-            .andExpect(jsonPath("$.[*].contentContentType").value(hasItem(DEFAULT_CONTENT_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))));
+            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
     }
 
     @Test

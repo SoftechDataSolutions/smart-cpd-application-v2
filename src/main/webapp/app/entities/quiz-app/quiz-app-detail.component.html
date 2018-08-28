@@ -5,14 +5,6 @@
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="smartCpdApp.quizApp.option">Option</span></dt>
-                <dd>
-                    <span>{{quizApp.option}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.quizApp.correct">Correct</span></dt>
-                <dd>
-                    <span>{{quizApp.correct}}</span>
-                </dd>
                 <dt><span jhiTranslate="smartCpdApp.quizApp.quiz">Quiz</span></dt>
                 <dd>
                     <div *ngIf="quizApp.quiz">
@@ -23,6 +15,18 @@
                 <dd>
                     <div *ngIf="quizApp.customer">
                         <a [routerLink]="['/customer', quizApp.customer?.id, 'view']">{{quizApp.customer?.normalized}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.quizApp.currSection">Curr Section</span></dt>
+                <dd>
+                    <div *ngIf="quizApp.currSection">
+                        <a [routerLink]="['/section', quizApp.currSection?.id, 'view']">{{quizApp.currSection?.name}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.quizApp.newSection">New Section</span></dt>
+                <dd>
+                    <div *ngIf="quizApp.newSection">
+                        <a [routerLink]="['/section', quizApp.newSection?.id, 'view']">{{quizApp.newSection?.name}}</a>
                     </div>
                 </dd>
             </dl>

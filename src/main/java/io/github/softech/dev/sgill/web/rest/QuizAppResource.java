@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -57,7 +56,7 @@ public class QuizAppResource {
      */
     @PostMapping("/quiz-apps")
     @Timed
-    public ResponseEntity<QuizApp> createQuizApp(@Valid @RequestBody QuizApp quizApp) throws URISyntaxException {
+    public ResponseEntity<QuizApp> createQuizApp(@RequestBody QuizApp quizApp) throws URISyntaxException {
         log.debug("REST request to save QuizApp : {}", quizApp);
         if (quizApp.getId() != null) {
             throw new BadRequestAlertException("A new quizApp cannot already have an ID", ENTITY_NAME, "idexists");
@@ -79,7 +78,7 @@ public class QuizAppResource {
      */
     @PutMapping("/quiz-apps")
     @Timed
-    public ResponseEntity<QuizApp> updateQuizApp(@Valid @RequestBody QuizApp quizApp) throws URISyntaxException {
+    public ResponseEntity<QuizApp> updateQuizApp(@RequestBody QuizApp quizApp) throws URISyntaxException {
         log.debug("REST request to update QuizApp : {}", quizApp);
         if (quizApp.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

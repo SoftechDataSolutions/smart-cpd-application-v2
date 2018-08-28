@@ -34,8 +34,9 @@
             <th jhiSortBy="notes"><span jhiTranslate="smartCpdApp.section.notes">Notes</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="normSection"><span jhiTranslate="smartCpdApp.section.normSection">Norm Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="content"><span jhiTranslate="smartCpdApp.section.content">Content</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="textContent"><span jhiTranslate="smartCpdApp.section.textContent">Text Content</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="videoUrl"><span jhiTranslate="smartCpdApp.section.videoUrl">Video Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="textcontent"><span jhiTranslate="smartCpdApp.section.textcontent">Textcontent</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="type"><span jhiTranslate="smartCpdApp.section.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="quiz.name"><span jhiTranslate="smartCpdApp.section.quiz">Quiz</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="course.normCourses"><span jhiTranslate="smartCpdApp.section.course">Course</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -51,8 +52,9 @@
                     <a *ngIf="section.content" (click)="openFile(section.contentContentType, section.content)" jhiTranslate="entity.action.open">open</a>
                     <span *ngIf="section.content">{{section.contentContentType}}, {{byteSize(section.content)}}</span>
                 </td>
-                <td>{{section.textContent}}</td>
                 <td>{{section.videoUrl}}</td>
+                <td>{{section.textcontent}}</td>
+                <td>{{section.type}}</td>
                 <td>
                     <div *ngIf="section.quiz">
                         <a [routerLink]="['../quiz', section.quiz?.id, 'view' ]" >{{section.quiz?.name}}</a>

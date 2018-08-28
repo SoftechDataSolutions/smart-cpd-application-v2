@@ -24,13 +24,17 @@
                         {{section.contentContentType}}, {{byteSize(section.content)}}
                     </div>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.textContent">Text Content</span></dt>
-                <dd>
-                    <span>{{section.textContent}}</span>
-                </dd>
                 <dt><span jhiTranslate="smartCpdApp.section.videoUrl">Video Url</span></dt>
                 <dd>
                     <span>{{section.videoUrl}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.textcontent">Textcontent</span></dt>
+                <dd>
+                    <span>{{section.textcontent}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.type">Type</span></dt>
+                <dd>
+                    <span>{{section.type}}</span>
                 </dd>
                 <dt><span jhiTranslate="smartCpdApp.section.quiz">Quiz</span></dt>
                 <dd>
@@ -43,6 +47,12 @@
                     <div *ngIf="section.course">
                         <a [routerLink]="['/course', section.course?.id, 'view']">{{section.course?.normCourses}}</a>
                     </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.tags">Tags</span></dt>
+                <dd>
+                    <span *ngFor="let tags of section.tags; let last = last">
+                        <a [routerLink]="['/tags', tags?.id, 'view' ]">{{tags.name}}</a>{{last ? '' : ', '}}
+                    </span>
                 </dd>
             </dl>
 

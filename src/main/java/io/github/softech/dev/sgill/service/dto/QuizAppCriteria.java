@@ -28,13 +28,13 @@ public class QuizAppCriteria implements Serializable {
 
     private LongFilter id;
 
-    private StringFilter option;
-
-    private BooleanFilter correct;
-
     private LongFilter quizId;
 
     private LongFilter customerId;
+
+    private LongFilter currSectionId;
+
+    private LongFilter newSectionId;
 
     public QuizAppCriteria() {
     }
@@ -45,22 +45,6 @@ public class QuizAppCriteria implements Serializable {
 
     public void setId(LongFilter id) {
         this.id = id;
-    }
-
-    public StringFilter getOption() {
-        return option;
-    }
-
-    public void setOption(StringFilter option) {
-        this.option = option;
-    }
-
-    public BooleanFilter getCorrect() {
-        return correct;
-    }
-
-    public void setCorrect(BooleanFilter correct) {
-        this.correct = correct;
     }
 
     public LongFilter getQuizId() {
@@ -79,14 +63,30 @@ public class QuizAppCriteria implements Serializable {
         this.customerId = customerId;
     }
 
+    public LongFilter getCurrSectionId() {
+        return currSectionId;
+    }
+
+    public void setCurrSectionId(LongFilter currSectionId) {
+        this.currSectionId = currSectionId;
+    }
+
+    public LongFilter getNewSectionId() {
+        return newSectionId;
+    }
+
+    public void setNewSectionId(LongFilter newSectionId) {
+        this.newSectionId = newSectionId;
+    }
+
     @Override
     public String toString() {
         return "QuizAppCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (option != null ? "option=" + option + ", " : "") +
-                (correct != null ? "correct=" + correct + ", " : "") +
                 (quizId != null ? "quizId=" + quizId + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
+                (currSectionId != null ? "currSectionId=" + currSectionId + ", " : "") +
+                (newSectionId != null ? "newSectionId=" + newSectionId + ", " : "") +
             "}";
     }
 

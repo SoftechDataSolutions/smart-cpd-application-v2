@@ -36,13 +36,6 @@
                         <option [ngValue]="questionOption.id === questionHistory.question?.id ? questionHistory.question : questionOption" *ngFor="let questionOption of questions; trackBy: trackQuestionById">{{questionOption.textQuestion}}</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.questionHistory.choice" for="field_choice">Choice</label>
-                    <select class="form-control" id="field_choice" name="choice" [(ngModel)]="questionHistory.choice" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="choiceOption.id === questionHistory.choice?.id ? questionHistory.choice : choiceOption" *ngFor="let choiceOption of choices; trackBy: trackChoiceById">{{choiceOption.textChoice}}</option>
-                    </select>
-                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

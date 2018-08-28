@@ -1,7 +1,6 @@
 import { Moment } from 'moment';
 import { ICustomer } from 'app/shared/model//customer.model';
 import { IQuestion } from 'app/shared/model//question.model';
-import { IChoice } from 'app/shared/model//choice.model';
 
 export interface IQuestionHistory {
     id?: number;
@@ -9,7 +8,6 @@ export interface IQuestionHistory {
     correct?: boolean;
     customer?: ICustomer;
     question?: IQuestion;
-    choice?: IChoice;
 }
 
 export class QuestionHistory implements IQuestionHistory {
@@ -18,8 +16,7 @@ export class QuestionHistory implements IQuestionHistory {
         public timestamp?: Moment,
         public correct?: boolean,
         public customer?: ICustomer,
-        public question?: IQuestion,
-        public choice?: IChoice
+        public question?: IQuestion
     ) {
         this.correct = this.correct || false;
     }

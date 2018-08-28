@@ -20,11 +20,5 @@
                                  referencedColumnNames="id"
                                  referencedTableName="question"/>
 
-        <addForeignKeyConstraint baseColumnNames="choice_id"
-                                 baseTableName="question_history"
-                                 constraintName="fk_question_history_choice_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="choice"/>
-
     </changeSet>
 </databaseChangeLog>

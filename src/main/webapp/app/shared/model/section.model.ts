@@ -1,5 +1,6 @@
 import { IQuiz } from 'app/shared/model//quiz.model';
 import { ICourse } from 'app/shared/model//course.model';
+import { ITags } from 'app/shared/model//tags.model';
 
 export interface ISection {
     id?: number;
@@ -8,10 +9,12 @@ export interface ISection {
     normSection?: string;
     contentContentType?: string;
     content?: any;
-    textContent?: string;
     videoUrl?: string;
+    textcontent?: any;
+    type?: string;
     quiz?: IQuiz;
     course?: ICourse;
+    tags?: ITags[];
 }
 
 export class Section implements ISection {
@@ -22,9 +25,11 @@ export class Section implements ISection {
         public normSection?: string,
         public contentContentType?: string,
         public content?: any,
-        public textContent?: string,
         public videoUrl?: string,
+        public textcontent?: any,
+        public type?: string,
         public quiz?: IQuiz,
-        public course?: ICourse
+        public course?: ICourse,
+        public tags?: ITags[]
     ) {}
 }

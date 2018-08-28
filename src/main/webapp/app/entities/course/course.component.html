@@ -1,6 +1,6 @@
 <div>
     <h2 id="page-heading">
-        <span jhiTranslate="smartCpdApp.course.home.title">Our Courses</span>
+        <span jhiTranslate="smartCpdApp.course.home.title">Courses</span>
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/course/new']" *jhiHasAnyAuthority="'ROLE_ADMIN'">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down"  jhiTranslate="smartCpdApp.course.home.createLabel">
@@ -26,20 +26,24 @@
         <div class="col-md-6 col-sm-12">
             <span><strong>Sort by</strong></span>
             <div jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-                <button type="button" class="btn btn-light" jhiSortBy="normCourses">
-                    <span>Name</span>
+                <button type="button" class="btn btn-light" jhiSortBy="amount">
+                    <span jhiTranslate="smartCpdApp.course.amount">Amount</span>
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
-                <button type="button" class="btn btn-light" jhiSortBy="amount">
-                    <span jhiTranslate="smartCpdApp.course.amount">Price</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <button type="button" class="btn btn-light" jhiSortBy="point">
+                <span jhiTranslate="smartCpdApp.course.point">Points</span>
+                <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
                 <button type="button" class="btn btn-light" jhiSortBy="credit">
-                    <span jhiTranslate="smartCpdApp.course.credit">Credits</span>
+                <span jhiTranslate="smartCpdApp.course.credit">Credit</span>
+                <fa-icon [icon]="'sort'"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-light" jhiSortBy="state">
+                    <span jhiTranslate="smartCpdApp.course.state">State</span>
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
-                <button type="button" class="btn btn-light" jhiSortBy="topic.id">
-                    <span jhiTranslate="smartCpdApp.course.topic">Topic</span>
+                <button type="button" class="btn btn-light" jhiSortBy="country">
+                    <span jhiTranslate="smartCpdApp.course.country">Country</span>
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
             </div>
@@ -121,7 +125,7 @@
             <div class="list-group">
                 <!--api/_search/courses?query=test<a (click)="redirectToCourse(topic.name)" [routerLink]="['/course', topic.id, 'view']" class="list-group-item list-group-item-action flex-column align-items-start"-->
                 <div class="list-group-item list-group-item-action flex-column align-items-start"
-                   *ngFor="let course of courses; trackBy: trackId" style="background-color: #f2f2f2; margin-top: 5px;">
+                     *ngFor="let course of courses; trackBy: trackId" style="background-color: #f2f2f2; margin-top: 5px;">
                     <div class="row">
                         <div class="col-3 col-xs-12">
                             <img class="img-responsive" [src]="'data:' + course.imageContentType +
@@ -143,12 +147,12 @@
                         </div>
                         <div class="col-2 col-xs-12">
                             <div class="row">
-                                    <button class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/cart/new']" *jhiHasAnyAuthority="'ROLE_USER'">
-                                        <fa-icon [icon]="'shopping-cart'"></fa-icon>
-                                        <span class="hidden-sm-down">
+                                <button class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/cart/new']" *jhiHasAnyAuthority="'ROLE_USER'">
+                                    <fa-icon [icon]="'shopping-cart'"></fa-icon>
+                                    <span class="hidden-sm-down">
                                             Add to Cart
                                         </span>
-                                    </button>
+                                </button>
                             </div>
                             <div class="row"><br><hr><br></div>
                             <div class="row">
@@ -166,35 +170,4 @@
         </a>
     </div>
 </div>
-
-
-    <!--
-    <div *ngIf="courses" *jhiHasAnyAuthority="'ROLE_USER'">
-        <div class="list-group">
-            <a [routerLink]="['/course', course.id]" class="list-group-item list-group-item-action flex-column align-items-start"
-               *ngFor="let course of courses; trackBy: trackId">
-                <div class="d-flex w-100 justify-content-between">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{course.normCourses}}</h5>
-                        <small
-                            *ngIf="course.topic">
-                            <a [routerLink]="['../topic',
-                                course.topic?.id ]" >
-                                {{course.topic?.id}}
-                            </a>
-                        </small>
-                    </div>
-                    <small class="mb-1">{{course.description}}</small>
-                    <p class="mb-1">Price: {{course.amount | currency:'USD'}}</p>
-                    <small>
-                        Country:
-                        <span jhiTranslate="smartCpdApp.course.country">{{course.country}}</span>
-
-                        State/Province:
-                        <span jhiTranslate="smartCpdApp.course.state">{{course.state}}</span>
-                    </small>
-                </div>
-            </a>
-        </div>
-    </div>-->
 </div>

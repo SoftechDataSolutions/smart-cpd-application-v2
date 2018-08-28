@@ -25,12 +25,6 @@
                         <a [routerLink]="['/question', questionHistory.question?.id, 'view']">{{questionHistory.question?.textQuestion}}</a>
                     </div>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.questionHistory.choice">Choice</span></dt>
-                <dd>
-                    <div *ngIf="questionHistory.choice">
-                        <a [routerLink]="['/choice', questionHistory.choice?.id, 'view']">{{questionHistory.choice?.textChoice}}</a>
-                    </div>
-                </dd>
             </dl>
 
             <button type="submit"

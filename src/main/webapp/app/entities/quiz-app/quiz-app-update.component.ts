@@ -10,6 +10,8 @@ import { IQuiz } from 'app/shared/model/quiz.model';
 import { QuizService } from 'app/entities/quiz';
 import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
+import { ISection } from 'app/shared/model/section.model';
+import { SectionService } from 'app/entities/section';
 
 @Component({
     selector: 'jhi-quiz-app-update',
@@ -23,11 +25,14 @@ export class QuizAppUpdateComponent implements OnInit {
 
     customers: ICustomer[];
 
+    sections: ISection[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private quizAppService: QuizAppService,
         private quizService: QuizService,
         private customerService: CustomerService,
+        private sectionService: SectionService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -45,6 +50,12 @@ export class QuizAppUpdateComponent implements OnInit {
         this.customerService.query().subscribe(
             (res: HttpResponse<ICustomer[]>) => {
                 this.customers = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.sectionService.query().subscribe(
+            (res: HttpResponse<ISection[]>) => {
+                this.sections = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -85,6 +96,10 @@ export class QuizAppUpdateComponent implements OnInit {
     }
 
     trackCustomerById(index: number, item: ICustomer) {
+        return item.id;
+    }
+
+    trackSectionById(index: number, item: ISection) {
         return item.id;
     }
     get quizApp() {

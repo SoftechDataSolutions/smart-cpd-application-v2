@@ -10,6 +10,8 @@ import { ICertificate } from 'app/shared/model/certificate.model';
 import { CertificateService } from './certificate.service';
 import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
+import { ICourse } from 'app/shared/model/course.model';
+import { CourseService } from 'app/entities/course';
 
 @Component({
     selector: 'jhi-certificate-update',
@@ -20,6 +22,8 @@ export class CertificateUpdateComponent implements OnInit {
     isSaving: boolean;
 
     customers: ICustomer[];
+
+    courses: ICourse[];
     timestamp: string;
 
     constructor(
@@ -27,6 +31,7 @@ export class CertificateUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private certificateService: CertificateService,
         private customerService: CustomerService,
+        private courseService: CourseService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -38,6 +43,12 @@ export class CertificateUpdateComponent implements OnInit {
         this.customerService.query().subscribe(
             (res: HttpResponse<ICustomer[]>) => {
                 this.customers = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.courseService.query().subscribe(
+            (res: HttpResponse<ICourse[]>) => {
+                this.courses = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -87,6 +98,10 @@ export class CertificateUpdateComponent implements OnInit {
     }
 
     trackCustomerById(index: number, item: ICustomer) {
+        return item.id;
+    }
+
+    trackCourseById(index: number, item: ICourse) {
         return item.id;
     }
     get certificate() {

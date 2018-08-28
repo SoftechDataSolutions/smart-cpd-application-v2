@@ -9,29 +9,23 @@
                 <dd>
                     <span>{{certificate.timestamp}}</span>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.firstname">Firstname</span></dt>
+                <dt><span jhiTranslate="smartCpdApp.certificate.pdf">Pdf</span></dt>
                 <dd>
-                    <span>{{certificate.firstname}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.lastname">Lastname</span></dt>
-                <dd>
-                    <span>{{certificate.lastname}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.course">Course</span></dt>
-                <dd>
-                    <span>{{certificate.course}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.content">Content</span></dt>
-                <dd>
-                    <div *ngIf="certificate.content">
-                        <a (click)="openFile(certificate.contentContentType, certificate.content)" jhiTranslate="entity.action.open">open</a>
-                        {{certificate.contentContentType}}, {{byteSize(certificate.content)}}
+                    <div *ngIf="certificate.pdf">
+                        <a (click)="openFile(certificate.pdfContentType, certificate.pdf)" jhiTranslate="entity.action.open">open</a>
+                        {{certificate.pdfContentType}}, {{byteSize(certificate.pdf)}}
                     </div>
                 </dd>
                 <dt><span jhiTranslate="smartCpdApp.certificate.customer">Customer</span></dt>
                 <dd>
                     <div *ngIf="certificate.customer">
                         <a [routerLink]="['/customer', certificate.customer?.id, 'view']">{{certificate.customer?.normalized}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.certificate.courses">Courses</span></dt>
+                <dd>
+                    <div *ngIf="certificate.courses">
+                        <a [routerLink]="['/course', certificate.courses?.id, 'view']">{{certificate.courses?.normCourses}}</a>
                     </div>
                 </dd>
             </dl>

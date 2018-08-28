@@ -26,26 +26,18 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="firstname" type="varchar(255)">
+            <column name="pdf" type="longblob">
                 <constraints nullable="true" />
             </column>
-
-            <column name="lastname" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="course" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="content" type="longblob">
-                <constraints nullable="true" />
-            </column>
-            <column name="content_content_type" type="varchar(255)">
+            <column name="pdf_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
             <column name="customer_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="courses_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

@@ -1,16 +1,21 @@
 import { IQuiz } from 'app/shared/model//quiz.model';
 import { ICustomer } from 'app/shared/model//customer.model';
+import { ISection } from 'app/shared/model//section.model';
 
 export interface IQuizApp {
     id?: number;
-    option?: string;
-    correct?: boolean;
     quiz?: IQuiz;
     customer?: ICustomer;
+    currSection?: ISection;
+    newSection?: ISection;
 }
 
 export class QuizApp implements IQuizApp {
-    constructor(public id?: number, public option?: string, public correct?: boolean, public quiz?: IQuiz, public customer?: ICustomer) {
-        this.correct = this.correct || false;
-    }
+    constructor(
+        public id?: number,
+        public quiz?: IQuiz,
+        public customer?: ICustomer,
+        public currSection?: ISection,
+        public newSection?: ISection
+    ) {}
 }

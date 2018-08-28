@@ -61,6 +61,15 @@ public class SectionServiceImpl implements SectionService {
         return sectionRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the Section with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    public Page<Section> findAllWithEagerRelationships(Pageable pageable) {
+        return sectionRepository.findAllWithEagerRelationships(pageable);
+    }
+    
 
     /**
      * Get one section by id.
@@ -72,7 +81,7 @@ public class SectionServiceImpl implements SectionService {
     @Transactional(readOnly = true)
     public Optional<Section> findOne(Long id) {
         log.debug("Request to get Section : {}", id);
-        return sectionRepository.findById(id);
+        return sectionRepository.findOneWithEagerRelationships(id);
     }
 
     /**

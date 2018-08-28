@@ -41,12 +41,16 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="text_content" type="varchar(255)">
+            <column name="video_url" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="video_url" type="varchar(255)">
+            <column name="textcontent" type="clob">
                 <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="false" />
             </column>
             <column name="quiz_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_section_quiz_id" />
@@ -57,6 +61,17 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+        
+        <createTable tableName="section_tags">
+            <column name="tags_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sections_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="sections_id, tags_id" tableName="section_tags"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

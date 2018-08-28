@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="customer"/>
 
+        <addForeignKeyConstraint baseColumnNames="courses_id"
+                                 baseTableName="certificate"
+                                 constraintName="fk_certificate_courses_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course"/>
+
     </changeSet>
 </databaseChangeLog>

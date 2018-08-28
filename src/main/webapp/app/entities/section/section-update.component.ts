@@ -10,6 +10,8 @@ import { IQuiz } from 'app/shared/model/quiz.model';
 import { QuizService } from 'app/entities/quiz';
 import { ICourse } from 'app/shared/model/course.model';
 import { CourseService } from 'app/entities/course';
+import { ITags } from 'app/shared/model/tags.model';
+import { TagsService } from 'app/entities/tags';
 
 @Component({
     selector: 'jhi-section-update',
@@ -23,12 +25,15 @@ export class SectionUpdateComponent implements OnInit {
 
     courses: ICourse[];
 
+    tags: ITags[];
+
     constructor(
         private dataUtils: JhiDataUtils,
         private jhiAlertService: JhiAlertService,
         private sectionService: SectionService,
         private quizService: QuizService,
         private courseService: CourseService,
+        private tagsService: TagsService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -55,6 +60,12 @@ export class SectionUpdateComponent implements OnInit {
         this.courseService.query().subscribe(
             (res: HttpResponse<ICourse[]>) => {
                 this.courses = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.tagsService.query().subscribe(
+            (res: HttpResponse<ITags[]>) => {
+                this.tags = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -108,6 +119,21 @@ export class SectionUpdateComponent implements OnInit {
 
     trackCourseById(index: number, item: ICourse) {
         return item.id;
+    }
+
+    trackTagsById(index: number, item: ITags) {
+        return item.id;
+    }
+
+    getSelected(selectedVals: Array<any>, option: any) {
+        if (selectedVals) {
+            for (let i = 0; i < selectedVals.length; i++) {
+                if (option.id === selectedVals[i].id) {
+                    return selectedVals[i];
+                }
+            }
+        }
+        return option;
     }
     get section() {
         return this._section;

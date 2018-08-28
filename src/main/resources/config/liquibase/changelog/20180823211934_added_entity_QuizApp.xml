@@ -22,19 +22,19 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="jhi_option" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="correct" type="bit">
-                <constraints nullable="false" />
-            </column>
-
             <column name="quiz_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
             <column name="customer_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="curr_section_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="new_section_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 

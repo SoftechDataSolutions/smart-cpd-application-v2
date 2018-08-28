@@ -20,5 +20,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="course"/>
 
+        <addForeignKeyConstraint baseColumnNames="sections_id"
+                                 baseTableName="section_tags"
+                                 constraintName="fk_section_tags_sections_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="section"/>
+        <addForeignKeyConstraint baseColumnNames="tags_id"
+                                 baseTableName="section_tags"
+                                 constraintName="fk_section_tags_tags_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tags"/>
+        
     </changeSet>
 </databaseChangeLog>

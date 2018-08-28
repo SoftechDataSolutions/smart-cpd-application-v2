@@ -132,6 +132,12 @@
                         <option [ngValue]="topicOption.id === course.topic?.id ? course.topic : topicOption" *ngFor="let topicOption of topics; trackBy: trackTopicById">{{topicOption.name}}</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label jhiTranslate="smartCpdApp.course.tags" for="field_tags">Tags</label>
+                    <select class="form-control" id="field_tags" multiple name="tags" [(ngModel)]="course.tags">
+                        <option [ngValue]="getSelected(course.tags, tagsOption)" *ngFor="let tagsOption of tags; trackBy: trackTagsById">{{tagsOption.name}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

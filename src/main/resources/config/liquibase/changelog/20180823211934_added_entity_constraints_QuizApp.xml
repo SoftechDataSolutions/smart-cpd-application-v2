@@ -20,5 +20,17 @@
                                  referencedColumnNames="id"
                                  referencedTableName="customer"/>
 
+        <addForeignKeyConstraint baseColumnNames="curr_section_id"
+                                 baseTableName="quiz_app"
+                                 constraintName="fk_quiz_app_curr_section_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="section"/>
+
+        <addForeignKeyConstraint baseColumnNames="new_section_id"
+                                 baseTableName="quiz_app"
+                                 constraintName="fk_quiz_app_new_section_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="section"/>
+
     </changeSet>
 </databaseChangeLog>

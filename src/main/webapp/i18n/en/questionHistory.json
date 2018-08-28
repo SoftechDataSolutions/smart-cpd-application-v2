@@ -20,8 +20,7 @@
             "timestamp": "Timestamp",
             "correct": "Correct",
             "customer": "Customer",
-            "question": "Question",
-            "choice": "Choice"
+            "question": "Question"
         }
     }
 }

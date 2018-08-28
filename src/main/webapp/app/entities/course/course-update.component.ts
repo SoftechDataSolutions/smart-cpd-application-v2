@@ -8,6 +8,8 @@ import { ICourse } from 'app/shared/model/course.model';
 import { CourseService } from './course.service';
 import { ITopic } from 'app/shared/model/topic.model';
 import { TopicService } from 'app/entities/topic';
+import { ITags } from 'app/shared/model/tags.model';
+import { TagsService } from 'app/entities/tags';
 
 @Component({
     selector: 'jhi-course-update',
@@ -19,11 +21,14 @@ export class CourseUpdateComponent implements OnInit {
 
     topics: ITopic[];
 
+    tags: ITags[];
+
     constructor(
         private dataUtils: JhiDataUtils,
         private jhiAlertService: JhiAlertService,
         private courseService: CourseService,
         private topicService: TopicService,
+        private tagsService: TagsService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -35,6 +40,12 @@ export class CourseUpdateComponent implements OnInit {
         this.topicService.query().subscribe(
             (res: HttpResponse<ITopic[]>) => {
                 this.topics = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.tagsService.query().subscribe(
+            (res: HttpResponse<ITags[]>) => {
+                this.tags = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -84,6 +95,21 @@ export class CourseUpdateComponent implements OnInit {
 
     trackTopicById(index: number, item: ITopic) {
         return item.id;
+    }
+
+    trackTagsById(index: number, item: ITags) {
+        return item.id;
+    }
+
+    getSelected(selectedVals: Array<any>, option: any) {
+        if (selectedVals) {
+            for (let i = 0; i < selectedVals.length; i++) {
+                if (option.id === selectedVals[i].id) {
+                    return selectedVals[i];
+                }
+            }
+        }
+        return option;
     }
     get course() {
         return this._course;

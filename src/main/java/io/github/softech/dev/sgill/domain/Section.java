@@ -9,6 +9,8 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -44,11 +46,16 @@ public class Section implements Serializable {
     @Column(name = "content_content_type", nullable = false)
     private String contentContentType;
 
-    @Column(name = "text_content")
-    private String textContent;
-
     @Column(name = "video_url")
     private String videoUrl;
+
+    @Lob
+    @Column(name = "textcontent")
+    private String textcontent;
+
+    @NotNull
+    @Column(name = "jhi_type", nullable = false)
+    private String type;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -57,6 +64,13 @@ public class Section implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private Course course;
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "section_tags",
+               joinColumns = @JoinColumn(name = "sections_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
+    private Set<Tags> tags = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -132,19 +146,6 @@ public class Section implements Serializable {
         this.contentContentType = contentContentType;
     }
 
-    public String getTextContent() {
-        return textContent;
-    }
-
-    public Section textContent(String textContent) {
-        this.textContent = textContent;
-        return this;
-    }
-
-    public void setTextContent(String textContent) {
-        this.textContent = textContent;
-    }
-
     public String getVideoUrl() {
         return videoUrl;
     }
@@ -156,6 +157,32 @@ public class Section implements Serializable {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public String getTextcontent() {
+        return textcontent;
+    }
+
+    public Section textcontent(String textcontent) {
+        this.textcontent = textcontent;
+        return this;
+    }
+
+    public void setTextcontent(String textcontent) {
+        this.textcontent = textcontent;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Section type(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Quiz getQuiz() {
@@ -182,6 +209,29 @@ public class Section implements Serializable {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Set<Tags> getTags() {
+        return tags;
+    }
+
+    public Section tags(Set<Tags> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public Section addTags(Tags tags) {
+        this.tags.add(tags);
+        return this;
+    }
+
+    public Section removeTags(Tags tags) {
+        this.tags.remove(tags);
+        return this;
+    }
+
+    public void setTags(Set<Tags> tags) {
+        this.tags = tags;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -214,8 +264,9 @@ public class Section implements Serializable {
             ", normSection='" + getNormSection() + "'" +
             ", content='" + getContent() + "'" +
             ", contentContentType='" + getContentContentType() + "'" +
-            ", textContent='" + getTextContent() + "'" +
             ", videoUrl='" + getVideoUrl() + "'" +
+            ", textcontent='" + getTextcontent() + "'" +
+            ", type='" + getType() + "'" +
             "}";
     }
 }

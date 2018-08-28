@@ -13,21 +13,21 @@
             "otherEntityName": "customer",
             "relationshipType": "many-to-one",
             "otherEntityField": "normalized"
-        }
-    ],
-    "fields": [
-        {
-            "fieldName": "option",
-            "fieldType": "String"
         },
         {
-            "fieldName": "correct",
-            "fieldType": "Boolean",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "relationshipName": "currSection",
+            "otherEntityName": "section",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "newSection",
+            "otherEntityName": "section",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
         }
     ],
+    "fields": [],
     "changelogDate": "20180823211934",
     "dto": "no",
     "searchEngine": "elasticsearch",

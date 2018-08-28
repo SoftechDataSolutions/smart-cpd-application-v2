@@ -29,25 +29,20 @@ public class Certificate implements Serializable {
     @Column(name = "jhi_timestamp")
     private Instant timestamp;
 
-    @Column(name = "firstname")
-    private String firstname;
-
-    @Column(name = "lastname")
-    private String lastname;
-
-    @Column(name = "course")
-    private String course;
-
     @Lob
-    @Column(name = "content")
-    private byte[] content;
+    @Column(name = "pdf")
+    private byte[] pdf;
 
-    @Column(name = "content_content_type")
-    private String contentContentType;
+    @Column(name = "pdf_content_type")
+    private String pdfContentType;
 
     @ManyToOne
     @JsonIgnoreProperties("")
     private Customer customer;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Course courses;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -71,69 +66,30 @@ public class Certificate implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public byte[] getPdf() {
+        return pdf;
     }
 
-    public Certificate firstname(String firstname) {
-        this.firstname = firstname;
+    public Certificate pdf(byte[] pdf) {
+        this.pdf = pdf;
         return this;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setPdf(byte[] pdf) {
+        this.pdf = pdf;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getPdfContentType() {
+        return pdfContentType;
     }
 
-    public Certificate lastname(String lastname) {
-        this.lastname = lastname;
+    public Certificate pdfContentType(String pdfContentType) {
+        this.pdfContentType = pdfContentType;
         return this;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public Certificate course(String course) {
-        this.course = course;
-        return this;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
-    public Certificate content(byte[] content) {
-        this.content = content;
-        return this;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
-
-    public String getContentContentType() {
-        return contentContentType;
-    }
-
-    public Certificate contentContentType(String contentContentType) {
-        this.contentContentType = contentContentType;
-        return this;
-    }
-
-    public void setContentContentType(String contentContentType) {
-        this.contentContentType = contentContentType;
+    public void setPdfContentType(String pdfContentType) {
+        this.pdfContentType = pdfContentType;
     }
 
     public Customer getCustomer() {
@@ -147,6 +103,19 @@ public class Certificate implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Course getCourses() {
+        return courses;
+    }
+
+    public Certificate courses(Course course) {
+        this.courses = course;
+        return this;
+    }
+
+    public void setCourses(Course course) {
+        this.courses = course;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -175,11 +144,8 @@ public class Certificate implements Serializable {
         return "Certificate{" +
             "id=" + getId() +
             ", timestamp='" + getTimestamp() + "'" +
-            ", firstname='" + getFirstname() + "'" +
-            ", lastname='" + getLastname() + "'" +
-            ", course='" + getCourse() + "'" +
-            ", content='" + getContent() + "'" +
-            ", contentContentType='" + getContentContentType() + "'" +
+            ", pdf='" + getPdf() + "'" +
+            ", pdfContentType='" + getPdfContentType() + "'" +
             "}";
     }
 }

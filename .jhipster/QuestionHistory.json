@@ -13,12 +13,6 @@
             "relationshipName": "question",
             "otherEntityName": "question",
             "otherEntityField": "textQuestion"
-        },
-        {
-            "relationshipName": "choice",
-            "otherEntityName": "choice",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "textChoice"
         }
     ],
     "fields": [

@@ -1,4 +1,5 @@
 import { ITopic } from 'app/shared/model//topic.model';
+import { ITags } from 'app/shared/model//tags.model';
 
 export interface ICourse {
     id?: number;
@@ -14,6 +15,7 @@ export interface ICourse {
     country?: string;
     state?: string;
     topic?: ITopic;
+    tags?: ITags[];
 }
 
 export class Course implements ICourse {
@@ -30,6 +32,7 @@ export class Course implements ICourse {
         public credit?: string,
         public country?: string,
         public state?: string,
-        public topic?: ITopic
+        public topic?: ITopic,
+        public tags?: ITags[]
     ) {}
 }

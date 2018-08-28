@@ -61,6 +61,15 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the Course with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    public Page<Course> findAllWithEagerRelationships(Pageable pageable) {
+        return courseRepository.findAllWithEagerRelationships(pageable);
+    }
+    
 
     /**
      * Get one course by id.
@@ -72,7 +81,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional(readOnly = true)
     public Optional<Course> findOne(Long id) {
         log.debug("Request to get Course : {}", id);
-        return courseRepository.findById(id);
+        return courseRepository.findOneWithEagerRelationships(id);
     }
 
     /**

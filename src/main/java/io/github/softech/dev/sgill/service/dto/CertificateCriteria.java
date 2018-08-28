@@ -30,13 +30,9 @@ public class CertificateCriteria implements Serializable {
 
     private InstantFilter timestamp;
 
-    private StringFilter firstname;
-
-    private StringFilter lastname;
-
-    private StringFilter course;
-
     private LongFilter customerId;
+
+    private LongFilter coursesId;
 
     public CertificateCriteria() {
     }
@@ -57,30 +53,6 @@ public class CertificateCriteria implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public StringFilter getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(StringFilter firstname) {
-        this.firstname = firstname;
-    }
-
-    public StringFilter getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(StringFilter lastname) {
-        this.lastname = lastname;
-    }
-
-    public StringFilter getCourse() {
-        return course;
-    }
-
-    public void setCourse(StringFilter course) {
-        this.course = course;
-    }
-
     public LongFilter getCustomerId() {
         return customerId;
     }
@@ -89,15 +61,21 @@ public class CertificateCriteria implements Serializable {
         this.customerId = customerId;
     }
 
+    public LongFilter getCoursesId() {
+        return coursesId;
+    }
+
+    public void setCoursesId(LongFilter coursesId) {
+        this.coursesId = coursesId;
+    }
+
     @Override
     public String toString() {
         return "CertificateCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (timestamp != null ? "timestamp=" + timestamp + ", " : "") +
-                (firstname != null ? "firstname=" + firstname + ", " : "") +
-                (lastname != null ? "lastname=" + lastname + ", " : "") +
-                (course != null ? "course=" + course + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
+                (coursesId != null ? "coursesId=" + coursesId + ", " : "") +
             "}";
     }
 

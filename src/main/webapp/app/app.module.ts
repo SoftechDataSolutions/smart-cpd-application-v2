@@ -16,6 +16,9 @@ import { SmartCpdAppRoutingModule } from './app-routing.module';
 import { SmartCpdHomeModule } from './home/home.module';
 import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+import { SmartCpdprimengModule } from './primeng/primeng.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 /*import { QuizFinalComponent } from './quiz-final/quiz-final.component';*/
@@ -29,7 +32,9 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         SmartCpdCoreModule,
         SmartCpdHomeModule,
         SmartCpdAccountModule,
-        SmartCpdEntityModule
+        SmartCpdEntityModule,
+        PdfViewerModule,
+        SmartCpdprimengModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

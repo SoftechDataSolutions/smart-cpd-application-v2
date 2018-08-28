@@ -14,5 +14,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="topic"/>
 
+        <addForeignKeyConstraint baseColumnNames="courses_id"
+                                 baseTableName="course_tags"
+                                 constraintName="fk_course_tags_courses_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course"/>
+        <addForeignKeyConstraint baseColumnNames="tags_id"
+                                 baseTableName="course_tags"
+                                 constraintName="fk_course_tags_tags_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tags"/>
+        
     </changeSet>
 </databaseChangeLog>

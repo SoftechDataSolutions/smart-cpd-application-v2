@@ -86,9 +86,6 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
             if (criteria.getQuestionId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionId(), QuestionHistory_.question, Question_.id));
             }
-            if (criteria.getChoiceId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getChoiceId(), QuestionHistory_.choice, Choice_.id));
-            }
         }
         return specification;
     }

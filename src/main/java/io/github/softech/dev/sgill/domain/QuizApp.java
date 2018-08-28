@@ -5,7 +5,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
@@ -26,13 +25,6 @@ public class QuizApp implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "jhi_option")
-    private String option;
-
-    @NotNull
-    @Column(name = "correct", nullable = false)
-    private Boolean correct;
-
     @ManyToOne
     @JsonIgnoreProperties("")
     private Quiz quiz;
@@ -41,6 +33,14 @@ public class QuizApp implements Serializable {
     @JsonIgnoreProperties("")
     private Customer customer;
 
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Section currSection;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Section newSection;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -48,32 +48,6 @@ public class QuizApp implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getOption() {
-        return option;
-    }
-
-    public QuizApp option(String option) {
-        this.option = option;
-        return this;
-    }
-
-    public void setOption(String option) {
-        this.option = option;
-    }
-
-    public Boolean isCorrect() {
-        return correct;
-    }
-
-    public QuizApp correct(Boolean correct) {
-        this.correct = correct;
-        return this;
-    }
-
-    public void setCorrect(Boolean correct) {
-        this.correct = correct;
     }
 
     public Quiz getQuiz() {
@@ -101,6 +75,32 @@ public class QuizApp implements Serializable {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
+    public Section getCurrSection() {
+        return currSection;
+    }
+
+    public QuizApp currSection(Section section) {
+        this.currSection = section;
+        return this;
+    }
+
+    public void setCurrSection(Section section) {
+        this.currSection = section;
+    }
+
+    public Section getNewSection() {
+        return newSection;
+    }
+
+    public QuizApp newSection(Section section) {
+        this.newSection = section;
+        return this;
+    }
+
+    public void setNewSection(Section section) {
+        this.newSection = section;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -127,8 +127,6 @@ public class QuizApp implements Serializable {
     public String toString() {
         return "QuizApp{" +
             "id=" + getId() +
-            ", option='" + getOption() + "'" +
-            ", correct='" + isCorrect() + "'" +
             "}";
     }
 }

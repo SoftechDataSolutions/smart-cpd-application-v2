@@ -9,22 +9,6 @@
                     <input type="text" class="form-control" id="id" name="id"
                         [(ngModel)]="quizApp.id" readonly />
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.option" for="field_option">Option</label>
-                    <input type="text" class="form-control" name="option" id="field_option"
-                        [(ngModel)]="quizApp.option" />
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.correct" for="field_correct">Correct</label>
-                    <input type="checkbox" class="form-control" name="correct" id="field_correct"
-                        [(ngModel)]="quizApp.correct" />
-                    <div [hidden]="!(editForm.controls.correct?.dirty && editForm.controls.correct?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.correct?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.quiz" for="field_quiz">Quiz</label>
@@ -38,6 +22,20 @@
                     <select class="form-control" id="field_customer" name="customer" [(ngModel)]="quizApp.customer" >
                         <option [ngValue]="null"></option>
                         <option [ngValue]="customerOption.id === quizApp.customer?.id ? quizApp.customer : customerOption" *ngFor="let customerOption of customers; trackBy: trackCustomerById">{{customerOption.normalized}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.currSection" for="field_currSection">Curr Section</label>
+                    <select class="form-control" id="field_currSection" name="currSection" [(ngModel)]="quizApp.currSection" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sectionOption.id === quizApp.currSection?.id ? quizApp.currSection : sectionOption" *ngFor="let sectionOption of sections; trackBy: trackSectionById">{{sectionOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.newSection" for="field_newSection">New Section</label>
+                    <select class="form-control" id="field_newSection" name="newSection" [(ngModel)]="quizApp.newSection" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sectionOption.id === quizApp.newSection?.id ? quizApp.newSection : sectionOption" *ngFor="let sectionOption of sections; trackBy: trackSectionById">{{sectionOption.name}}</option>
                     </select>
                 </div>
             </div>

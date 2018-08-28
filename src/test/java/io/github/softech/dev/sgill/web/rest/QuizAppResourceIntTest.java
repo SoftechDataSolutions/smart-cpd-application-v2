@@ -5,6 +5,8 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.QuizApp;
 import io.github.softech.dev.sgill.domain.Quiz;
 import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.domain.Section;
+import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.repository.QuizAppRepository;
 import io.github.softech.dev.sgill.repository.search.QuizAppSearchRepository;
 import io.github.softech.dev.sgill.service.QuizAppService;
@@ -49,12 +51,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SmartCpdApp.class)
 public class QuizAppResourceIntTest {
-
-    private static final String DEFAULT_OPTION = "AAAAAAAAAA";
-    private static final String UPDATED_OPTION = "BBBBBBBBBB";
-
-    private static final Boolean DEFAULT_CORRECT = false;
-    private static final Boolean UPDATED_CORRECT = true;
 
     @Autowired
     private QuizAppRepository quizAppRepository;
@@ -109,9 +105,7 @@ public class QuizAppResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static QuizApp createEntity(EntityManager em) {
-        QuizApp quizApp = new QuizApp()
-            .option(DEFAULT_OPTION)
-            .correct(DEFAULT_CORRECT);
+        QuizApp quizApp = new QuizApp();
         return quizApp;
     }
 
@@ -135,8 +129,6 @@ public class QuizAppResourceIntTest {
         List<QuizApp> quizAppList = quizAppRepository.findAll();
         assertThat(quizAppList).hasSize(databaseSizeBeforeCreate + 1);
         QuizApp testQuizApp = quizAppList.get(quizAppList.size() - 1);
-        assertThat(testQuizApp.getOption()).isEqualTo(DEFAULT_OPTION);
-        assertThat(testQuizApp.isCorrect()).isEqualTo(DEFAULT_CORRECT);
 
         // Validate the QuizApp in Elasticsearch
         verify(mockQuizAppSearchRepository, times(1)).save(testQuizApp);
@@ -166,24 +158,6 @@ public class QuizAppResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCorrectIsRequired() throws Exception {
-        int databaseSizeBeforeTest = quizAppRepository.findAll().size();
-        // set the field null
-        quizApp.setCorrect(null);
-
-        // Create the QuizApp, which fails.
-
-        restQuizAppMockMvc.perform(post("/api/quiz-apps")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(quizApp)))
-            .andExpect(status().isBadRequest());
-
-        List<QuizApp> quizAppList = quizAppRepository.findAll();
-        assertThat(quizAppList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllQuizApps() throws Exception {
         // Initialize the database
         quizAppRepository.saveAndFlush(quizApp);
@@ -192,9 +166,7 @@ public class QuizAppResourceIntTest {
         restQuizAppMockMvc.perform(get("/api/quiz-apps?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())))
-            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION.toString())))
-            .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())));
     }
     
 
@@ -208,87 +180,7 @@ public class QuizAppResourceIntTest {
         restQuizAppMockMvc.perform(get("/api/quiz-apps/{id}", quizApp.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(quizApp.getId().intValue()))
-            .andExpect(jsonPath("$.option").value(DEFAULT_OPTION.toString()))
-            .andExpect(jsonPath("$.correct").value(DEFAULT_CORRECT.booleanValue()));
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByOptionIsEqualToSomething() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where option equals to DEFAULT_OPTION
-        defaultQuizAppShouldBeFound("option.equals=" + DEFAULT_OPTION);
-
-        // Get all the quizAppList where option equals to UPDATED_OPTION
-        defaultQuizAppShouldNotBeFound("option.equals=" + UPDATED_OPTION);
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByOptionIsInShouldWork() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where option in DEFAULT_OPTION or UPDATED_OPTION
-        defaultQuizAppShouldBeFound("option.in=" + DEFAULT_OPTION + "," + UPDATED_OPTION);
-
-        // Get all the quizAppList where option equals to UPDATED_OPTION
-        defaultQuizAppShouldNotBeFound("option.in=" + UPDATED_OPTION);
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByOptionIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where option is not null
-        defaultQuizAppShouldBeFound("option.specified=true");
-
-        // Get all the quizAppList where option is null
-        defaultQuizAppShouldNotBeFound("option.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByCorrectIsEqualToSomething() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where correct equals to DEFAULT_CORRECT
-        defaultQuizAppShouldBeFound("correct.equals=" + DEFAULT_CORRECT);
-
-        // Get all the quizAppList where correct equals to UPDATED_CORRECT
-        defaultQuizAppShouldNotBeFound("correct.equals=" + UPDATED_CORRECT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByCorrectIsInShouldWork() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where correct in DEFAULT_CORRECT or UPDATED_CORRECT
-        defaultQuizAppShouldBeFound("correct.in=" + DEFAULT_CORRECT + "," + UPDATED_CORRECT);
-
-        // Get all the quizAppList where correct equals to UPDATED_CORRECT
-        defaultQuizAppShouldNotBeFound("correct.in=" + UPDATED_CORRECT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByCorrectIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        quizAppRepository.saveAndFlush(quizApp);
-
-        // Get all the quizAppList where correct is not null
-        defaultQuizAppShouldBeFound("correct.specified=true");
-
-        // Get all the quizAppList where correct is null
-        defaultQuizAppShouldNotBeFound("correct.specified=false");
+            .andExpect(jsonPath("$.id").value(quizApp.getId().intValue()));
     }
 
     @Test
@@ -328,6 +220,44 @@ public class QuizAppResourceIntTest {
         defaultQuizAppShouldNotBeFound("customerId.equals=" + (customerId + 1));
     }
 
+
+    @Test
+    @Transactional
+    public void getAllQuizAppsByCurrSectionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Section currSection = SectionResourceIntTest.createEntity(em);
+        em.persist(currSection);
+        em.flush();
+        quizApp.setCurrSection(currSection);
+        quizAppRepository.saveAndFlush(quizApp);
+        Long currSectionId = currSection.getId();
+
+        // Get all the quizAppList where currSection equals to currSectionId
+        defaultQuizAppShouldBeFound("currSectionId.equals=" + currSectionId);
+
+        // Get all the quizAppList where currSection equals to currSectionId + 1
+        defaultQuizAppShouldNotBeFound("currSectionId.equals=" + (currSectionId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllQuizAppsByNewSectionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Section newSection = SectionResourceIntTest.createEntity(em);
+        em.persist(newSection);
+        em.flush();
+        quizApp.setNewSection(newSection);
+        quizAppRepository.saveAndFlush(quizApp);
+        Long newSectionId = newSection.getId();
+
+        // Get all the quizAppList where newSection equals to newSectionId
+        defaultQuizAppShouldBeFound("newSectionId.equals=" + newSectionId);
+
+        // Get all the quizAppList where newSection equals to newSectionId + 1
+        defaultQuizAppShouldNotBeFound("newSectionId.equals=" + (newSectionId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned
      */
@@ -335,9 +265,7 @@ public class QuizAppResourceIntTest {
         restQuizAppMockMvc.perform(get("/api/quiz-apps?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())))
-            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION.toString())))
-            .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())));
     }
 
     /**
@@ -373,9 +301,6 @@ public class QuizAppResourceIntTest {
         QuizApp updatedQuizApp = quizAppRepository.findById(quizApp.getId()).get();
         // Disconnect from session so that the updates on updatedQuizApp are not directly saved in db
         em.detach(updatedQuizApp);
-        updatedQuizApp
-            .option(UPDATED_OPTION)
-            .correct(UPDATED_CORRECT);
 
         restQuizAppMockMvc.perform(put("/api/quiz-apps")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -386,8 +311,6 @@ public class QuizAppResourceIntTest {
         List<QuizApp> quizAppList = quizAppRepository.findAll();
         assertThat(quizAppList).hasSize(databaseSizeBeforeUpdate);
         QuizApp testQuizApp = quizAppList.get(quizAppList.size() - 1);
-        assertThat(testQuizApp.getOption()).isEqualTo(UPDATED_OPTION);
-        assertThat(testQuizApp.isCorrect()).isEqualTo(UPDATED_CORRECT);
 
         // Validate the QuizApp in Elasticsearch
         verify(mockQuizAppSearchRepository, times(1)).save(testQuizApp);
@@ -446,9 +369,7 @@ public class QuizAppResourceIntTest {
         restQuizAppMockMvc.perform(get("/api/_search/quiz-apps?query=id:" + quizApp.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())))
-            .andExpect(jsonPath("$.[*].option").value(hasItem(DEFAULT_OPTION.toString())))
-            .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())));
     }
 
     @Test

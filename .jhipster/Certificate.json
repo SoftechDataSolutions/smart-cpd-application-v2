@@ -1,44 +1,36 @@
 {
-    "name": "Certificate",
-    "fields": [
-        {
-            "fieldName": "timestamp",
-            "fieldType": "Instant"
-        },
-        {
-            "fieldName": "firstname",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "lastname",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "course",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "content",
-            "fieldType": "byte[]",
-            "fieldTypeBlobContent": "any"
-        }
-    ],
+    "fluentMethods": true,
+    "clientRootFolder": "",
     "relationships": [
         {
             "relationshipType": "many-to-one",
             "relationshipName": "customer",
             "otherEntityName": "customer",
             "otherEntityField": "normalized"
+        },
+        {
+            "relationshipName": "courses",
+            "otherEntityName": "course",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "normCourses"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "timestamp",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "pdf",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
         }
     ],
     "changelogDate": "20180819063643",
-    "entityTableName": "certificate",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceImpl",
+    "entityTableName": "certificate",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "infinite-scroll"
 }

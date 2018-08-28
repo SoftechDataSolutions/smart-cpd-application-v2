@@ -17,10 +17,10 @@
             "detail": {
                 "title": "Quiz App"
             },
-            "option": "Option",
-            "correct": "Correct",
             "quiz": "Quiz",
-            "customer": "Customer"
+            "customer": "Customer",
+            "currSection": "Curr Section",
+            "newSection": "New Section"
         }
     }
 }
