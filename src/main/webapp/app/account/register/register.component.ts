@@ -14,6 +14,7 @@ import { ICustomer } from 'app/shared/model/customer.model';
 import { ICompany } from 'app/shared/model/company.model';
 import { CompanyService } from 'app/entities/company';
 import { MapsAPILoader } from '@agm/core';
+import moment = require('moment');
 
 @Component({
     selector: 'jhi-register',
@@ -34,6 +35,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     public city: string;
     public country: string;
     public state: string;
+    public date: string;
     @ViewChild('search') public searchElement: ElementRef;
     constructor(
         private languageService: JhiLanguageService,
@@ -89,6 +91,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
+        this.date = this.registerAccount.company.cycledate;
+    }
+
+    selectCompany(company: ICompany) {
+        this.date = company.cycledate.toString();
     }
     /*
     setAddress(addrObj) {
@@ -97,7 +104,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.addrKeys = Object.keys(addrObj);
         });
     }*/
-
     /*
     public handleAddressChange(address: Address) {
         const array = address.address_components;

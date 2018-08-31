@@ -42,12 +42,11 @@ public class Question implements Serializable {
     @Column(name = "used")
     private Boolean used;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Choice> choices = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties("")
     private Quiz quiz;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -122,13 +121,11 @@ public class Question implements Serializable {
 
     public Question addChoice(Choice choice) {
         this.choices.add(choice);
-        choice.setQuestion(this);
         return this;
     }
 
     public Question removeChoice(Choice choice) {
         this.choices.remove(choice);
-        choice.setQuestion(null);
         return this;
     }
 

@@ -34,8 +34,6 @@ public class QuizCriteria implements Serializable {
 
     private IntegerFilter passingscore;
 
-    private LongFilter questionId;
-
     public QuizCriteria() {
     }
 
@@ -71,14 +69,6 @@ public class QuizCriteria implements Serializable {
         this.passingscore = passingscore;
     }
 
-    public LongFilter getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(LongFilter questionId) {
-        this.questionId = questionId;
-    }
-
     @Override
     public String toString() {
         return "QuizCriteria{" +
@@ -86,7 +76,6 @@ public class QuizCriteria implements Serializable {
                 (name != null ? "name=" + name + ", " : "") +
                 (difficulty != null ? "difficulty=" + difficulty + ", " : "") +
                 (passingscore != null ? "passingscore=" + passingscore + ", " : "") +
-                (questionId != null ? "questionId=" + questionId + ", " : "") +
             "}";
     }
 

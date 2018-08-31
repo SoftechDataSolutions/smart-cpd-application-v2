@@ -76,12 +76,6 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findById(id);
     }
 
-    @Override
-    public Page<Question> findQuestionsbyQuizId(Long id){
-        log.debug("Request to get Question by Quiz Id: {}", id);
-        return questionRepository.findQuestionsByQuizId(id);
-    }
-
     /**
      * Delete the question by id.
      *

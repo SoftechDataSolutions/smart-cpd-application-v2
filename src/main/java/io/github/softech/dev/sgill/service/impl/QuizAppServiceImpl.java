@@ -1,5 +1,9 @@
 package io.github.softech.dev.sgill.service.impl;
 
+import io.github.softech.dev.sgill.domain.Question;
+import io.github.softech.dev.sgill.domain.Quiz;
+import io.github.softech.dev.sgill.repository.QuestionRepository;
+import io.github.softech.dev.sgill.service.QuestionService;
 import io.github.softech.dev.sgill.service.QuizAppService;
 import io.github.softech.dev.sgill.domain.QuizApp;
 import io.github.softech.dev.sgill.repository.QuizAppRepository;
@@ -13,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -30,9 +37,16 @@ public class QuizAppServiceImpl implements QuizAppService {
 
     private final QuizAppSearchRepository quizAppSearchRepository;
 
-    public QuizAppServiceImpl(QuizAppRepository quizAppRepository, QuizAppSearchRepository quizAppSearchRepository) {
+    private final QuestionRepository questionRepository;
+
+    private final QuestionService questionService;
+
+    public QuizAppServiceImpl(QuizAppRepository quizAppRepository, QuizAppSearchRepository quizAppSearchRepository,
+                              QuestionRepository questionRepository, QuestionService questionService) {
         this.quizAppRepository = quizAppRepository;
         this.quizAppSearchRepository = quizAppSearchRepository;
+        this.questionService = questionService;
+        this.questionRepository = questionRepository;
     }
 
     /**
@@ -44,6 +58,13 @@ public class QuizAppServiceImpl implements QuizAppService {
     @Override
     public QuizApp save(QuizApp quizApp) {
         log.debug("Request to save QuizApp : {}", quizApp);
+        Quiz quiz = quizApp.getQuiz();
+        List<Question> questionList = questionRepository.findQuestionsByQuiz(quiz);
+        Set<Question> questionSet = new HashSet<>();
+        for (Question question: questionList){
+            questionSet.add(question);
+        }
+        quizApp.setQuestions(questionSet);
         QuizApp result = quizAppRepository.save(quizApp);
         quizAppSearchRepository.save(result);
         return result;

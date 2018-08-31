@@ -21,7 +21,7 @@
             "customer": "Customer",
             "currSection": "Curr Section",
             "newSection": "New Section",
-            "question": "Question"
+            "questions": "Questions"
         }
     }
 }

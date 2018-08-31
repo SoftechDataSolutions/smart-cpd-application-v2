@@ -27,12 +27,12 @@
             "otherEntityField": "name"
         },
         {
-            "relationshipName": "question",
+            "relationshipName": "questions",
             "otherEntityName": "question",
             "relationshipType": "many-to-many",
             "otherEntityField": "textQuestion",
             "ownerSide": true,
-            "otherEntityRelationshipName": "quizApp"
+            "otherEntityRelationshipName": "quizIntance"
         }
     ],
     "fields": [],

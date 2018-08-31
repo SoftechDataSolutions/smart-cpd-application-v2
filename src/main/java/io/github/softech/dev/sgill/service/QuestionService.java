@@ -45,8 +45,6 @@ public interface QuestionService {
      */
     void delete(Long id);
 
-    Page<Question> findQuestionsbyQuizId(Long id);
-
     /**
      * Search for the question corresponding to the query.
      *

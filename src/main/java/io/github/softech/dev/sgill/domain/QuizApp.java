@@ -43,9 +43,9 @@ public class QuizApp implements Serializable {
     @JsonIgnoreProperties("")
     private Section newSection;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    @JoinTable(name = "quiz_app_question",
+    @JoinTable(name = "quiz_app_questions",
                joinColumns = @JoinColumn(name = "quiz_apps_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "questions_id", referencedColumnName = "id"))
     private Set<Question> questions = new HashSet<>();
@@ -120,12 +120,12 @@ public class QuizApp implements Serializable {
         return this;
     }
 
-    public QuizApp addQuestion(Question question) {
+    public QuizApp addQuestions(Question question) {
         this.questions.add(question);
         return this;
     }
 
-    public QuizApp removeQuestion(Question question) {
+    public QuizApp removeQuestions(Question question) {
         this.questions.remove(question);
         return this;
     }

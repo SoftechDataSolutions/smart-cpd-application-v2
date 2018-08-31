@@ -3,7 +3,6 @@ package io.github.softech.dev.sgill.web.rest;
 import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Quiz;
-import io.github.softech.dev.sgill.domain.Question;
 import io.github.softech.dev.sgill.repository.QuizRepository;
 import io.github.softech.dev.sgill.repository.search.QuizSearchRepository;
 import io.github.softech.dev.sgill.service.QuizService;
@@ -360,25 +359,6 @@ public class QuizResourceIntTest {
 
         // Get all the quizList where passingscore less than or equals to UPDATED_PASSINGSCORE
         defaultQuizShouldBeFound("passingscore.lessThan=" + UPDATED_PASSINGSCORE);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllQuizzesByQuestionIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Question question = QuestionResourceIntTest.createEntity(em);
-        em.persist(question);
-        em.flush();
-        quiz.addQuestion(question);
-        quizRepository.saveAndFlush(quiz);
-        Long questionId = question.getId();
-
-        // Get all the quizList where question equals to questionId
-        defaultQuizShouldBeFound("questionId.equals=" + questionId);
-
-        // Get all the quizList where question equals to questionId + 1
-        defaultQuizShouldNotBeFound("questionId.equals=" + (questionId + 1));
     }
 
     /**

@@ -141,6 +141,7 @@ public class QuizHistoryResource {
      * @param pageable the pagination information
      * @return the result of the search
      */
+
     @GetMapping("/_search/quiz-histories")
     @Timed
     public ResponseEntity<List<QuizHistory>> searchQuizHistories(@RequestParam String query, Pageable pageable) {

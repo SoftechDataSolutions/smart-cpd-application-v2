@@ -3,8 +3,6 @@
         <div *ngIf="quizApp">
             <h2><span jhiTranslate="smartCpdApp.quizApp.detail.title">Quiz App</span> {{quizApp.id}}</h2>
             <hr>
-            <p *ngIf="questions == null">is null</p>
-            <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
                 <dt><span jhiTranslate="smartCpdApp.quizApp.quiz">Quiz</span></dt>
@@ -31,10 +29,10 @@
                         <a [routerLink]="['/section', quizApp.newSection?.id, 'view']">{{quizApp.newSection?.name}}</a>
                     </div>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.quizApp.question">Question</span></dt>
+                <dt><span jhiTranslate="smartCpdApp.quizApp.questions">Questions</span></dt>
                 <dd>
-                    <span *ngFor="let question of quizApp.questions; let last = last">
-                        <a [routerLink]="['/question', question?.id, 'view' ]">{{question.textQuestion}}</a>{{last ? '' : ', '}}
+                    <span *ngFor="let questions of quizApp.questions; let last = last">
+                        <a [routerLink]="['/question', questions?.id, 'view' ]">{{questions.textQuestion}}</a>{{last ? '' : ', '}}
                     </span>
                 </dd>
             </dl>

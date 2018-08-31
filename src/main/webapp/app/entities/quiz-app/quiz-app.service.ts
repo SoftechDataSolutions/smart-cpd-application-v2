@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IQuizApp } from 'app/shared/model/quiz-app.model';
-import { IQuestion } from 'app/shared/model/question.model';
 
 type EntityResponseType = HttpResponse<IQuizApp>;
 type EntityArrayResponseType = HttpResponse<IQuizApp[]>;
@@ -14,7 +13,6 @@ type EntityArrayResponseType = HttpResponse<IQuizApp[]>;
 export class QuizAppService {
     private resourceUrl = SERVER_API_URL + 'api/quiz-apps';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/quiz-apps';
-    private resourceQuizFindUrl = SERVER_API_URL + 'api/_findbyquiz/quiz-apps';
 
     constructor(private http: HttpClient) {}
 
@@ -42,9 +40,5 @@ export class QuizAppService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<IQuizApp[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
-    }
-
-    findbyquiz(id: number): Observable<EntityArrayResponseType> {
-        return this.http.get<IQuestion[]>(`${this.resourceQuizFindUrl}/${id}`, { observe: 'response' });
     }
 }

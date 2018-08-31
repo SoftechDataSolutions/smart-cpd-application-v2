@@ -1,5 +1,6 @@
 package io.github.softech.dev.sgill.service.impl;
 
+import io.github.softech.dev.sgill.domain.Question;
 import io.github.softech.dev.sgill.service.ChoiceService;
 import io.github.softech.dev.sgill.domain.Choice;
 import io.github.softech.dev.sgill.repository.ChoiceRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -61,7 +63,11 @@ public class ChoiceServiceImpl implements ChoiceService {
         return choiceRepository.findAll(pageable);
     }
 
-
+    @Override
+    public List<Choice> findChoicesByQuestionId(Long id){
+        log.debug("Request to get Question by Quiz Id: {}", id);
+        return choiceRepository.findChoicesByQuestionId(id);
+    }
     /**
      * Get one choice by id.
      *

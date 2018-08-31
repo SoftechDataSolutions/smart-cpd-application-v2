@@ -41,7 +41,7 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         
-        <createTable tableName="quiz_app_question">
+        <createTable tableName="quiz_app_questions">
             <column name="questions_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -50,7 +50,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="quiz_apps_id, questions_id" tableName="quiz_app_question"/>
+        <addPrimaryKey columnNames="quiz_apps_id, questions_id" tableName="quiz_app_questions"/>
         
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

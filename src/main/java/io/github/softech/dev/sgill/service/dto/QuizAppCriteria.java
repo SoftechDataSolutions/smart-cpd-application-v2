@@ -36,7 +36,7 @@ public class QuizAppCriteria implements Serializable {
 
     private LongFilter newSectionId;
 
-    private LongFilter questionId;
+    private LongFilter questionsId;
 
     public QuizAppCriteria() {
     }
@@ -81,12 +81,12 @@ public class QuizAppCriteria implements Serializable {
         this.newSectionId = newSectionId;
     }
 
-    public LongFilter getQuestionId() {
-        return questionId;
+    public LongFilter getQuestionsId() {
+        return questionsId;
     }
 
-    public void setQuestionId(LongFilter questionId) {
-        this.questionId = questionId;
+    public void setQuestionsId(LongFilter questionsId) {
+        this.questionsId = questionsId;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class QuizAppCriteria implements Serializable {
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (currSectionId != null ? "currSectionId=" + currSectionId + ", " : "") +
                 (newSectionId != null ? "newSectionId=" + newSectionId + ", " : "") +
-                (questionId != null ? "questionId=" + questionId + ", " : "") +
+                (questionsId != null ? "questionsId=" + questionsId + ", " : "") +
             "}";
     }
 

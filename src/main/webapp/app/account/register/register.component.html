@@ -150,7 +150,7 @@
                         <label class="form-control-label" jhiTranslate="smartCpdApp.customer.company" for="field_company2">Company</label>
                         <select class="form-control" id="field_company2" name="company" [(ngModel)]="registerAccount.company" required>
                             <option [ngValue]="null">Please Select One</option>
-                            <option [ngValue]="companyOption" *ngFor="let companyOption of companies; trackBy: trackCompanyById">{{companyOption.name}}</option>
+                            <option (select)="selectCompany(companyOption)" [ngValue]="companyOption" *ngFor="let companyOption of companies; trackBy: trackCompanyById">{{companyOption.name}}</option>
                         </select>
                     </div>
                     <!--<a *ngIf="registerAccount.company.length < 1">
@@ -197,7 +197,7 @@
                     <input type="text" class="form-control" name="country" id="field_country"
                            [(ngModel)]="registerAccount.country" placeholder=" {{country}}" disabled="true" required/>
                 </div>
-               <div class="form-group">
+               <div *ngIf="!registerAccount.show" class="form-group">
                    <label class="form-control-label" jhiTranslate="smartCpdApp.customer.cycledate" for="field_cycledate">Cycledate</label>
                    <div class="d-flex">
                        <input id="field_cycledate" type="datetime-local" class="form-control" name="cycledate" [(ngModel)]="cycledate"

@@ -86,8 +86,8 @@ public class QuizAppQueryService extends QueryService<QuizApp> {
             if (criteria.getNewSectionId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getNewSectionId(), QuizApp_.newSection, Section_.id));
             }
-            if (criteria.getQuestionId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionId(), QuizApp_.questions, Question_.id));
+            if (criteria.getQuestionsId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getQuestionsId(), QuizApp_.questions, Question_.id));
             }
         }
         return specification;
