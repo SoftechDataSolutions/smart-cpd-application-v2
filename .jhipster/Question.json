@@ -30,6 +30,10 @@
         {
             "fieldName": "restudy",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "used",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180819063646",

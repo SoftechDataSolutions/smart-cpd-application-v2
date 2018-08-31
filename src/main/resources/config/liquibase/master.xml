@@ -50,5 +50,6 @@
     <include file="config/liquibase/changelog/20180819063649_added_entity_constraints_QuestionHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180819063649_added_entity_constraints_QuestionHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180823211934_added_entity_constraints_QuizApp.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180819063645_added_entity_constraints_Quiz.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

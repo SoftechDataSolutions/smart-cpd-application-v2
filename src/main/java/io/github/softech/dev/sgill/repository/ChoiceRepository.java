@@ -1,8 +1,12 @@
 package io.github.softech.dev.sgill.repository;
 
 import io.github.softech.dev.sgill.domain.Choice;
+import io.github.softech.dev.sgill.domain.Question;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -11,5 +15,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ChoiceRepository extends JpaRepository<Choice, Long>, JpaSpecificationExecutor<Choice> {
-
+    List<Choice> findChoicesByQuestionId(Long id);
 }

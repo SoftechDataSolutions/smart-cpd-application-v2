@@ -43,7 +43,8 @@ public class QuizAppServiceImpl implements QuizAppService {
      */
     @Override
     public QuizApp save(QuizApp quizApp) {
-        log.debug("Request to save QuizApp : {}", quizApp);        QuizApp result = quizAppRepository.save(quizApp);
+        log.debug("Request to save QuizApp : {}", quizApp);
+        QuizApp result = quizAppRepository.save(quizApp);
         quizAppSearchRepository.save(result);
         return result;
     }
@@ -61,6 +62,15 @@ public class QuizAppServiceImpl implements QuizAppService {
         return quizAppRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the QuizApp with eager load of many-to-many relationships.
+     *
+     * @return the list of entities
+     */
+    public Page<QuizApp> findAllWithEagerRelationships(Pageable pageable) {
+        return quizAppRepository.findAllWithEagerRelationships(pageable);
+    }
+    
 
     /**
      * Get one quizApp by id.
@@ -72,7 +82,7 @@ public class QuizAppServiceImpl implements QuizAppService {
     @Transactional(readOnly = true)
     public Optional<QuizApp> findOne(Long id) {
         log.debug("Request to get QuizApp : {}", id);
-        return quizAppRepository.findById(id);
+        return quizAppRepository.findOneWithEagerRelationships(id);
     }
 
     /**

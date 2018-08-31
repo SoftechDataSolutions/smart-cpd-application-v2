@@ -5,6 +5,7 @@ import io.github.softech.dev.sgill.domain.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,6 +44,8 @@ public interface QuestionService {
      * @param id the id of the entity
      */
     void delete(Long id);
+
+    Page<Question> findQuestionsbyQuizId(Long id);
 
     /**
      * Search for the question corresponding to the query.

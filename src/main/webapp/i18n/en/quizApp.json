@@ -20,7 +20,8 @@
             "quiz": "Quiz",
             "customer": "Customer",
             "currSection": "Curr Section",
-            "newSection": "New Section"
+            "newSection": "New Section",
+            "question": "Question"
         }
     }
 }

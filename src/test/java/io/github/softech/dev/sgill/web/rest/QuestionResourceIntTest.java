@@ -59,6 +59,9 @@ public class QuestionResourceIntTest {
     private static final String DEFAULT_RESTUDY = "AAAAAAAAAA";
     private static final String UPDATED_RESTUDY = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_USED = false;
+    private static final Boolean UPDATED_USED = true;
+
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -115,7 +118,8 @@ public class QuestionResourceIntTest {
         Question question = new Question()
             .textQuestion(DEFAULT_TEXT_QUESTION)
             .difficulty(DEFAULT_DIFFICULTY)
-            .restudy(DEFAULT_RESTUDY);
+            .restudy(DEFAULT_RESTUDY)
+            .used(DEFAULT_USED);
         return question;
     }
 
@@ -142,6 +146,7 @@ public class QuestionResourceIntTest {
         assertThat(testQuestion.getTextQuestion()).isEqualTo(DEFAULT_TEXT_QUESTION);
         assertThat(testQuestion.getDifficulty()).isEqualTo(DEFAULT_DIFFICULTY);
         assertThat(testQuestion.getRestudy()).isEqualTo(DEFAULT_RESTUDY);
+        assertThat(testQuestion.isUsed()).isEqualTo(DEFAULT_USED);
 
         // Validate the Question in Elasticsearch
         verify(mockQuestionSearchRepository, times(1)).save(testQuestion);
@@ -200,7 +205,8 @@ public class QuestionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
             .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
-            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())))
+            .andExpect(jsonPath("$.[*].used").value(hasItem(DEFAULT_USED.booleanValue())));
     }
     
 
@@ -217,7 +223,8 @@ public class QuestionResourceIntTest {
             .andExpect(jsonPath("$.id").value(question.getId().intValue()))
             .andExpect(jsonPath("$.textQuestion").value(DEFAULT_TEXT_QUESTION.toString()))
             .andExpect(jsonPath("$.difficulty").value(DEFAULT_DIFFICULTY.toString()))
-            .andExpect(jsonPath("$.restudy").value(DEFAULT_RESTUDY.toString()));
+            .andExpect(jsonPath("$.restudy").value(DEFAULT_RESTUDY.toString()))
+            .andExpect(jsonPath("$.used").value(DEFAULT_USED.booleanValue()));
     }
 
     @Test
@@ -339,6 +346,45 @@ public class QuestionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllQuestionsByUsedIsEqualToSomething() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where used equals to DEFAULT_USED
+        defaultQuestionShouldBeFound("used.equals=" + DEFAULT_USED);
+
+        // Get all the questionList where used equals to UPDATED_USED
+        defaultQuestionShouldNotBeFound("used.equals=" + UPDATED_USED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllQuestionsByUsedIsInShouldWork() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where used in DEFAULT_USED or UPDATED_USED
+        defaultQuestionShouldBeFound("used.in=" + DEFAULT_USED + "," + UPDATED_USED);
+
+        // Get all the questionList where used equals to UPDATED_USED
+        defaultQuestionShouldNotBeFound("used.in=" + UPDATED_USED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllQuestionsByUsedIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        questionRepository.saveAndFlush(question);
+
+        // Get all the questionList where used is not null
+        defaultQuestionShouldBeFound("used.specified=true");
+
+        // Get all the questionList where used is null
+        defaultQuestionShouldNotBeFound("used.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllQuestionsByChoiceIsEqualToSomething() throws Exception {
         // Initialize the database
         Choice choice = ChoiceResourceIntTest.createEntity(em);
@@ -384,7 +430,8 @@ public class QuestionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
             .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
-            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())))
+            .andExpect(jsonPath("$.[*].used").value(hasItem(DEFAULT_USED.booleanValue())));
     }
 
     /**
@@ -423,7 +470,8 @@ public class QuestionResourceIntTest {
         updatedQuestion
             .textQuestion(UPDATED_TEXT_QUESTION)
             .difficulty(UPDATED_DIFFICULTY)
-            .restudy(UPDATED_RESTUDY);
+            .restudy(UPDATED_RESTUDY)
+            .used(UPDATED_USED);
 
         restQuestionMockMvc.perform(put("/api/questions")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -437,6 +485,7 @@ public class QuestionResourceIntTest {
         assertThat(testQuestion.getTextQuestion()).isEqualTo(UPDATED_TEXT_QUESTION);
         assertThat(testQuestion.getDifficulty()).isEqualTo(UPDATED_DIFFICULTY);
         assertThat(testQuestion.getRestudy()).isEqualTo(UPDATED_RESTUDY);
+        assertThat(testQuestion.isUsed()).isEqualTo(UPDATED_USED);
 
         // Validate the Question in Elasticsearch
         verify(mockQuestionSearchRepository, times(1)).save(testQuestion);
@@ -498,7 +547,8 @@ public class QuestionResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(question.getId().intValue())))
             .andExpect(jsonPath("$.[*].textQuestion").value(hasItem(DEFAULT_TEXT_QUESTION.toString())))
             .andExpect(jsonPath("$.[*].difficulty").value(hasItem(DEFAULT_DIFFICULTY.toString())))
-            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())));
+            .andExpect(jsonPath("$.[*].restudy").value(hasItem(DEFAULT_RESTUDY.toString())))
+            .andExpect(jsonPath("$.[*].used").value(hasItem(DEFAULT_USED.booleanValue())));
     }
 
     @Test

@@ -6,6 +6,7 @@ export interface IQuestion {
     textQuestion?: string;
     difficulty?: string;
     restudy?: string;
+    used?: boolean;
     choices?: IChoice[];
     quiz?: IQuiz;
 }
@@ -16,7 +17,10 @@ export class Question implements IQuestion {
         public textQuestion?: string,
         public difficulty?: string,
         public restudy?: string,
+        public used?: boolean,
         public choices?: IChoice[],
         public quiz?: IQuiz
-    ) {}
+    ) {
+        this.used = this.used || false;
+    }
 }

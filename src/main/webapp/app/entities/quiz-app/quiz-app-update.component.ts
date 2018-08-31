@@ -12,6 +12,8 @@ import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
 import { ISection } from 'app/shared/model/section.model';
 import { SectionService } from 'app/entities/section';
+import { IQuestion } from 'app/shared/model/question.model';
+import { QuestionService } from 'app/entities/question';
 
 @Component({
     selector: 'jhi-quiz-app-update',
@@ -27,12 +29,15 @@ export class QuizAppUpdateComponent implements OnInit {
 
     sections: ISection[];
 
+    questions: IQuestion[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private quizAppService: QuizAppService,
         private quizService: QuizService,
         private customerService: CustomerService,
         private sectionService: SectionService,
+        private questionService: QuestionService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -56,6 +61,12 @@ export class QuizAppUpdateComponent implements OnInit {
         this.sectionService.query().subscribe(
             (res: HttpResponse<ISection[]>) => {
                 this.sections = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.questionService.query().subscribe(
+            (res: HttpResponse<IQuestion[]>) => {
+                this.questions = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -101,6 +112,21 @@ export class QuizAppUpdateComponent implements OnInit {
 
     trackSectionById(index: number, item: ISection) {
         return item.id;
+    }
+
+    trackQuestionById(index: number, item: IQuestion) {
+        return item.id;
+    }
+
+    getSelected(selectedVals: Array<any>, option: any) {
+        if (selectedVals) {
+            for (let i = 0; i < selectedVals.length; i++) {
+                if (option.id === selectedVals[i].id) {
+                    return selectedVals[i];
+                }
+            }
+        }
+        return option;
     }
     get quizApp() {
         return this._quizApp;

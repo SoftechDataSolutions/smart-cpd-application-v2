@@ -39,6 +39,9 @@ public class Question implements Serializable {
     @Column(name = "restudy")
     private String restudy;
 
+    @Column(name = "used")
+    private Boolean used;
+
     @OneToMany(mappedBy = "question")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Choice> choices = new HashSet<>();
@@ -93,6 +96,19 @@ public class Question implements Serializable {
 
     public void setRestudy(String restudy) {
         this.restudy = restudy;
+    }
+
+    public Boolean isUsed() {
+        return used;
+    }
+
+    public Question used(Boolean used) {
+        this.used = used;
+        return this;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
     }
 
     public Set<Choice> getChoices() {
@@ -161,6 +177,7 @@ public class Question implements Serializable {
             ", textQuestion='" + getTextQuestion() + "'" +
             ", difficulty='" + getDifficulty() + "'" +
             ", restudy='" + getRestudy() + "'" +
+            ", used='" + isUsed() + "'" +
             "}";
     }
 }

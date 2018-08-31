@@ -34,6 +34,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="used" type="bit">
+                <constraints nullable="true" />
+            </column>
+
             <column name="quiz_id" type="bigint">
                 <constraints nullable="true" />
             </column>

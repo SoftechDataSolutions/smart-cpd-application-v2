@@ -36,6 +36,8 @@ public class QuizAppCriteria implements Serializable {
 
     private LongFilter newSectionId;
 
+    private LongFilter questionId;
+
     public QuizAppCriteria() {
     }
 
@@ -79,6 +81,14 @@ public class QuizAppCriteria implements Serializable {
         this.newSectionId = newSectionId;
     }
 
+    public LongFilter getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(LongFilter questionId) {
+        this.questionId = questionId;
+    }
+
     @Override
     public String toString() {
         return "QuizAppCriteria{" +
@@ -87,6 +97,7 @@ public class QuizAppCriteria implements Serializable {
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (currSectionId != null ? "currSectionId=" + currSectionId + ", " : "") +
                 (newSectionId != null ? "newSectionId=" + newSectionId + ", " : "") +
+                (questionId != null ? "questionId=" + questionId + ", " : "") +
             "}";
     }
 

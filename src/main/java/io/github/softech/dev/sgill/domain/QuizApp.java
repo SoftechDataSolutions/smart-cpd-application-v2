@@ -8,6 +8,8 @@ import javax.persistence.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -40,6 +42,13 @@ public class QuizApp implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("")
     private Section newSection;
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "quiz_app_question",
+               joinColumns = @JoinColumn(name = "quiz_apps_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "questions_id", referencedColumnName = "id"))
+    private Set<Question> questions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -100,6 +109,29 @@ public class QuizApp implements Serializable {
 
     public void setNewSection(Section section) {
         this.newSection = section;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public QuizApp questions(Set<Question> questions) {
+        this.questions = questions;
+        return this;
+    }
+
+    public QuizApp addQuestion(Question question) {
+        this.questions.add(question);
+        return this;
+    }
+
+    public QuizApp removeQuestion(Question question) {
+        this.questions.remove(question);
+        return this;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

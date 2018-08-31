@@ -41,6 +41,17 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         
+        <createTable tableName="quiz_app_question">
+            <column name="questions_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quiz_apps_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="quiz_apps_id, questions_id" tableName="quiz_app_question"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

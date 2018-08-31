@@ -1,7 +1,11 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.sun.mail.imap.protocol.ID;
+import io.github.softech.dev.sgill.domain.Question;
 import io.github.softech.dev.sgill.domain.QuizApp;
+import io.github.softech.dev.sgill.repository.QuestionRepository;
+import io.github.softech.dev.sgill.service.QuestionService;
 import io.github.softech.dev.sgill.service.QuizAppService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -42,9 +46,15 @@ public class QuizAppResource {
 
     private final QuizAppQueryService quizAppQueryService;
 
-    public QuizAppResource(QuizAppService quizAppService, QuizAppQueryService quizAppQueryService) {
+    private final QuestionRepository questionRepository;
+
+    private final QuestionService questionService;
+
+    public QuizAppResource(QuizAppService quizAppService, QuizAppQueryService quizAppQueryService, QuestionService questionService,QuestionRepository questionRepository) {
         this.quizAppService = quizAppService;
         this.quizAppQueryService = quizAppQueryService;
+        this.questionRepository = questionRepository;
+        this.questionService = questionService;
     }
 
     /**
@@ -147,6 +157,15 @@ public class QuizAppResource {
         log.debug("REST request to search for a page of QuizApps for query {}", query);
         Page<QuizApp> page = quizAppService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/quiz-apps");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_findbyquiz/quiz-apps/{id}")
+    @Timed
+    public ResponseEntity<List<Question>> searchQuizApps(@PathVariable Long id) {
+        log.debug("REST request to find questions of quiz ID", id);
+        Page<Question> page = questionService.findQuestionsbyQuizId(id);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders("Quiz Id:"+ id.toString(), page, "/api/_findbyquiz/quiz-apps/{id}");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

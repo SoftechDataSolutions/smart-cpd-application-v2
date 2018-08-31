@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -73,6 +74,12 @@ public class QuestionServiceImpl implements QuestionService {
     public Optional<Question> findOne(Long id) {
         log.debug("Request to get Question : {}", id);
         return questionRepository.findById(id);
+    }
+
+    @Override
+    public Page<Question> findQuestionsbyQuizId(Long id){
+        log.debug("Request to get Question by Quiz Id: {}", id);
+        return questionRepository.findQuestionsByQuizId(id);
     }
 
     /**

@@ -32,5 +32,16 @@
                                  referencedColumnNames="id"
                                  referencedTableName="section"/>
 
+        <addForeignKeyConstraint baseColumnNames="quiz_apps_id"
+                                 baseTableName="quiz_app_question"
+                                 constraintName="fk_quiz_app_question_quiz_apps_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="quiz_app"/>
+        <addForeignKeyConstraint baseColumnNames="questions_id"
+                                 baseTableName="quiz_app_question"
+                                 constraintName="fk_quiz_app_question_questions_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="question"/>
+        
     </changeSet>
 </databaseChangeLog>

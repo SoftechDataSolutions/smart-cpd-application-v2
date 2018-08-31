@@ -67,16 +67,21 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Type</label>
-                    <input type="text" class="form-control" name="type" id="field_type"
-                        [(ngModel)]="section.type" required/>
-                    <div [hidden]="!(editForm.controls.type?.dirty && editForm.controls.type?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.type?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div id="field_type">
+                        <div class="radio" style="margin-left: 10px;">
+                            <label>
+                                <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
+                                .mp4
+                            </label>
+                        </div>
+                        <div class="radio"style="margin-left: 10px;">
+                            <label>
+                                <input type="radio" name="type" value="pdf" [(ngModel)]="section.type">
+                                .pdf
+                            </label>
+                        </div>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.quiz" for="field_quiz">Quiz</label>
                     <select class="form-control" id="field_quiz" name="quiz" [(ngModel)]="section.quiz">

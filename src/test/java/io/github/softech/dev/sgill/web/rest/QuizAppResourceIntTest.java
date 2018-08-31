@@ -7,6 +7,7 @@ import io.github.softech.dev.sgill.domain.Quiz;
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.Section;
+import io.github.softech.dev.sgill.domain.Question;
 import io.github.softech.dev.sgill.repository.QuizAppRepository;
 import io.github.softech.dev.sgill.repository.search.QuizAppSearchRepository;
 import io.github.softech.dev.sgill.service.QuizAppService;
@@ -17,6 +18,7 @@ import io.github.softech.dev.sgill.service.QuizAppQueryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,8 +57,11 @@ public class QuizAppResourceIntTest {
 
     @Autowired
     private QuizAppRepository quizAppRepository;
-
+    @Mock
+    private QuizAppRepository quizAppRepositoryMock;
     
+    @Mock
+    private QuizAppService quizAppServiceMock;
 
     @Autowired
     private QuizAppService quizAppService;
@@ -169,6 +175,36 @@ public class QuizAppResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(quizApp.getId().intValue())));
     }
     
+    public void getAllQuizAppsWithEagerRelationshipsIsEnabled() throws Exception {
+        QuizAppResource quizAppResource = new QuizAppResource(quizAppServiceMock, quizAppQueryService);
+        when(quizAppServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        MockMvc restQuizAppMockMvc = MockMvcBuilders.standaloneSetup(quizAppResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restQuizAppMockMvc.perform(get("/api/quiz-apps?eagerload=true"))
+        .andExpect(status().isOk());
+
+        verify(quizAppServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    public void getAllQuizAppsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        QuizAppResource quizAppResource = new QuizAppResource(quizAppServiceMock, quizAppQueryService);
+            when(quizAppServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+            MockMvc restQuizAppMockMvc = MockMvcBuilders.standaloneSetup(quizAppResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        restQuizAppMockMvc.perform(get("/api/quiz-apps?eagerload=true"))
+        .andExpect(status().isOk());
+
+            verify(quizAppServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
 
     @Test
     @Transactional
@@ -256,6 +292,25 @@ public class QuizAppResourceIntTest {
 
         // Get all the quizAppList where newSection equals to newSectionId + 1
         defaultQuizAppShouldNotBeFound("newSectionId.equals=" + (newSectionId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllQuizAppsByQuestionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Question question = QuestionResourceIntTest.createEntity(em);
+        em.persist(question);
+        em.flush();
+        quizApp.addQuestion(question);
+        quizAppRepository.saveAndFlush(quizApp);
+        Long questionId = question.getId();
+
+        // Get all the quizAppList where question equals to questionId
+        defaultQuizAppShouldBeFound("questionId.equals=" + questionId);
+
+        // Get all the quizAppList where question equals to questionId + 1
+        defaultQuizAppShouldNotBeFound("questionId.equals=" + (questionId + 1));
     }
 
     /**

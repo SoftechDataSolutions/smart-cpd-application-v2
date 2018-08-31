@@ -151,4 +151,12 @@ public class QuestionResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/_findbyquiz/questions/{id}")
+    @Timed
+    public ResponseEntity<List<Question>> searchQuizApps(@PathVariable Long id) {
+        log.debug("REST request to find questions of quiz ID", id);
+        Page<Question> page = questionService.findQuestionsbyQuizId(id);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders("Quiz Id:"+ id.toString(), page, "/api/_findbyquiz/questions/{id}");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 }

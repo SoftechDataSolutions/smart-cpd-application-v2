@@ -25,6 +25,14 @@
             "otherEntityName": "section",
             "relationshipType": "many-to-one",
             "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "question",
+            "otherEntityName": "question",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "textQuestion",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "quizApp"
         }
     ],
     "fields": [],

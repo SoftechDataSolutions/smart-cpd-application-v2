@@ -13,6 +13,7 @@ type EntityArrayResponseType = HttpResponse<IQuestion[]>;
 export class QuestionService {
     private resourceUrl = SERVER_API_URL + 'api/questions';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/questions';
+    private resourceQuizFindUrl = SERVER_API_URL + 'api/_findbyquiz/questions';
 
     constructor(private http: HttpClient) {}
 
@@ -40,5 +41,9 @@ export class QuestionService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<IQuestion[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+    }
+
+    findbyquiz(id: number): Observable<EntityArrayResponseType> {
+        return this.http.get<IQuestion[]>(`${this.resourceQuizFindUrl}/${id}`, { observe: 'response' });
     }
 }

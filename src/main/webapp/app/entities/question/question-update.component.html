@@ -30,6 +30,11 @@
                     <input type="text" class="form-control" name="restudy" id="field_restudy"
                         [(ngModel)]="question.restudy" />
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.question.used" for="field_used">Used</label>
+                    <input type="checkbox" class="form-control" name="used" id="field_used"
+                        [(ngModel)]="question.used" />
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.question.quiz" for="field_quiz">Quiz</label>
