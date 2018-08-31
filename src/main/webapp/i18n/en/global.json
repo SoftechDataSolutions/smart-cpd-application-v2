@@ -116,6 +116,7 @@
                 "questionhistory": "QuestionHistory",
                 "quizapp": "QuizApp",
                 "tags": "Tags",
+                "bookmarks": "Bookmarks",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
