@@ -25,8 +25,8 @@
             "textcontent": "Textcontent",
             "type": "Type",
             "quiz": "Quiz",
-            "course": "Course",
-            "tags": "Tags"
+            "tags": "Tags",
+            "course": "Course"
         }
     }
 }

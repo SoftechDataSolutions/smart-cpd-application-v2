@@ -92,11 +92,11 @@ public class SectionQueryService extends QueryService<Section> {
             if (criteria.getQuizId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getQuizId(), Section_.quiz, Quiz_.id));
             }
-            if (criteria.getCourseId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getCourseId(), Section_.course, Course_.id));
-            }
             if (criteria.getTagsId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getTagsId(), Section_.tags, Tags_.id));
+            }
+            if (criteria.getCourseId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getCourseId(), Section_.course, Course_.id));
             }
         }
         return specification;

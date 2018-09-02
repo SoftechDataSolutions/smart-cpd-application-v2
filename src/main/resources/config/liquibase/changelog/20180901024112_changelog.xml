@@ -1,54 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-
-    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063638_added_entity_Customer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063639_added_entity_Company.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063640_added_entity_Topic.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063641_added_entity_Course.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063642_added_entity_CourseCartBridge.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063643_added_entity_Certificate.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063644_added_entity_Section.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063645_added_entity_Quiz.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063646_added_entity_Question.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063647_added_entity_Choice.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063648_added_entity_CourseHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063650_added_entity_SectionHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063651_added_entity_QuizHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063652_added_entity_Orders.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063653_added_entity_Cart.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063654_added_entity_TimeCourseLog.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180822053330_added_entity_Servicelist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063649_added_entity_QuestionHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180823211934_added_entity_QuizApp.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180827020534_added_entity_Tags.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180831224213_added_entity_Bookmarks.xml" relativeToChangelogFile="false"/>
-    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20180819063638_added_entity_constraints_Customer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063641_added_entity_constraints_Course.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063642_added_entity_constraints_CourseCartBridge.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063643_added_entity_constraints_Certificate.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063644_added_entity_constraints_Section.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063646_added_entity_constraints_Question.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063647_added_entity_constraints_Choice.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063648_added_entity_constraints_CourseHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063649_added_entity_constraints_QuestionHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063650_added_entity_constraints_SectionHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063651_added_entity_constraints_QuizHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063652_added_entity_constraints_Orders.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063653_added_entity_constraints_Cart.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063654_added_entity_constraints_TimeCourseLog.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180822053330_added_entity_constraints_Servicelist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180819063649_added_entity_constraints_QuestionHistory.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180823211934_added_entity_constraints_QuizApp.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20180831224213_added_entity_constraints_Bookmarks.xml" relativeToChangelogFile="false"/>
-</databaseChangeLog>
-
-    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
-    <!--<changeSet author="shaanjotgill (generated)" id="1535769684011-1">
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="shaanjotgill (generated)" id="1535769684011-1">
         <createTable tableName="bookmarks">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="bookmarksPK"/>
@@ -658,4 +610,5 @@
     </changeSet>
     <changeSet author="shaanjotgill (generated)" id="1535769684011-79">
         <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="orders" constraintName="FKtpihbdn6ws0hu56camb0bg2to" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cart"/>
-    </changeSet>-->
+    </changeSet>
+</databaseChangeLog>

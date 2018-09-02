@@ -42,17 +42,17 @@
                         <a [routerLink]="['/quiz', section.quiz?.id, 'view']">{{section.quiz?.name}}</a>
                     </div>
                 </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.course">Course</span></dt>
-                <dd>
-                    <div *ngIf="section.course">
-                        <a [routerLink]="['/course', section.course?.id, 'view']">{{section.course?.normCourses}}</a>
-                    </div>
-                </dd>
                 <dt><span jhiTranslate="smartCpdApp.section.tags">Tags</span></dt>
                 <dd>
                     <span *ngFor="let tags of section.tags; let last = last">
                         <a [routerLink]="['/tags', tags?.id, 'view' ]">{{tags.name}}</a>{{last ? '' : ', '}}
                     </span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.section.course">Course</span></dt>
+                <dd>
+                    <div *ngIf="section.course">
+                        <a [routerLink]="['/course', section.course?.id, 'view']">{{section.course?.normCourses}}</a>
+                    </div>
                 </dd>
             </dl>
 

@@ -64,15 +64,28 @@
                     <p-editor id="field_textcontent" name="textcontent" [(ngModel)]="section.textcontent" styleClass="editor-dimensions"></p-editor>
                     <!--<textarea class="form-control" name="textcontent" id="field_textcontent"
                         [(ngModel)]="section.textcontent" ></textarea>-->
+                    <!--<textarea class="form-control" name="textcontent" id="field_textcontent"
+                              [(ngModel)]="section.textcontent" ></textarea>-->
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Type</label>
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Content Type</label>
                     <div id="field_type">
                         <div class="radio" style="margin-left: 10px;">
                             <label>
                                 <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
                                 .mp4
+                            </label><div class="radio" style="margin-left: 10px;">
+                            <label>
+                                <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
+                                .mp4
                             </label>
+                        </div>
+                            <div class="radio"style="margin-left: 10px;">
+                                <label>
+                                    <input type="radio" name="type" value="pdf" [(ngModel)]="section.type">
+                                    .pdf
+                                </label>
+                            </div>
                         </div>
                         <div class="radio"style="margin-left: 10px;">
                             <label>
@@ -82,6 +95,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.quiz" for="field_quiz">Quiz</label>
                     <select class="form-control" id="field_quiz" name="quiz" [(ngModel)]="section.quiz">
@@ -90,16 +104,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.course" for="field_course">Course</label>
-                    <select class="form-control" id="field_course" name="course" [(ngModel)]="section.course" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="courseOption.id === section.course?.id ? section.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label jhiTranslate="smartCpdApp.section.tags" for="field_tags">Tags</label>
                     <select class="form-control" id="field_tags" multiple name="tags" [(ngModel)]="section.tags">
                         <option [ngValue]="getSelected(section.tags, tagsOption)" *ngFor="let tagsOption of tags; trackBy: trackTagsById">{{tagsOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.course" for="field_course">Course</label>
+                    <select class="form-control" id="field_course" name="course" [(ngModel)]="section.course" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
                     </select>
                 </div>
             </div>

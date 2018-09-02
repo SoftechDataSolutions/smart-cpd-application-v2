@@ -1,6 +1,9 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { WizardModule } from 'primeng-extensions/components/wizard/wizard.js';
+import { FormsModule } from '@angular/forms';
+import { ProgressBarModule } from 'primeng/components/progressbar/progressbar';
+import { GrowlModule } from 'primeng/components/growl/growl';
 import { SmartCpdSharedModule } from 'app/shared';
 import {
     QuizAppComponent,
@@ -15,7 +18,7 @@ import {
 const ENTITY_STATES = [...quizAppRoute, ...quizAppPopupRoute];
 
 @NgModule({
-    imports: [SmartCpdSharedModule, RouterModule.forChild(ENTITY_STATES)],
+    imports: [SmartCpdSharedModule, RouterModule.forChild(ENTITY_STATES), WizardModule, FormsModule, ProgressBarModule, GrowlModule],
     declarations: [
         QuizAppComponent,
         QuizAppDetailComponent,

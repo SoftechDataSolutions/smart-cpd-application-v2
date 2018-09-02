@@ -61,16 +61,16 @@ public class Section implements Serializable {
     @JoinColumn(unique = true)
     private Quiz quiz;
 
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private Course course;
-
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "section_tags",
                joinColumns = @JoinColumn(name = "sections_id", referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
     private Set<Tags> tags = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -198,19 +198,6 @@ public class Section implements Serializable {
         this.quiz = quiz;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public Section course(Course course) {
-        this.course = course;
-        return this;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
     public Set<Tags> getTags() {
         return tags;
     }
@@ -232,6 +219,19 @@ public class Section implements Serializable {
 
     public void setTags(Set<Tags> tags) {
         this.tags = tags;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public Section course(Course course) {
+        this.course = course;
+        return this;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

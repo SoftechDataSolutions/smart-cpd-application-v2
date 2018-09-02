@@ -11,18 +11,18 @@
             "otherEntityRelationshipName": "section"
         },
         {
-            "relationshipType": "many-to-one",
-            "relationshipName": "course",
-            "otherEntityName": "course",
-            "otherEntityField": "normCourses"
-        },
-        {
             "relationshipName": "tags",
             "otherEntityName": "tags",
             "relationshipType": "many-to-many",
             "otherEntityField": "name",
             "ownerSide": true,
             "otherEntityRelationshipName": "section"
+        },
+        {
+            "relationshipName": "course",
+            "otherEntityName": "course",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "normCourses"
         }
     ],
     "fields": [

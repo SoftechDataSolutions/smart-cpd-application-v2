@@ -4,8 +4,8 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.Quiz;
-import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.Tags;
+import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.repository.SectionRepository;
 import io.github.softech.dev.sgill.repository.search.SectionSearchRepository;
 import io.github.softech.dev.sgill.service.SectionService;
@@ -525,25 +525,6 @@ public class SectionResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllSectionsByCourseIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Course course = CourseResourceIntTest.createEntity(em);
-        em.persist(course);
-        em.flush();
-        section.setCourse(course);
-        sectionRepository.saveAndFlush(section);
-        Long courseId = course.getId();
-
-        // Get all the sectionList where course equals to courseId
-        defaultSectionShouldBeFound("courseId.equals=" + courseId);
-
-        // Get all the sectionList where course equals to courseId + 1
-        defaultSectionShouldNotBeFound("courseId.equals=" + (courseId + 1));
-    }
-
-
-    @Test
-    @Transactional
     public void getAllSectionsByTagsIsEqualToSomething() throws Exception {
         // Initialize the database
         Tags tags = TagsResourceIntTest.createEntity(em);
@@ -558,6 +539,25 @@ public class SectionResourceIntTest {
 
         // Get all the sectionList where tags equals to tagsId + 1
         defaultSectionShouldNotBeFound("tagsId.equals=" + (tagsId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllSectionsByCourseIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Course course = CourseResourceIntTest.createEntity(em);
+        em.persist(course);
+        em.flush();
+        section.setCourse(course);
+        sectionRepository.saveAndFlush(section);
+        Long courseId = course.getId();
+
+        // Get all the sectionList where course equals to courseId
+        defaultSectionShouldBeFound("courseId.equals=" + courseId);
+
+        // Get all the sectionList where course equals to courseId + 1
+        defaultSectionShouldNotBeFound("courseId.equals=" + (courseId + 1));
     }
 
     /**

@@ -1,4 +1,43 @@
-<div class="row justify-content-center">
+<div *ngIf="quizApp" class="row justify-content-center">
+    <div class="col-1"></div>
+    <div class="col-9">
+        <form novalidate>
+            <pe-steps>
+                <pe-step label="{{quiz.name}}">
+                    <div class="row">
+                        <div class="col-2">Quiz Progress</div>
+                        <div class="col-6">
+                            <p-progressBar [styleClass]="'layout-format'" [value]="value"></p-progressBar>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                    <br>
+                    <hr>
+                    <br>
+                    <h1>Question:{{currentQuestion}}</h1>
+                    <h4>{{questionList[(currentQuestion-1)].textQuestion}}</h4>
+                    <div *ngFor="let choices of questionList[(currentQuestion-1)].choices">
+                            <div class="radio" style="margin-left: 5px;">
+                                <label>
+                                    <input type="radio" name="type" value="{{choices}}" (click)="onSelect(questionList[(currentQuestion-1)],choices)" #radioBtn >
+                                    {{choices.textChoice}}
+                                </label>
+                            </div>
+                    </div>
+                    <div *ngIf="isselected && proceed" class="alert alert-success" role="alert">
+                        <h3>{{message}}</h3>
+                    </div>
+                    <div *ngIf="isselected && !proceed" class="alert alert-danger" role="alert">
+                        <h3>{{message}}</h3><hr>
+                        <h3>Answer Hint: {{restudy}}</h3>
+                    </div>
+                </pe-step>
+            </pe-steps>
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+<!--<div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="quizApp">
             <h2><span jhiTranslate="smartCpdApp.quizApp.detail.title">Quiz App</span> {{quizApp.id}}</h2>
@@ -50,4 +89,4 @@
             </button>
         </div>
     </div>
-</div>
+</div>-->

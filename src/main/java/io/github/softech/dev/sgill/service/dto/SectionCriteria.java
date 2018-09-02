@@ -40,9 +40,9 @@ public class SectionCriteria implements Serializable {
 
     private LongFilter quizId;
 
-    private LongFilter courseId;
-
     private LongFilter tagsId;
+
+    private LongFilter courseId;
 
     public SectionCriteria() {
     }
@@ -103,20 +103,20 @@ public class SectionCriteria implements Serializable {
         this.quizId = quizId;
     }
 
-    public LongFilter getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(LongFilter courseId) {
-        this.courseId = courseId;
-    }
-
     public LongFilter getTagsId() {
         return tagsId;
     }
 
     public void setTagsId(LongFilter tagsId) {
         this.tagsId = tagsId;
+    }
+
+    public LongFilter getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(LongFilter courseId) {
+        this.courseId = courseId;
     }
 
     @Override
@@ -129,8 +129,8 @@ public class SectionCriteria implements Serializable {
                 (videoUrl != null ? "videoUrl=" + videoUrl + ", " : "") +
                 (type != null ? "type=" + type + ", " : "") +
                 (quizId != null ? "quizId=" + quizId + ", " : "") +
-                (courseId != null ? "courseId=" + courseId + ", " : "") +
                 (tagsId != null ? "tagsId=" + tagsId + ", " : "") +
+                (courseId != null ? "courseId=" + courseId + ", " : "") +
             "}";
     }
 

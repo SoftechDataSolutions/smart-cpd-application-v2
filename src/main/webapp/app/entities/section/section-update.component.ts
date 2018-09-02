@@ -8,10 +8,10 @@ import { ISection } from 'app/shared/model/section.model';
 import { SectionService } from './section.service';
 import { IQuiz } from 'app/shared/model/quiz.model';
 import { QuizService } from 'app/entities/quiz';
-import { ICourse } from 'app/shared/model/course.model';
-import { CourseService } from 'app/entities/course';
 import { ITags } from 'app/shared/model/tags.model';
 import { TagsService } from 'app/entities/tags';
+import { ICourse } from 'app/shared/model/course.model';
+import { CourseService } from 'app/entities/course';
 
 @Component({
     selector: 'jhi-section-update',
@@ -23,17 +23,17 @@ export class SectionUpdateComponent implements OnInit {
 
     quizzes: IQuiz[];
 
-    courses: ICourse[];
-
     tags: ITags[];
+
+    courses: ICourse[];
 
     constructor(
         private dataUtils: JhiDataUtils,
         private jhiAlertService: JhiAlertService,
         private sectionService: SectionService,
         private quizService: QuizService,
-        private courseService: CourseService,
         private tagsService: TagsService,
+        private courseService: CourseService,
         private activatedRoute: ActivatedRoute
     ) {}
 
@@ -57,15 +57,15 @@ export class SectionUpdateComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
-        this.courseService.query().subscribe(
-            (res: HttpResponse<ICourse[]>) => {
-                this.courses = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
         this.tagsService.query().subscribe(
             (res: HttpResponse<ITags[]>) => {
                 this.tags = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.courseService.query().subscribe(
+            (res: HttpResponse<ICourse[]>) => {
+                this.courses = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -117,11 +117,11 @@ export class SectionUpdateComponent implements OnInit {
         return item.id;
     }
 
-    trackCourseById(index: number, item: ICourse) {
+    trackTagsById(index: number, item: ITags) {
         return item.id;
     }
 
-    trackTagsById(index: number, item: ITags) {
+    trackCourseById(index: number, item: ICourse) {
         return item.id;
     }
 
