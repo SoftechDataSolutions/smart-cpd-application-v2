@@ -77,6 +77,12 @@ public class SectionResourceIntTest {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_PDF_URL = "AAAAAAAAAA";
+    private static final String UPDATED_PDF_URL = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_TOTAL_PAGES = 1;
+    private static final Integer UPDATED_TOTAL_PAGES = 2;
+
     @Autowired
     private SectionRepository sectionRepository;
     @Mock
@@ -141,7 +147,9 @@ public class SectionResourceIntTest {
             .contentContentType(DEFAULT_CONTENT_CONTENT_TYPE)
             .videoUrl(DEFAULT_VIDEO_URL)
             .textcontent(DEFAULT_TEXTCONTENT)
-            .type(DEFAULT_TYPE);
+            .type(DEFAULT_TYPE)
+            .pdfUrl(DEFAULT_PDF_URL)
+            .totalPages(DEFAULT_TOTAL_PAGES);
         return section;
     }
 
@@ -173,6 +181,8 @@ public class SectionResourceIntTest {
         assertThat(testSection.getVideoUrl()).isEqualTo(DEFAULT_VIDEO_URL);
         assertThat(testSection.getTextcontent()).isEqualTo(DEFAULT_TEXTCONTENT);
         assertThat(testSection.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testSection.getPdfUrl()).isEqualTo(DEFAULT_PDF_URL);
+        assertThat(testSection.getTotalPages()).isEqualTo(DEFAULT_TOTAL_PAGES);
 
         // Validate the Section in Elasticsearch
         verify(mockSectionSearchRepository, times(1)).save(testSection);
@@ -254,7 +264,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
             .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
             .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].pdfUrl").value(hasItem(DEFAULT_PDF_URL.toString())))
+            .andExpect(jsonPath("$.[*].totalPages").value(hasItem(DEFAULT_TOTAL_PAGES)));
     }
     
     public void getAllSectionsWithEagerRelationshipsIsEnabled() throws Exception {
@@ -306,7 +318,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.content").value(Base64Utils.encodeToString(DEFAULT_CONTENT)))
             .andExpect(jsonPath("$.videoUrl").value(DEFAULT_VIDEO_URL.toString()))
             .andExpect(jsonPath("$.textcontent").value(DEFAULT_TEXTCONTENT.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.pdfUrl").value(DEFAULT_PDF_URL.toString()))
+            .andExpect(jsonPath("$.totalPages").value(DEFAULT_TOTAL_PAGES));
     }
 
     @Test
@@ -506,6 +520,111 @@ public class SectionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllSectionsByPdfUrlIsEqualToSomething() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where pdfUrl equals to DEFAULT_PDF_URL
+        defaultSectionShouldBeFound("pdfUrl.equals=" + DEFAULT_PDF_URL);
+
+        // Get all the sectionList where pdfUrl equals to UPDATED_PDF_URL
+        defaultSectionShouldNotBeFound("pdfUrl.equals=" + UPDATED_PDF_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByPdfUrlIsInShouldWork() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where pdfUrl in DEFAULT_PDF_URL or UPDATED_PDF_URL
+        defaultSectionShouldBeFound("pdfUrl.in=" + DEFAULT_PDF_URL + "," + UPDATED_PDF_URL);
+
+        // Get all the sectionList where pdfUrl equals to UPDATED_PDF_URL
+        defaultSectionShouldNotBeFound("pdfUrl.in=" + UPDATED_PDF_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByPdfUrlIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where pdfUrl is not null
+        defaultSectionShouldBeFound("pdfUrl.specified=true");
+
+        // Get all the sectionList where pdfUrl is null
+        defaultSectionShouldNotBeFound("pdfUrl.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTotalPagesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where totalPages equals to DEFAULT_TOTAL_PAGES
+        defaultSectionShouldBeFound("totalPages.equals=" + DEFAULT_TOTAL_PAGES);
+
+        // Get all the sectionList where totalPages equals to UPDATED_TOTAL_PAGES
+        defaultSectionShouldNotBeFound("totalPages.equals=" + UPDATED_TOTAL_PAGES);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTotalPagesIsInShouldWork() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where totalPages in DEFAULT_TOTAL_PAGES or UPDATED_TOTAL_PAGES
+        defaultSectionShouldBeFound("totalPages.in=" + DEFAULT_TOTAL_PAGES + "," + UPDATED_TOTAL_PAGES);
+
+        // Get all the sectionList where totalPages equals to UPDATED_TOTAL_PAGES
+        defaultSectionShouldNotBeFound("totalPages.in=" + UPDATED_TOTAL_PAGES);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTotalPagesIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where totalPages is not null
+        defaultSectionShouldBeFound("totalPages.specified=true");
+
+        // Get all the sectionList where totalPages is null
+        defaultSectionShouldNotBeFound("totalPages.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTotalPagesIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where totalPages greater than or equals to DEFAULT_TOTAL_PAGES
+        defaultSectionShouldBeFound("totalPages.greaterOrEqualThan=" + DEFAULT_TOTAL_PAGES);
+
+        // Get all the sectionList where totalPages greater than or equals to UPDATED_TOTAL_PAGES
+        defaultSectionShouldNotBeFound("totalPages.greaterOrEqualThan=" + UPDATED_TOTAL_PAGES);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSectionsByTotalPagesIsLessThanSomething() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList where totalPages less than or equals to DEFAULT_TOTAL_PAGES
+        defaultSectionShouldNotBeFound("totalPages.lessThan=" + DEFAULT_TOTAL_PAGES);
+
+        // Get all the sectionList where totalPages less than or equals to UPDATED_TOTAL_PAGES
+        defaultSectionShouldBeFound("totalPages.lessThan=" + UPDATED_TOTAL_PAGES);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllSectionsByQuizIsEqualToSomething() throws Exception {
         // Initialize the database
         Quiz quiz = QuizResourceIntTest.createEntity(em);
@@ -575,7 +694,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
             .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
             .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].pdfUrl").value(hasItem(DEFAULT_PDF_URL.toString())))
+            .andExpect(jsonPath("$.[*].totalPages").value(hasItem(DEFAULT_TOTAL_PAGES)));
     }
 
     /**
@@ -619,7 +740,9 @@ public class SectionResourceIntTest {
             .contentContentType(UPDATED_CONTENT_CONTENT_TYPE)
             .videoUrl(UPDATED_VIDEO_URL)
             .textcontent(UPDATED_TEXTCONTENT)
-            .type(UPDATED_TYPE);
+            .type(UPDATED_TYPE)
+            .pdfUrl(UPDATED_PDF_URL)
+            .totalPages(UPDATED_TOTAL_PAGES);
 
         restSectionMockMvc.perform(put("/api/sections")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -638,6 +761,8 @@ public class SectionResourceIntTest {
         assertThat(testSection.getVideoUrl()).isEqualTo(UPDATED_VIDEO_URL);
         assertThat(testSection.getTextcontent()).isEqualTo(UPDATED_TEXTCONTENT);
         assertThat(testSection.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testSection.getPdfUrl()).isEqualTo(UPDATED_PDF_URL);
+        assertThat(testSection.getTotalPages()).isEqualTo(UPDATED_TOTAL_PAGES);
 
         // Validate the Section in Elasticsearch
         verify(mockSectionSearchRepository, times(1)).save(testSection);
@@ -704,7 +829,9 @@ public class SectionResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(Base64Utils.encodeToString(DEFAULT_CONTENT))))
             .andExpect(jsonPath("$.[*].videoUrl").value(hasItem(DEFAULT_VIDEO_URL.toString())))
             .andExpect(jsonPath("$.[*].textcontent").value(hasItem(DEFAULT_TEXTCONTENT.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].pdfUrl").value(hasItem(DEFAULT_PDF_URL.toString())))
+            .andExpect(jsonPath("$.[*].totalPages").value(hasItem(DEFAULT_TOTAL_PAGES)));
     }
 
     @Test

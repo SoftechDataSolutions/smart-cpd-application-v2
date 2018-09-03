@@ -1,72 +1,48 @@
-<div class="row justify-content-center">
-    <div class="col-8">
-        <div *ngIf="section">
-            <h2><span jhiTranslate="smartCpdApp.section.detail.title">Section</span> {{section.id}}</h2>
-            <hr>
-            <jhi-alert-error></jhi-alert-error>
-            <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="smartCpdApp.section.name">Name</span></dt>
-                <dd>
-                    <span>{{section.name}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.notes">Notes</span></dt>
-                <dd>
-                    <span>{{section.notes}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.normSection">Norm Section</span></dt>
-                <dd>
-                    <span>{{section.normSection}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.content">Content</span></dt>
-                <dd>
-                    <div *ngIf="section.content">
-                        <a (click)="openFile(section.contentContentType, section.content)" jhiTranslate="entity.action.open">open</a>
-                        {{section.contentContentType}}, {{byteSize(section.content)}}
-                    </div>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.videoUrl">Video Url</span></dt>
-                <dd>
-                    <span>{{section.videoUrl}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.textcontent">Textcontent</span></dt>
-                <dd>
-                    <span>{{section.textcontent}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.type">Type</span></dt>
-                <dd>
-                    <span>{{section.type}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.quiz">Quiz</span></dt>
-                <dd>
-                    <div *ngIf="section.quiz">
-                        <a [routerLink]="['/quiz', section.quiz?.id, 'view']">{{section.quiz?.name}}</a>
-                    </div>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.tags">Tags</span></dt>
-                <dd>
-                    <span *ngFor="let tags of section.tags; let last = last">
-                        <a [routerLink]="['/tags', tags?.id, 'view' ]">{{tags.name}}</a>{{last ? '' : ', '}}
-                    </span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.section.course">Course</span></dt>
-                <dd>
-                    <div *ngIf="section.course">
-                        <a [routerLink]="['/course', section.course?.id, 'view']">{{section.course?.normCourses}}</a>
-                    </div>
-                </dd>
-            </dl>
-
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
-                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/section', section.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-            </button>
+<div *ngIf="pageNum == lastpageNum" class="alert alert-success" role="alert" ><span>
+        This is the last slide, after reviewing this material you can attempt the mandatory module quiz
+    </span>
+</div>
+<div *ngIf="section" class="row">
+    <div class="col-3" style="margin-top:70px;">
+        <div class="row">
+            <div *ngIf="pageNum != 1 && pageNum < lastpageNum" class="col-4 alert alert-warning" role="alert" (click)="prevPage();"><a>Previous Slide</a></div>
+            <div *ngIf="pageNum < lastpageNum" class="col-4 alert alert-info" role="alert" (click)="nextPage();"><a>Next Slide</a></div>
+            <div *ngIf="pageNum == lastpageNum" class="col-4 alert alert-success" role="alert" (click)="moveToQuiz();"><a>Attempt Quiz!</a></div>
+        </div>
+        <div class="row" style="margin-top:30px; border-top: 1px solid; padding-bottom: 25px; padding-top: 25px; border-bottom: 1px solid;">
+            <label for="goto-page">Page/Slide Number:&ensp;</label><br>
+                <input id="goto-page" name="pageNum" pInputText type="number" size="4" [(ngModel)]="pageNum">
+        </div>
+        <div class="row" style="margin-top:30px; padding-bottom: 25px; border-bottom: 1px solid;">
+            <h4>Bookmarks Coming Soon!</h4>
         </div>
     </div>
+    <div *ngIf="section.type === 'pdf'" class="col-9">
+        <form novalidate>
+            <pe-steps>
+                <pe-step label="Slides">
+                    <h2>{{section.normSection}}</h2>
+                    <h5>{{section.name}}, Page# is {{pageNum}}</h5>
+                    <hr>
+                    <pdf-viewer [src]="section.pdfUrl"
+                                [show-all]="false"
+                                [fit-to-page]="true"
+                                [original-size]="false"
+                                [autoresize]="true"
+                                [render-text]="false"
+                                [(page)]="pageNum"></pdf-viewer>
+                </pe-step>
+                <pe-step label="Module Info"></pe-step>
+            </pe-steps>
+        </form>
+    </div>
+    <div *ngIf="section.type === 'mp4'" class="col-9">
+        <form novalidate>
+            <pe-steps>
+                <pe-step label="{{section.normSection}}">
+                </pe-step>
+            </pe-steps>
+        </form>
+    </div>
+    <div class="col-3"></div>
 </div>

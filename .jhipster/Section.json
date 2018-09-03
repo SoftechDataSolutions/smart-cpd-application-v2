@@ -45,9 +45,6 @@
             "fieldName": "content",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "any",
-            "fieldValidateRules": [
-                "required"
-            ]
         },
         {
             "fieldName": "videoUrl",
@@ -64,6 +61,14 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "pdfUrl",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "totalPages",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180819063644",

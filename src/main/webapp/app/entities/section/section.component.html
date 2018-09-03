@@ -37,6 +37,8 @@
             <th jhiSortBy="videoUrl"><span jhiTranslate="smartCpdApp.section.videoUrl">Video Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="textcontent"><span jhiTranslate="smartCpdApp.section.textcontent">Textcontent</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="type"><span jhiTranslate="smartCpdApp.section.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="pdfUrl"><span jhiTranslate="smartCpdApp.section.pdfUrl">Pdf Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="totalPages"><span jhiTranslate="smartCpdApp.section.totalPages">Total Pages</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="quiz.name"><span jhiTranslate="smartCpdApp.section.quiz">Quiz</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="course.normCourses"><span jhiTranslate="smartCpdApp.section.course">Course</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -55,6 +57,8 @@
                 <td>{{section.videoUrl}}</td>
                 <td>{{section.textcontent}}</td>
                 <td>{{section.type}}</td>
+                <td>{{section.pdfUrl}}</td>
+                <td>{{section.totalPages}}</td>
                 <td>
                     <div *ngIf="section.quiz">
                         <a [routerLink]="['../quiz', section.quiz?.id, 'view' ]" >{{section.quiz?.name}}</a>

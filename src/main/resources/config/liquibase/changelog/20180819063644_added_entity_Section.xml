@@ -35,10 +35,10 @@
             </column>
 
             <column name="content" type="longblob">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="content_content_type" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="video_url" type="varchar(255)">
@@ -51,6 +51,14 @@
 
             <column name="jhi_type" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+
+            <column name="pdf_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="total_pages" type="integer">
+                <constraints nullable="true" />
             </column>
             <column name="quiz_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_section_quiz_id" />

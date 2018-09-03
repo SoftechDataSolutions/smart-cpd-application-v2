@@ -7,6 +7,7 @@ import { GrowlModule } from 'primeng/components/growl/growl';
 import { WizardModule } from 'primeng-extensions/components/wizard/wizard.js';
 import { SharedModule } from 'primeng/components/common/shared';
 import { SmartCpdSharedModule } from 'app/shared';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import {
     SectionComponent,
     SectionDetailComponent,
@@ -25,10 +26,11 @@ const ENTITY_STATES = [...sectionRoute, ...sectionPopupRoute];
         RouterModule.forChild(ENTITY_STATES),
         FormsModule,
         EditorModule,
-        GrowlModule,
         ButtonModule,
+        GrowlModule,
         WizardModule,
-        SharedModule
+        SharedModule,
+        PdfViewerModule
     ],
     declarations: [
         SectionComponent,

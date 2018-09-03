@@ -40,10 +40,10 @@ public class Section implements Serializable {
 
     
     @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = true)
     private byte[] content;
 
-    @Column(name = "content_content_type", nullable = false)
+    @Column(name = "content_content_type", nullable = true)
     private String contentContentType;
 
     @Column(name = "video_url")
@@ -56,6 +56,12 @@ public class Section implements Serializable {
     @NotNull
     @Column(name = "jhi_type", nullable = false)
     private String type;
+
+    @Column(name = "pdf_url")
+    private String pdfUrl;
+
+    @Column(name = "total_pages")
+    private Integer totalPages;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -185,6 +191,32 @@ public class Section implements Serializable {
         this.type = type;
     }
 
+    public String getPdfUrl() {
+        return pdfUrl;
+    }
+
+    public Section pdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
+        return this;
+    }
+
+    public void setPdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public Section totalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+        return this;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
+
     public Quiz getQuiz() {
         return quiz;
     }
@@ -267,6 +299,8 @@ public class Section implements Serializable {
             ", videoUrl='" + getVideoUrl() + "'" +
             ", textcontent='" + getTextcontent() + "'" +
             ", type='" + getType() + "'" +
+            ", pdfUrl='" + getPdfUrl() + "'" +
+            ", totalPages=" + getTotalPages() +
             "}";
     }
 }

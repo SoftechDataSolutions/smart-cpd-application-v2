@@ -31,6 +31,38 @@
                         [(ngModel)]="section.normSection" />
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Type</label>
+                    <div id="field_type">
+                        <div class="radio">
+                            <label style="margin-left: 10px;">
+                                <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
+                                .mp4
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label style="margin-left: 10px;">
+                                <input type="radio" name="type" value="pdf" [(ngModel)]="section.type">
+                                .pdf
+                            </label>
+                        </div>
+                    </div>
+                </div>
+               <div class="form-group" *ngIf="section.type === 'pdf'">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.pdfUrl" for="field_pdfUrl">Pdf Url</label>
+                    <input type="text" class="form-control" name="pdfUrl" id="field_pdfUrl"
+                           [(ngModel)]="section.pdfUrl" />
+                </div>
+                <div class="form-group" *ngIf="section.type === 'pdf'">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.totalPages" for="field_totalPages">Total Pages</label>
+                    <input type="number" class="form-control" name="totalPages" id="field_totalPages"
+                           [(ngModel)]="section.totalPages" />
+                </div>
+                <div class="form-group" *ngIf="section.type === 'mp4'">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.videoUrl" for="field_videoUrl">Video Url</label>
+                    <input type="text" class="form-control" name="videoUrl" id="field_videoUrl"
+                           [(ngModel)]="section.videoUrl" />
+                </div>
+                <div class="form-group" *ngIf="section.type === 'mp4'">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.content" for="field_content">Content</label>
                     <div>
                         <div *ngIf="section.content" class="form-text text-danger clearfix">
@@ -55,47 +87,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.videoUrl" for="field_videoUrl">Video Url</label>
-                    <input type="text" class="form-control" name="videoUrl" id="field_videoUrl"
-                        [(ngModel)]="section.videoUrl" />
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.textcontent" for="field_textcontent">Textcontent</label>
                     <p-editor id="field_textcontent" name="textcontent" [(ngModel)]="section.textcontent" styleClass="editor-dimensions"></p-editor>
                     <!--<textarea class="form-control" name="textcontent" id="field_textcontent"
                         [(ngModel)]="section.textcontent" ></textarea>-->
-                    <!--<textarea class="form-control" name="textcontent" id="field_textcontent"
-                              [(ngModel)]="section.textcontent" ></textarea>-->
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.section.type" for="field_type">Content Type</label>
-                    <div id="field_type">
-                        <div class="radio" style="margin-left: 10px;">
-                            <label>
-                                <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
-                                .mp4
-                            </label><div class="radio" style="margin-left: 10px;">
-                            <label>
-                                <input type="radio" name="type" value="mp4" [(ngModel)]="section.type">
-                                .mp4
-                            </label>
-                        </div>
-                            <div class="radio"style="margin-left: 10px;">
-                                <label>
-                                    <input type="radio" name="type" value="pdf" [(ngModel)]="section.type">
-                                    .pdf
-                                </label>
-                            </div>
-                        </div>
-                        <div class="radio"style="margin-left: 10px;">
-                            <label>
-                                <input type="radio" name="type" value="pdf" [(ngModel)]="section.type">
-                                .pdf
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.quiz" for="field_quiz">Quiz</label>
                     <select class="form-control" id="field_quiz" name="quiz" [(ngModel)]="section.quiz">
@@ -113,7 +109,7 @@
                     <label class="form-control-label" jhiTranslate="smartCpdApp.section.course" for="field_course">Course</label>
                     <select class="form-control" id="field_course" name="course" [(ngModel)]="section.course" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
+                        <option [ngValue]="courseOption.id === section.course?.id ? section.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.normCourses}}</option>
                     </select>
                 </div>
             </div>

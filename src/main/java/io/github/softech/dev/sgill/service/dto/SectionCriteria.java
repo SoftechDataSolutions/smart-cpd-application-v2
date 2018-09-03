@@ -38,6 +38,10 @@ public class SectionCriteria implements Serializable {
 
     private StringFilter type;
 
+    private StringFilter pdfUrl;
+
+    private IntegerFilter totalPages;
+
     private LongFilter quizId;
 
     private LongFilter tagsId;
@@ -95,6 +99,22 @@ public class SectionCriteria implements Serializable {
         this.type = type;
     }
 
+    public StringFilter getPdfUrl() {
+        return pdfUrl;
+    }
+
+    public void setPdfUrl(StringFilter pdfUrl) {
+        this.pdfUrl = pdfUrl;
+    }
+
+    public IntegerFilter getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(IntegerFilter totalPages) {
+        this.totalPages = totalPages;
+    }
+
     public LongFilter getQuizId() {
         return quizId;
     }
@@ -128,6 +148,8 @@ public class SectionCriteria implements Serializable {
                 (normSection != null ? "normSection=" + normSection + ", " : "") +
                 (videoUrl != null ? "videoUrl=" + videoUrl + ", " : "") +
                 (type != null ? "type=" + type + ", " : "") +
+                (pdfUrl != null ? "pdfUrl=" + pdfUrl + ", " : "") +
+                (totalPages != null ? "totalPages=" + totalPages + ", " : "") +
                 (quizId != null ? "quizId=" + quizId + ", " : "") +
                 (tagsId != null ? "tagsId=" + tagsId + ", " : "") +
                 (courseId != null ? "courseId=" + courseId + ", " : "") +

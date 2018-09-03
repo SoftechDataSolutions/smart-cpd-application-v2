@@ -12,6 +12,8 @@ export interface ISection {
     videoUrl?: string;
     textcontent?: any;
     type?: string;
+    pdfUrl?: string;
+    totalPages?: number;
     quiz?: IQuiz;
     tags?: ITags[];
     course?: ICourse;
@@ -28,6 +30,8 @@ export class Section implements ISection {
         public videoUrl?: string,
         public textcontent?: any,
         public type?: string,
+        public pdfUrl?: string,
+        public totalPages?: number,
         public quiz?: IQuiz,
         public tags?: ITags[],
         public course?: ICourse

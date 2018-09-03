@@ -89,6 +89,12 @@ public class SectionQueryService extends QueryService<Section> {
             if (criteria.getType() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getType(), Section_.type));
             }
+            if (criteria.getPdfUrl() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPdfUrl(), Section_.pdfUrl));
+            }
+            if (criteria.getTotalPages() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getTotalPages(), Section_.totalPages));
+            }
             if (criteria.getQuizId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getQuizId(), Section_.quiz, Quiz_.id));
             }

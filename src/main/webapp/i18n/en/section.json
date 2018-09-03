@@ -24,6 +24,8 @@
             "videoUrl": "Video Url",
             "textcontent": "Textcontent",
             "type": "Type",
+            "pdfUrl": "Pdf Url",
+            "totalPages": "Total Pages",
             "quiz": "Quiz",
             "tags": "Tags",
             "course": "Course"

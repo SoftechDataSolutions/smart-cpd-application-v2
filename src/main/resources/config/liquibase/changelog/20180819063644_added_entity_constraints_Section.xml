@@ -19,17 +19,17 @@
                                  constraintName="fk_section_tags_sections_id"
                                  referencedColumnNames="id"
                                  referencedTableName="section"/>
-
         <addForeignKeyConstraint baseColumnNames="tags_id"
                                  baseTableName="section_tags"
                                  constraintName="fk_section_tags_tags_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tags"/>
-
+        
         <addForeignKeyConstraint baseColumnNames="course_id"
                                  baseTableName="section"
                                  constraintName="fk_section_course_id"
                                  referencedColumnNames="id"
                                  referencedTableName="course"/>
+
     </changeSet>
 </databaseChangeLog>
