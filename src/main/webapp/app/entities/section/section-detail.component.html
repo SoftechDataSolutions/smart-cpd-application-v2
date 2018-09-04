@@ -4,20 +4,23 @@
 </div>
 <div *ngIf="section" class="row">
     <div class="col-3" style="margin-top:70px;">
-        <div class="row">
+        <div class="row" >
+            <h6 (change)="timer();">{{ellapsedTime}}</h6>
+        </div>
+        <div class="row" style="margin-top:30px; border-top: 1px solid; padding-top: 25px;">
             <div *ngIf="pageNum != 1 && pageNum < lastpageNum" class="col-4 alert alert-warning" role="alert" (click)="prevPage();"><a>Previous Slide</a></div>
             <div *ngIf="pageNum < lastpageNum" class="col-4 alert alert-info" role="alert" (click)="nextPage();"><a>Next Slide</a></div>
             <div *ngIf="pageNum == lastpageNum" class="col-4 alert alert-success" role="alert" (click)="moveToQuiz();"><a>Attempt Quiz!</a></div>
         </div>
         <div class="row" style="margin-top:30px; border-top: 1px solid; padding-bottom: 25px; padding-top: 25px; border-bottom: 1px solid;">
             <label for="goto-page">Page/Slide Number:&ensp;</label><br>
-                <input id="goto-page" name="pageNum" pInputText type="number" size="4" [(ngModel)]="pageNum">
+            <input id="goto-page" pInputText type="number" size="4" [(ngModel)]="pageNum">
         </div>
         <div class="row" style="margin-top:30px; padding-bottom: 25px; border-bottom: 1px solid;">
             <h4>Bookmarks Coming Soon!</h4>
         </div>
     </div>
-    <div *ngIf="section.type === 'pdf'" class="col-9">
+    <div *ngIf="section.type == 'pdf'" class="col-9">
         <form novalidate>
             <pe-steps>
                 <pe-step label="Slides">
@@ -32,17 +35,53 @@
                                 [render-text]="false"
                                 [(page)]="pageNum"></pdf-viewer>
                 </pe-step>
-                <pe-step label="Module Info"></pe-step>
-            </pe-steps>
-        </form>
-    </div>
-    <div *ngIf="section.type === 'mp4'" class="col-9">
-        <form novalidate>
-            <pe-steps>
-                <pe-step label="{{section.normSection}}">
+                <pe-step label="Module Info">
+                    <h6>Module/Section Name: {{section.name}}</h6>
+                    <h6>Module/Section Specific Notes: {{section.notes}}</h6>
+                    <h6>Module Quiz: {{quizName}}</h6>
+                    <h6>Module Associated Course: {{courseName}}</h6>
                 </pe-step>
             </pe-steps>
         </form>
     </div>
-    <div class="col-3"></div>
+    <div *ngIf="section.type == 'mp4'" class="col-9">
+        <form novalidate>
+            <pe-steps>
+                <pe-step label="{{section.normSection}}">
+                    <h2>{{section.normSection}}</h2>
+                    <h5>{{section.name}}</h5>
+                    <hr>
+                    <vg-player (onPlayerReady)="onPlayerReady($event)">
+                        <vg-overlay-play></vg-overlay-play>
+                        <vg-buffering></vg-buffering>
+
+                        <vg-controls>
+                            <vg-play-pause></vg-play-pause>
+                            <vg-playback-button></vg-playback-button>
+
+                            <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                            </vg-scrub-bar>
+
+                            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                            <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-track-selector></vg-track-selector>
+                            <vg-mute></vg-mute>
+                            <vg-volume></vg-volume>
+
+                            <vg-fullscreen></vg-fullscreen>
+                        </vg-controls>
+
+                        <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
+                            <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
+                        </video>
+                    </vg-player>
+                </pe-step>
+            </pe-steps>
+        </form>
+    </div>
 </div>

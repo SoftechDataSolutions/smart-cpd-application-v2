@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JhiDataUtils } from 'ng-jhipster';
 import { ISection } from 'app/shared/model/section.model';
+import { VgAPI } from 'videogular2/core';
 
 @Component({
     selector: 'jhi-section-detail',
@@ -14,9 +15,14 @@ export class SectionDetailComponent implements OnInit {
     lastpageNum: number;
     test: any;
     pdfUrl: string;
-
+    quizName: string;
+    courseName: string;
+    api: VgAPI;
+    ellapsedTime = '00:00';
+    startSec: number;
     constructor(private dataUtils: JhiDataUtils, private activatedRoute: ActivatedRoute, private router: Router) {
         this.pageNum = 1;
+        this.startSec = 0;
     }
 
     ngOnInit() {
@@ -30,6 +36,9 @@ export class SectionDetailComponent implements OnInit {
         const blob = new Blob([this.contentFile], { type: this.section.contentContentType });
         this.pdfUrl = this.section.pdfUrl;*/
         this.lastpageNum = this.section.totalPages;
+        this.quizName = this.section.quiz.name;
+        this.courseName = this.section.course.normCourses;
+        this.timeIncrement();
         /**const fileReader: FileReader = new FileReader();
         fileReader.onload = () => {
             this.contentFile = new Uint8Array(fileReader.result);
@@ -43,6 +52,23 @@ export class SectionDetailComponent implements OnInit {
             };
 
             reader.readAsArrayBuffer(this.section.content);*/
+    }
+
+    onPlayerReady(api: VgAPI) {
+        this.api = api;
+    }
+
+    timeIncrement() {
+        this.startSec++;
+        this.ellapsedTime = this.parseTime(this.startSec);
+    }
+
+    parseTime(totalSeconds: number) {
+        let mins: string | number = Math.floor(totalSeconds / 60);
+        let secs: string | number = Math.round(totalSeconds % 60);
+        mins = (mins < 10 ? '0' : '') + mins;
+        secs = (secs < 10 ? '0' : '') + secs;
+        return `${mins}:${secs}`;
     }
 
     nextPage() {
