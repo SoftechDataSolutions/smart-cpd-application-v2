@@ -206,6 +206,10 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
+"@types/core-js@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-2.5.0.tgz#35cc282488de6f10af1d92902899a3b8ca3fbc47"
+
 "@types/googlemaps@^3.30.12":
   version "3.30.12"
   resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.30.12.tgz#14d62bd8da288a25e9f8c939f5c326fadd58a628"
@@ -456,6 +460,10 @@ angular2-template-loader@0.6.2:
   resolved "https://registry.yarnpkg.com/angular2-template-loader/-/angular2-template-loader-0.6.2.tgz#c0d44e90fff0fac95e8b23f043acda7fd1c51d7c"
   dependencies:
     loader-utils "^0.2.15"
+
+angular2-uuid@*:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/angular2-uuid/-/angular2-uuid-1.1.1.tgz#72f03cd532b7f40032eb1ecfb9f8457384be956e"
 
 ansi-cyan@^0.1.1:
   version "0.1.1"
@@ -4692,6 +4700,10 @@ insight@0.10.1:
     tough-cookie "^2.0.0"
     uuid "^3.0.0"
 
+install@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/install/-/install-0.12.1.tgz#38b2dd4489330e9af3eeaba93b9e3fc77dee7872"
+
 internal-ip@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-1.2.0.tgz#ae9fbf93b984878785d50a8de1b356956058cf5c"
@@ -6519,6 +6531,12 @@ ng2-pdf-viewer@^5.1.2:
   dependencies:
     "@types/pdfjs-dist" "^0.1.2"
     pdfjs-dist "2.0.550"
+
+ng2-simple-timer@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ng2-simple-timer/-/ng2-simple-timer-6.0.0.tgz#6b272f0099b0117a5236297f8253a037a3d516ba"
+  dependencies:
+    angular2-uuid "*"
 
 ngx-bootstrap@^3.0.1:
   version "3.0.1"

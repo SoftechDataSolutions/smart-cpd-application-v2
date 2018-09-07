@@ -117,6 +117,7 @@
                 "quizapp": "QuizApp",
                 "tags": "Tags",
                 "bookmarks": "Bookmarks",
+                "bookmark": "Bookmark",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

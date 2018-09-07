@@ -40,7 +40,13 @@ import {
     faAsterisk,
     faTasks,
     faHome,
-    faShoppingCart
+    faShoppingCart,
+    faPlay,
+    faPause,
+    faFastForward,
+    faStepForward,
+    faFastBackward,
+    faStepBackward
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -80,6 +86,12 @@ library.add(faTrashAlt);
 library.add(faAsterisk);
 library.add(faShoppingCart);
 library.add(faEye);
+library.add(faPlay);
+library.add(faPause);
+library.add(faFastForward);
+library.add(faStepForward);
+library.add(faFastBackward);
+library.add(faStepBackward);
 
 import 'quill/dist/quill.js';
 import '../../../../node_modules/fullcalendar/dist/fullcalendar.js';

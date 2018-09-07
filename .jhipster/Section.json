@@ -44,7 +44,7 @@
         {
             "fieldName": "content",
             "fieldType": "byte[]",
-            "fieldTypeBlobContent": "any",
+            "fieldTypeBlobContent": "any"
         },
         {
             "fieldName": "videoUrl",

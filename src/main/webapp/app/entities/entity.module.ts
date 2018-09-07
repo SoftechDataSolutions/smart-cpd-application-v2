@@ -20,7 +20,7 @@ import { SmartCpdServicelistModule } from './servicelist/servicelist.module';
 import { SmartCpdQuizAppModule } from './quiz-app/quiz-app.module';
 import { SmartCpdQuestionHistoryModule } from './question-history/question-history.module';
 import { SmartCpdTagsModule } from './tags/tags.module';
-import { SmartCpdBookmarksModule } from './bookmarks/bookmarks.module';
+import { SmartCpdBookmarkModule } from './bookmark/bookmark.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -46,7 +46,7 @@ import { SmartCpdBookmarksModule } from './bookmarks/bookmarks.module';
         SmartCpdServicelistModule,
         SmartCpdQuizAppModule,
         SmartCpdTagsModule,
-        SmartCpdBookmarksModule,
+        SmartCpdBookmarkModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],
