@@ -34,6 +34,7 @@
             <th jhiSortBy="slide"><span jhiTranslate="smartCpdApp.bookmark.slide">Slide</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="timestamp"><span jhiTranslate="smartCpdApp.bookmark.timestamp">Timestamp</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="module"><span jhiTranslate="smartCpdApp.bookmark.module">Module</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="seconds"><span jhiTranslate="smartCpdApp.bookmark.seconds">Seconds</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="section.name"><span jhiTranslate="smartCpdApp.bookmark.section">Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -45,6 +46,7 @@
                 <td>{{bookmark.slide}}</td>
                 <td>{{bookmark.timestamp}}</td>
                 <td>{{bookmark.module}}</td>
+                <td>{{bookmark.seconds}}</td>
                 <td>
                     <div *ngIf="bookmark.section">
                         <a [routerLink]="['../section', bookmark.section?.id, 'view' ]" >{{bookmark.section?.name}}</a>

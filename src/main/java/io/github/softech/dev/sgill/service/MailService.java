@@ -4,7 +4,9 @@ import io.github.softech.dev.sgill.domain.User;
 
 import io.github.jhipster.config.JHipsterProperties;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.sql.Blob;
 import java.util.Locale;
 import javax.mail.internet.MimeMessage;
 
@@ -62,6 +64,35 @@ public class MailService {
             message.setFrom(jHipsterProperties.getMail().getFrom());
             message.setSubject(subject);
             message.setText(content, isHtml);
+            javaMailSender.send(mimeMessage);
+            log.debug("Sent email to User '{}'", to);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.warn("Email could not be sent to user '{}'", to, e);
+            } else {
+                log.warn("Email could not be sent to user '{}': {}", to, e.getMessage());
+            }
+        }
+    }
+
+    @Async
+    public void sendCertificateEmail(String to, File pdf, boolean isMultipart) {
+        String subject = "Certificate Attachment";
+        String content = "Please find your recently completed course certificate attached with this email";
+        boolean isHtml = false;
+        log.debug("Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
+            isMultipart, isHtml, to, subject, content);
+
+        // Prepare message using a Spring helper
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name());
+            message.setTo(to);
+            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setSubject(subject);
+            message.setText(content, isHtml);
+            message.addAttachment("Certificate", pdf);
+            //message.addBcc();
             javaMailSender.send(mimeMessage);
             log.debug("Sent email to User '{}'", to);
         } catch (Exception e) {

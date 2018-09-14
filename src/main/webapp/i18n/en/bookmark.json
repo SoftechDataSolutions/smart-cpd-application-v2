@@ -21,6 +21,7 @@
             "slide": "Slide",
             "timestamp": "Timestamp",
             "module": "Module",
+            "seconds": "Seconds",
             "section": "Section"
         }
     }

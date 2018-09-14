@@ -1,8 +1,5 @@
 package io.github.softech.dev.sgill.service.impl;
 
-import io.github.softech.dev.sgill.domain.Section;
-import io.github.softech.dev.sgill.repository.SectionRepository;
-import io.github.softech.dev.sgill.repository.search.SectionSearchRepository;
 import io.github.softech.dev.sgill.service.BookmarkService;
 import io.github.softech.dev.sgill.domain.Bookmark;
 import io.github.softech.dev.sgill.repository.BookmarkRepository;
@@ -33,16 +30,9 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     private final BookmarkSearchRepository bookmarkSearchRepository;
 
-    private final SectionRepository sectionRepository;
-
-    private final SectionSearchRepository sectionSearchRepository;
-
-    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, BookmarkSearchRepository bookmarkSearchRepository,
-                               SectionRepository sectionRepository, SectionSearchRepository sectionSearchRepository) {
+    public BookmarkServiceImpl(BookmarkRepository bookmarkRepository, BookmarkSearchRepository bookmarkSearchRepository) {
         this.bookmarkRepository = bookmarkRepository;
         this.bookmarkSearchRepository = bookmarkSearchRepository;
-        this.sectionRepository = sectionRepository;
-        this.sectionSearchRepository = sectionSearchRepository;
     }
 
     /**
@@ -54,6 +44,15 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public Bookmark save(Bookmark bookmark) {
         log.debug("Request to save Bookmark : {}", bookmark);
+        if (bookmark.getTimestamp()!=null) {
+            String hrs = bookmark.getTimestamp().substring(0,2);
+            String min = bookmark.getTimestamp().substring(3,5);
+            String sec = bookmark.getTimestamp().substring(6,8);
+            int hrssec = Integer.parseInt(hrs) * 3600;
+            int minsec = Integer.parseInt(min) * 60;
+            int secs = Integer.parseInt(sec);
+            bookmark.setSeconds(hrssec + minsec + secs);
+        }
         Bookmark result = bookmarkRepository.save(bookmark);
         bookmarkSearchRepository.save(result);
         return result;
@@ -109,13 +108,12 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional(readOnly = true)
     public Page<Bookmark> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Bookmarks for query {}", query);
-        return bookmarkSearchRepository.search(queryStringQuery(query), pageable);
-    }
+        return bookmarkSearchRepository.search(queryStringQuery(query), pageable);    }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Bookmark> findbySectionName(String name, Pageable pageable) {
-        log.debug("Request to search for a page of Bookmarks for query {}", name);
-        return bookmarkRepository.findBookmarksByModule(name, pageable);
+    public Page<Bookmark> findbySectionId(Long id, Pageable pageable) {
+        log.debug("Request to search for a page of Bookmarks for query {}", id);
+        return bookmarkRepository.findBookmarksBySectionId(id, pageable);
     }
 }

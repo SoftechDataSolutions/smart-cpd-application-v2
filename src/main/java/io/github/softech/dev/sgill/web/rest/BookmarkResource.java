@@ -2,7 +2,6 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Bookmark;
-import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.service.BookmarkService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -122,15 +121,6 @@ public class BookmarkResource {
         return ResponseUtil.wrapOrNotFound(bookmark);
     }
 
-    @GetMapping("/bookmarks")
-    @Timed
-    public ResponseEntity<List<Bookmark>> getSectionBookmarks(@RequestParam String name, Pageable pageable) {
-        log.debug("REST request to get Bookmarks by Section : {}", name);
-        Page<Bookmark> bookmark = bookmarkService.findbySectionName(name, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(bookmark, "/api/bookmarks");
-        return new ResponseEntity<>(bookmark.getContent(), headers, HttpStatus.OK);
-    }
-
     /**
      * DELETE  /bookmarks/:id : delete the "id" bookmark.
      *
@@ -160,6 +150,15 @@ public class BookmarkResource {
         Page<Bookmark> page = bookmarkService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/bookmarks");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_sections/bookmarks/{id}")
+    @Timed
+    public ResponseEntity<List<Bookmark>> getSectionBookmarks(@PathVariable Long id, Pageable pageable) {
+        log.debug("REST request to get Bookmarks by Section : {}", id);
+        Page<Bookmark> bookmark = bookmarkService.findbySectionId(id, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(bookmark, "/api/_sections/bookmarks");
+        return new ResponseEntity<>(bookmark.getContent(), headers, HttpStatus.OK);
     }
 
 }

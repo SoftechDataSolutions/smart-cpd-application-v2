@@ -1,46 +1,71 @@
-<div class="row justify-content-center">
-    <div class="col-8">
-        <div *ngIf="certificate">
-            <h2><span jhiTranslate="smartCpdApp.certificate.detail.title">Certificate</span> {{certificate.id}}</h2>
-            <hr>
-            <jhi-alert-error></jhi-alert-error>
-            <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="smartCpdApp.certificate.timestamp">Timestamp</span></dt>
-                <dd>
-                    <span>{{certificate.timestamp}}</span>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.pdf">Pdf</span></dt>
-                <dd>
-                    <div *ngIf="certificate.pdf">
-                        <a (click)="openFile(certificate.pdfContentType, certificate.pdf)" jhiTranslate="entity.action.open">open</a>
-                        {{certificate.pdfContentType}}, {{byteSize(certificate.pdf)}}
-                    </div>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.customer">Customer</span></dt>
-                <dd>
-                    <div *ngIf="certificate.customer">
-                        <a [routerLink]="['/customer', certificate.customer?.id, 'view']">{{certificate.customer?.normalized}}</a>
-                    </div>
-                </dd>
-                <dt><span jhiTranslate="smartCpdApp.certificate.courses">Courses</span></dt>
-                <dd>
-                    <div *ngIf="certificate.courses">
-                        <a [routerLink]="['/course', certificate.courses?.id, 'view']">{{certificate.courses?.normCourses}}</a>
-                    </div>
-                </dd>
-            </dl>
-
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
-                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/certificate', certificate.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-            </button>
+<div id="convertPdf">
+    <div *ngIf="certificate" class="col-8 justify-content-center" style="margin: 3px; border: 4px coral solid;">
+        <div class="row justify-content-center">
+            <div class="col-8" style="position: center;">
+                <h2 style="text-align: center; padding-top: 20px;">Company Name</h2>
+                <hr>
+            </div>
         </div>
+        <div *ngIf="certificate" class="row justify-content-center">
+            <!--style="background-image: url('http://www.voltasengineering.com/wp-content/uploads/2018/09/SCS-Education-for-Builders-Watermark-Logo-Only.jpg');-->
+            <!--src="http://www.voltasengineering.com/wp-content/uploads/2018/09/CPD-Signatures-Test.png"-->
+            <div class="col-8 justify-content-center"
+                 style="height: 70%;
+                 width: 60%;
+                 position: center;"><img style="width: inherit; margin-left: 20%; position: center;" class="img-responsive" src="image1.jpg"></div>
+            </div>
+
+        <div *ngIf="certificate" class="row justify-content-center" style="position: center;">
+            <div class="col-8">
+                <hr>
+                <h2 style="text-align: center;">Presented to<br><b>Shaanjot Gill</b><!--{{certificate.customer.}}--></h2><br>
+                <h3 style="text-align: center;">has successfully completed <br> and earned <u>5<!--{{certificate.courses.credit}}--> CPD points</u> for <br>
+                    <b>Roofs 1 <!--{{certificate.courses.normCourses}}--></b> course on <br> 11/5/2018 <!--{{certificate.timestamp}}--></h3><br><hr><br>
+            </div>
+        </div>
+        <div *ngIf="certificate" class="row justify-content-center">
+            <div class="col-8">
+                 <!--style="background-image: url('http://www.voltasengineering.com/wp-content/uploads/2018/09/CPD-Signatures-Test.png');
+                 background-repeat: no-repeat;
+                 background-position: center;
+                 size: 100% 100%;
+                 height: 200px;
+                 width: 100%;
+                 align-content: center;"></div>-->
+                <img style="width: inherit;" class="img-responsive" src="image2.png">
+                <hr>
+            </div>
+        </div>
+        <div *ngIf="certificate" class="row">
+            <div class="col-2"></div>
+            <div class="col-4">
+                <strong>Customer ID: 24<!--{{certificate.customer.id}}--></strong>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-4">
+                <strong>License: 123456<!--{{certificate.customer.licenseNumber}}--></strong>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="padding-top: 30px;">
+    <div class="col-8">
+        <button type="submit"
+                style="position: center; margin-left: 48%;"
+                 (click)="convertToPDF()"
+                 class="btn btn-info">
+            <fa-icon [icon]="'download'"></fa-icon>&nbsp;<span> Download PDF </span>
+        </button>
+        <!--<h3>Array Buffer<br></h3>
+        <h3>{{newArrayBuffer}}<br></h3>
+        <h3>{{arrayBufferLength}}<br><hr></h3>
+        <h3>Base 64<br></h3>
+        <h3>{{base64String}}<br></h3>
+        <h3>{{base64Length}}<br><hr></h3>
+        <h3>Test<br></h3>
+        <h3>{{arrayBuffer}}<br></h3>
+        <h3>{{test}}<br><hr></h3>
+        <h3>Byte<br></h3>
+        <h3>{{bytes}}</h3>-->
     </div>
 </div>

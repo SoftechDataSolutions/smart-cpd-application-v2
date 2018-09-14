@@ -86,6 +86,9 @@ public class BookmarkQueryService extends QueryService<Bookmark> {
             if (criteria.getModule() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getModule(), Bookmark_.module));
             }
+            if (criteria.getSeconds() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getSeconds(), Bookmark_.seconds));
+            }
             if (criteria.getSectionId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getSectionId(), Bookmark_.section, Section_.id));
             }

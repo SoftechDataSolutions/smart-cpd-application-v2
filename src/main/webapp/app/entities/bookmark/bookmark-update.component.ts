@@ -43,8 +43,19 @@ export class BookmarkUpdateComponent implements OnInit {
         window.history.back();
     }
 
+    getSeconds(time: string) {
+        const hrs = time.substring(0, 2);
+        const min = time.substring(3, 5);
+        const sec = time.substring(6, 8);
+        const hrsNum = Number(hrs);
+        const minNum = Number(min);
+        const secNum = Number(sec);
+        return hrsNum * 3600 + minNum * 60 + secNum;
+    }
+
     save() {
         this.isSaving = true;
+        this.bookmark.seconds = this.getSeconds(this.bookmark.timestamp);
         if (this.bookmark.id !== undefined) {
             this.subscribeToSaveResponse(this.bookmarkService.update(this.bookmark));
         } else {

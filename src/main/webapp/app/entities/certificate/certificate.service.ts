@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
@@ -16,6 +16,7 @@ type EntityArrayResponseType = HttpResponse<ICertificate[]>;
 export class CertificateService {
     private resourceUrl = SERVER_API_URL + 'api/certificates';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/certificates';
+    private resourceEmailUrl = SERVER_API_URL + 'api/_email/certificates';
 
     constructor(private http: HttpClient) {}
 
@@ -30,6 +31,20 @@ export class CertificateService {
         const copy = this.convertDateFromClient(certificate);
         return this.http
             .put<ICertificate>(this.resourceUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    /**sendpdf(pdf: string, id: number): Observable<HttpResponse<any>> {
+        const option = createRequestOption(pdf);
+        let headers = new HttpHeaders();
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post<ICertificate>(`${this.resourceUrl}/${id}`, pdf, { headers });
+    }*/
+
+    send(pdf: string, id: number): Observable<EntityResponseType> {
+        const options = createRequestOption(pdf);
+        return this.http
+            .put<ICertificate>(`${this.resourceEmailUrl}/${id}`, options, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 

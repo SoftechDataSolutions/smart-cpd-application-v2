@@ -23,15 +23,20 @@ export class SectionDetailComponent implements OnInit {
     courseName: string;
     api: VgAPI;
     ellapsedTime = '00:00';
+    completed: string;
     ellapsed = 0;
     prevEllapsed = 0;
     bookmarks: IBookmark[];
-    reqdBookmarks: IBookmark[];
     pause = false;
     startDate: Date;
     nowDate: Date;
     counter = 0;
     diff: any;
+    isComplete: Boolean;
+    comingAgainFlag: Boolean;
+    currentTime: number;
+    arrayBuffer: any;
+    contentFile: Object;
     constructor(
         private dataUtils: JhiDataUtils,
         private activatedRoute: ActivatedRoute,
@@ -43,6 +48,9 @@ export class SectionDetailComponent implements OnInit {
         this.activatedRoute.data.subscribe(({ section }) => {
             this.section = section;
         });
+        this.bookmarkService.getsection(this.section.id).subscribe(data => {
+            this.bookmarks = data.body;
+        });
         this.startDate = new Date();
         if (this.section.type === 'pdf') {
             setInterval(() => {
@@ -51,19 +59,38 @@ export class SectionDetailComponent implements OnInit {
         } else {
             setInterval(() => {
                 this.ticksSecond();
+                this.isCompleted();
+                if (this.isComplete) {
+                    this.comingAgainFlag = true;
+                }
             }, 1000);
         }
-        /**this.contentFile = new Uint8Array(this.section.content.length);
+        this.contentFile = this.section.content;
+        /**
+        const fileReader = new FileReader();
+        fileReader.onload = (e: Event) => {
+            this.arrayBuffer = fileReader.result;
+        };
+        fileReader.readAsArrayBuffer(this.section.content);
+        this.contentFile = new Uint8Array(this.arrayBuffer);
         for (let i = 0; i < this.section.content.length; i++) {
             this.contentFile[i] = this.section.content.charCodeAt(i);
         }*/
         this.pdflink = this.section.pdfUrl;
         this.lastpageNum = this.section.totalPages;
-        this.bookmarkService.getsection(this.section.name).subscribe(data => {
-            this.bookmarks = data.body;
-        });
         this.quizName = this.section.quiz.name;
         this.courseName = this.section.course.normCourses;
+    }
+
+    isCompleted() {
+        this.currentTime = this.api.currentTime;
+        this.isComplete = this.api.isCompleted;
+        if (this.isComplete) {
+            this.completed = this.ellapsedTime;
+            if ((this.comingAgainFlag = false)) {
+                this.onPause();
+            }
+        }
     }
 
     onPause() {
@@ -86,6 +113,9 @@ export class SectionDetailComponent implements OnInit {
     }
 
     onPlay() {
+        if (this.isComplete) {
+            this.comingAgainFlag = true;
+        }
         this.prevEllapsed = this.ellapsed;
         this.startDate = new Date();
         this.pause = false;
@@ -93,34 +123,50 @@ export class SectionDetailComponent implements OnInit {
     }
 
     onStepBackward30() {
+        if (this.isComplete) {
+            this.comingAgainFlag = true;
+        }
         if (this.ellapsed <= 30) {
             this.onReset();
         } else {
             /**this.ellapsed = this.ellapsed - 30;*/
             this.api.seekTime(this.ellapsed - 30, false);
+            this.onPlay();
         }
     }
 
     onStepBackward60() {
+        if (this.isComplete) {
+            this.comingAgainFlag = true;
+        }
         if (this.ellapsed <= 60) {
             this.onReset();
         } else {
             /**this.ellapsed = this.ellapsed - 60;*/
             this.api.seekTime(this.ellapsed - 60, false);
+            this.onPlay();
         }
     }
 
     onStepBackward300() {
+        if (this.isComplete) {
+            this.comingAgainFlag = true;
+        }
         if (this.ellapsed <= 300) {
             this.onReset();
         } else {
             /**this.ellapsed = this.ellapsed - 300;*/
             this.api.seekTime(this.ellapsed - 300, false);
+            this.onPlay();
         }
     }
 
     onReset() {
+        if (this.isComplete) {
+            this.comingAgainFlag = true;
+        }
         this.api.seekTime(0, false);
+        this.onPlay();
     }
 
     ticksDate() {

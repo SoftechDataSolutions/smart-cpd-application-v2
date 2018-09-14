@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IBookmark } from 'app/shared/model/bookmark.model';
-import { ISection } from 'app/shared/model/section.model';
 
 type EntityResponseType = HttpResponse<IBookmark>;
 type EntityArrayResponseType = HttpResponse<IBookmark[]>;
@@ -14,7 +13,7 @@ type EntityArrayResponseType = HttpResponse<IBookmark[]>;
 export class BookmarkService {
     private resourceUrl = SERVER_API_URL + 'api/bookmarks';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/bookmarks';
-
+    private resourceSectionUrl = SERVER_API_URL + 'api/_sections/bookmarks';
     constructor(private http: HttpClient) {}
 
     create(bookmark: IBookmark): Observable<EntityResponseType> {
@@ -43,8 +42,8 @@ export class BookmarkService {
         return this.http.get<IBookmark[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
 
-    getsection(name: string): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(name);
-        return this.http.get<IBookmark[]>(this.resourceUrl, { params: options, observe: 'response' });
+    getsection(id: number): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(id);
+        return this.http.get<IBookmark[]>(`${this.resourceSectionUrl}/${id}`, { observe: 'response' });
     }
 }

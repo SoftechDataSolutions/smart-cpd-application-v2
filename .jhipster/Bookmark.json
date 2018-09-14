@@ -31,6 +31,10 @@
         {
             "fieldName": "module",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "seconds",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20180904211039",

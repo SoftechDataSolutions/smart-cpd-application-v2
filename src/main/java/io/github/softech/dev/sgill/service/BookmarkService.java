@@ -54,5 +54,5 @@ public interface BookmarkService {
      */
     Page<Bookmark> search(String query, Pageable pageable);
 
-    Page<Bookmark> findbySectionName(String name, Pageable pageable);
+    Page<Bookmark> findbySectionId(Long id, Pageable pageable);
 }

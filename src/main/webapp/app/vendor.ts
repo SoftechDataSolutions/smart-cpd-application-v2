@@ -46,7 +46,8 @@ import {
     faFastForward,
     faStepForward,
     faFastBackward,
-    faStepBackward
+    faStepBackward,
+    faDownload
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -92,6 +93,7 @@ library.add(faFastForward);
 library.add(faStepForward);
 library.add(faFastBackward);
 library.add(faStepBackward);
+library.add(faDownload);
 
 import 'quill/dist/quill.js';
 import '../../../../node_modules/fullcalendar/dist/fullcalendar.js';

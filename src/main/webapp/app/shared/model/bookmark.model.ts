@@ -6,6 +6,7 @@ export interface IBookmark {
     slide?: number;
     timestamp?: string;
     module?: string;
+    seconds?: number;
     section?: ISection;
 }
 
@@ -16,6 +17,7 @@ export class Bookmark implements IBookmark {
         public slide?: number,
         public timestamp?: string,
         public module?: string,
+        public seconds?: number,
         public section?: ISection
     ) {}
 }

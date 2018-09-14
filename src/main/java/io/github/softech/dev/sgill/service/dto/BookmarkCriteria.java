@@ -36,6 +36,8 @@ public class BookmarkCriteria implements Serializable {
 
     private StringFilter module;
 
+    private IntegerFilter seconds;
+
     private LongFilter sectionId;
 
     public BookmarkCriteria() {
@@ -81,6 +83,14 @@ public class BookmarkCriteria implements Serializable {
         this.module = module;
     }
 
+    public IntegerFilter getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(IntegerFilter seconds) {
+        this.seconds = seconds;
+    }
+
     public LongFilter getSectionId() {
         return sectionId;
     }
@@ -97,6 +107,7 @@ public class BookmarkCriteria implements Serializable {
                 (slide != null ? "slide=" + slide + ", " : "") +
                 (timestamp != null ? "timestamp=" + timestamp + ", " : "") +
                 (module != null ? "module=" + module + ", " : "") +
+                (seconds != null ? "seconds=" + seconds + ", " : "") +
                 (sectionId != null ? "sectionId=" + sectionId + ", " : "") +
             "}";
     }

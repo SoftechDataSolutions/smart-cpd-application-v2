@@ -1,32 +1,133 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { JhiDataUtils } from 'ng-jhipster';
-
+import * as jspdf from 'jspdf';
+import * as html2canvas from 'html2canvas';
 import { ICertificate } from 'app/shared/model/certificate.model';
-
+import { CertificateService } from 'app/entities/certificate/certificate.service';
+import { Account, Principal, IUser, UserService } from 'app/core';
+import { ICustomer } from 'app/shared/model/customer.model';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import * as sgMail from '@sendgrid/mail';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared';
 @Component({
     selector: 'jhi-certificate-detail',
     templateUrl: './certificate-detail.component.html'
 })
 export class CertificateDetailComponent implements OnInit {
     certificate: ICertificate;
-
-    constructor(private dataUtils: JhiDataUtils, private activatedRoute: ActivatedRoute) {}
+    customer: ICustomer;
+    user: IUser;
+    pdf: jspdf;
+    account: Account;
+    userEmail: String;
+    blob: Blob;
+    newArrayBuffer: ArrayBuffer;
+    arrayBufferLength: number;
+    arrayBuffer: ArrayBuffer;
+    test: string;
+    bufferLength: number;
+    tempArray: Uint8Array;
+    tempLength: number;
+    base64String: string;
+    base64Length: number;
+    dataURI: string;
+    isSaving = false;
+    bytes: any;
+    timestamp: string;
+    constructor(
+        private dataUtils: JhiDataUtils,
+        private activatedRoute: ActivatedRoute,
+        private certificateService: CertificateService,
+        private principal: Principal,
+        private http: HttpClient
+    ) {}
 
     ngOnInit() {
+        this.isSaving = false;
         this.activatedRoute.data.subscribe(({ certificate }) => {
             this.certificate = certificate;
         });
+        this.principal.identity().then(account => {
+            this.account = account;
+            this.userEmail = this.account.email;
+        });
+        setTimeout(() => {
+            this.convertToPDF();
+        }, 3000);
+        /**this.certificate.pdfContentType = 'data:application/pdf;base64';
+         this.certificateService.update(this.certificate);*/
+        this.bytes = this.certificate.pdf;
+        this.customer = this.certificate.customer;
+        this.user = this.certificate.customer.user;
+    }
+
+    convertToPDF() {
+        const data = document.getElementById('convertPdf');
+        html2canvas(data).then(canvas => {
+            // Few necessary setting options
+            const imgWidth = 270;
+            const pageHeight = 450;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const heightLeft = imgHeight;
+            const reader = new FileReader();
+            const contentDataURL = canvas.toDataURL('image/png');
+            this.pdf = new jspdf('p', 'mm', 'a4', 1);
+            this.pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight, '', 'FAST');
+            this.pdf.save('certificate.pdf');
+            this.blob = this.pdf.output('blob');
+            this.arrayBuffer = this.pdf.output('arraybuffer');
+            this.save();
+        });
+    }
+
+    save() {
+        this.isSaving = true;
+        this.certificate.pdf = this.bufferToBase64(new Uint8Array(this.arrayBuffer));
+        this.certificate.pdfContentType = 'application/pdf';
+        if (this.certificate.id !== undefined) {
+            this.subscribeToSaveResponse(this.certificateService.update(this.certificate));
+        } else {
+            this.subscribeToSaveResponse(this.certificateService.create(this.certificate));
+        }
+    }
+
+    bufferToBase64(buffer: Uint8Array) {
+        const binstr = Array.prototype.map
+            .call(buffer, function(ch) {
+                return String.fromCharCode(ch);
+            })
+            .join('');
+        this.certificateService.send(btoa(binstr), this.certificate.id);
     }
 
     byteSize(field) {
         return this.dataUtils.byteSize(field);
     }
 
+    setFileData(event, entity, field, isImage) {
+        this.dataUtils.setFileData(event, entity, field, isImage);
+    }
+
     openFile(contentType, field) {
         return this.dataUtils.openFile(contentType, field);
     }
+
     previousState() {
         window.history.back();
+    }
+
+    private subscribeToSaveResponse(result: Observable<HttpResponse<ICertificate>>) {
+        result.subscribe((res: HttpResponse<ICertificate>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    private onSaveSuccess() {
+        this.isSaving = false;
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
     }
 }

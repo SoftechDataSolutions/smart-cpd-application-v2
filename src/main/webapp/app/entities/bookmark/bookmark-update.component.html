@@ -34,7 +34,7 @@
                     <label class="form-control-label" jhiTranslate="smartCpdApp.bookmark.section" for="field_section">Section</label>
                     <select class="form-control" id="field_section" name="section" [(ngModel)]="bookmark.section"  required>
                         <option *ngIf="!editForm.value.section" [ngValue]="null" selected></option>
-                        <option [ngValue]="sectionOption" *ngFor="let sectionOption of sections; trackBy: trackSectionById">{{sectionOption.name}}</option>
+                        <option [ngValue]="sectionOption.id === bookmark.section?.id ? bookmark.section : sectionOption" *ngFor="let sectionOption of sections; trackBy: trackSectionById">{{sectionOption.name}}</option>
                     </select>
                 </div>
                 <div [hidden]="!(editForm.controls.section?.dirty && editForm.controls.section?.invalid)">

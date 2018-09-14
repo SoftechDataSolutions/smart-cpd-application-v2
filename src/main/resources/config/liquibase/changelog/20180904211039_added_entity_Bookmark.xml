@@ -38,6 +38,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="seconds" type="integer">
+                <constraints nullable="true" />
+            </column>
+
             <column name="section_id" type="bigint">
                 <constraints nullable="false" />
             </column>

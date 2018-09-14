@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long>, JpaSpecificationExecutor<Bookmark> {
-    Page<Bookmark> findBookmarksByModule(String name, Pageable pageable);
+    Page<Bookmark> findBookmarksBySectionId(Long Id, Pageable pageable);
 }

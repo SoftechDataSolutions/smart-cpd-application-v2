@@ -61,6 +61,9 @@ public class BookmarkResourceIntTest {
     private static final String DEFAULT_MODULE = "AAAAAAAAAA";
     private static final String UPDATED_MODULE = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_SECONDS = 1;
+    private static final Integer UPDATED_SECONDS = 2;
+
     @Autowired
     private BookmarkRepository bookmarkRepository;
 
@@ -118,7 +121,8 @@ public class BookmarkResourceIntTest {
             .text(DEFAULT_TEXT)
             .slide(DEFAULT_SLIDE)
             .timestamp(DEFAULT_TIMESTAMP)
-            .module(DEFAULT_MODULE);
+            .module(DEFAULT_MODULE)
+            .seconds(DEFAULT_SECONDS);
         // Add required entity
         Section section = SectionResourceIntTest.createEntity(em);
         em.persist(section);
@@ -151,6 +155,7 @@ public class BookmarkResourceIntTest {
         assertThat(testBookmark.getSlide()).isEqualTo(DEFAULT_SLIDE);
         assertThat(testBookmark.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
         assertThat(testBookmark.getModule()).isEqualTo(DEFAULT_MODULE);
+        assertThat(testBookmark.getSeconds()).isEqualTo(DEFAULT_SECONDS);
 
         // Validate the Bookmark in Elasticsearch
         verify(mockBookmarkSearchRepository, times(1)).save(testBookmark);
@@ -210,7 +215,8 @@ public class BookmarkResourceIntTest {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
             .andExpect(jsonPath("$.[*].slide").value(hasItem(DEFAULT_SLIDE)))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())));
+            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())))
+            .andExpect(jsonPath("$.[*].seconds").value(hasItem(DEFAULT_SECONDS)));
     }
     
 
@@ -228,7 +234,8 @@ public class BookmarkResourceIntTest {
             .andExpect(jsonPath("$.text").value(DEFAULT_TEXT.toString()))
             .andExpect(jsonPath("$.slide").value(DEFAULT_SLIDE))
             .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
-            .andExpect(jsonPath("$.module").value(DEFAULT_MODULE.toString()));
+            .andExpect(jsonPath("$.module").value(DEFAULT_MODULE.toString()))
+            .andExpect(jsonPath("$.seconds").value(DEFAULT_SECONDS));
     }
 
     @Test
@@ -416,6 +423,72 @@ public class BookmarkResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllBookmarksBySecondsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        bookmarkRepository.saveAndFlush(bookmark);
+
+        // Get all the bookmarkList where seconds equals to DEFAULT_SECONDS
+        defaultBookmarkShouldBeFound("seconds.equals=" + DEFAULT_SECONDS);
+
+        // Get all the bookmarkList where seconds equals to UPDATED_SECONDS
+        defaultBookmarkShouldNotBeFound("seconds.equals=" + UPDATED_SECONDS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBookmarksBySecondsIsInShouldWork() throws Exception {
+        // Initialize the database
+        bookmarkRepository.saveAndFlush(bookmark);
+
+        // Get all the bookmarkList where seconds in DEFAULT_SECONDS or UPDATED_SECONDS
+        defaultBookmarkShouldBeFound("seconds.in=" + DEFAULT_SECONDS + "," + UPDATED_SECONDS);
+
+        // Get all the bookmarkList where seconds equals to UPDATED_SECONDS
+        defaultBookmarkShouldNotBeFound("seconds.in=" + UPDATED_SECONDS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBookmarksBySecondsIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        bookmarkRepository.saveAndFlush(bookmark);
+
+        // Get all the bookmarkList where seconds is not null
+        defaultBookmarkShouldBeFound("seconds.specified=true");
+
+        // Get all the bookmarkList where seconds is null
+        defaultBookmarkShouldNotBeFound("seconds.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBookmarksBySecondsIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        bookmarkRepository.saveAndFlush(bookmark);
+
+        // Get all the bookmarkList where seconds greater than or equals to DEFAULT_SECONDS
+        defaultBookmarkShouldBeFound("seconds.greaterOrEqualThan=" + DEFAULT_SECONDS);
+
+        // Get all the bookmarkList where seconds greater than or equals to UPDATED_SECONDS
+        defaultBookmarkShouldNotBeFound("seconds.greaterOrEqualThan=" + UPDATED_SECONDS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBookmarksBySecondsIsLessThanSomething() throws Exception {
+        // Initialize the database
+        bookmarkRepository.saveAndFlush(bookmark);
+
+        // Get all the bookmarkList where seconds less than or equals to DEFAULT_SECONDS
+        defaultBookmarkShouldNotBeFound("seconds.lessThan=" + DEFAULT_SECONDS);
+
+        // Get all the bookmarkList where seconds less than or equals to UPDATED_SECONDS
+        defaultBookmarkShouldBeFound("seconds.lessThan=" + UPDATED_SECONDS);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllBookmarksBySectionIsEqualToSomething() throws Exception {
         // Initialize the database
         Section section = SectionResourceIntTest.createEntity(em);
@@ -443,7 +516,8 @@ public class BookmarkResourceIntTest {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
             .andExpect(jsonPath("$.[*].slide").value(hasItem(DEFAULT_SLIDE)))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())));
+            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())))
+            .andExpect(jsonPath("$.[*].seconds").value(hasItem(DEFAULT_SECONDS)));
     }
 
     /**
@@ -483,7 +557,8 @@ public class BookmarkResourceIntTest {
             .text(UPDATED_TEXT)
             .slide(UPDATED_SLIDE)
             .timestamp(UPDATED_TIMESTAMP)
-            .module(UPDATED_MODULE);
+            .module(UPDATED_MODULE)
+            .seconds(UPDATED_SECONDS);
 
         restBookmarkMockMvc.perform(put("/api/bookmarks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -498,6 +573,7 @@ public class BookmarkResourceIntTest {
         assertThat(testBookmark.getSlide()).isEqualTo(UPDATED_SLIDE);
         assertThat(testBookmark.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
         assertThat(testBookmark.getModule()).isEqualTo(UPDATED_MODULE);
+        assertThat(testBookmark.getSeconds()).isEqualTo(UPDATED_SECONDS);
 
         // Validate the Bookmark in Elasticsearch
         verify(mockBookmarkSearchRepository, times(1)).save(testBookmark);
@@ -560,7 +636,8 @@ public class BookmarkResourceIntTest {
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
             .andExpect(jsonPath("$.[*].slide").value(hasItem(DEFAULT_SLIDE)))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())));
+            .andExpect(jsonPath("$.[*].module").value(hasItem(DEFAULT_MODULE.toString())))
+            .andExpect(jsonPath("$.[*].seconds").value(hasItem(DEFAULT_SECONDS)));
     }
 
     @Test

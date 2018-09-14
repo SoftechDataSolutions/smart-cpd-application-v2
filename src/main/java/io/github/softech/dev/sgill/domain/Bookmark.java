@@ -39,6 +39,9 @@ public class Bookmark implements Serializable {
     @Column(name = "module")
     private String module;
 
+    @Column(name = "seconds")
+    private Integer seconds;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("")
@@ -105,6 +108,19 @@ public class Bookmark implements Serializable {
         this.module = module;
     }
 
+    public Integer getSeconds() {
+        return seconds;
+    }
+
+    public Bookmark seconds(Integer seconds) {
+        this.seconds = seconds;
+        return this;
+    }
+
+    public void setSeconds(Integer seconds) {
+        this.seconds = seconds;
+    }
+
     public Section getSection() {
         return section;
     }
@@ -147,6 +163,7 @@ public class Bookmark implements Serializable {
             ", slide=" + getSlide() +
             ", timestamp='" + getTimestamp() + "'" +
             ", module='" + getModule() + "'" +
+            ", seconds=" + getSeconds() +
             "}";
     }
 }
