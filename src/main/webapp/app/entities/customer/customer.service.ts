@@ -16,6 +16,7 @@ type EntityArrayResponseType = HttpResponse<ICustomer[]>;
 export class CustomerService {
     private resourceUrl = SERVER_API_URL + 'api/customers';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/customers';
+    private resourceUserUrl = SERVER_API_URL + 'api/_user/customers';
 
     constructor(private http: HttpClient) {}
 
@@ -36,6 +37,12 @@ export class CustomerService {
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<ICustomer>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    getbyuser(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<ICustomer>(`${this.resourceUserUrl}/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 

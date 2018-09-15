@@ -24,16 +24,9 @@ export class CertificateDetailComponent implements OnInit {
     account: Account;
     userEmail: String;
     blob: Blob;
-    newArrayBuffer: ArrayBuffer;
-    arrayBufferLength: number;
     arrayBuffer: ArrayBuffer;
     test: string;
     bufferLength: number;
-    tempArray: Uint8Array;
-    tempLength: number;
-    base64String: string;
-    base64Length: number;
-    dataURI: string;
     isSaving = false;
     bytes: any;
     timestamp: string;
@@ -41,8 +34,7 @@ export class CertificateDetailComponent implements OnInit {
         private dataUtils: JhiDataUtils,
         private activatedRoute: ActivatedRoute,
         private certificateService: CertificateService,
-        private principal: Principal,
-        private http: HttpClient
+        private principal: Principal
     ) {}
 
     ngOnInit() {
@@ -59,7 +51,6 @@ export class CertificateDetailComponent implements OnInit {
         }, 3000);
         /**this.certificate.pdfContentType = 'data:application/pdf;base64';
          this.certificateService.update(this.certificate);*/
-        this.bytes = this.certificate.pdf;
         this.customer = this.certificate.customer;
         this.user = this.certificate.customer.user;
     }
@@ -79,19 +70,14 @@ export class CertificateDetailComponent implements OnInit {
             this.pdf.save('certificate.pdf');
             this.blob = this.pdf.output('blob');
             this.arrayBuffer = this.pdf.output('arraybuffer');
-            this.save();
+            /**this.email();*/
+            /**this.certificateService.email(this.certificate.id);*/
         });
     }
 
-    save() {
-        this.isSaving = true;
-        this.certificate.pdf = this.bufferToBase64(new Uint8Array(this.arrayBuffer));
-        this.certificate.pdfContentType = 'application/pdf';
-        if (this.certificate.id !== undefined) {
-            this.subscribeToSaveResponse(this.certificateService.update(this.certificate));
-        } else {
-            this.subscribeToSaveResponse(this.certificateService.create(this.certificate));
-        }
+    email() {
+        this.certificateService.email(this.certificate.id);
+        /**this.certificateService.attachment(this.bufferToBase64(new Uint8Array(this.arrayBuffer)), this.certificate.id);*/
     }
 
     bufferToBase64(buffer: Uint8Array) {
@@ -100,7 +86,7 @@ export class CertificateDetailComponent implements OnInit {
                 return String.fromCharCode(ch);
             })
             .join('');
-        this.certificateService.send(btoa(binstr), this.certificate.id);
+        return btoa(binstr);
     }
 
     byteSize(field) {

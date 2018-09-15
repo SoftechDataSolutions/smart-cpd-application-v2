@@ -17,22 +17,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.pdf" for="field_pdf">Pdf</label>
-                    <div>
-                        <div *ngIf="certificate.pdf" class="form-text text-danger clearfix">
-                            <a class="pull-left" (click)="openFile(certificate.pdfContentType, certificate.pdf)" jhiTranslate="entity.action.open">open</a><br>
-                            <span class="pull-left">{{certificate.pdfContentType}}, {{byteSize(certificate.pdf)}}</span>
-                            <button type="button" (click)="certificate.pdf=null;certificate.pdfContentType=null;"
-                                    class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon [icon]="'times'"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_pdf" (change)="setFileData($event, certificate, 'pdf', false)" jhiTranslate="entity.action.addblob"/>
-                    </div>
-                    <input type="hidden" class="form-control" name="pdf" id="field_pdf"
-                        [(ngModel)]="certificate.pdf" />
-                    <input type="hidden" class="form-control" name="pdfContentType" id="field_pdfContentType"
-                        [(ngModel)]="certificate.pdfContentType" />
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.certificate.isEmailed" for="field_isEmailed">Is Emailed</label>
+                    <input type="checkbox" class="form-control" name="isEmailed" id="field_isEmailed"
+                        [(ngModel)]="certificate.isEmailed" />
                 </div>
 
                 <div class="form-group">

@@ -26,10 +26,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="pdf" type="longblob">
-                <constraints nullable="true" />
-            </column>
-            <column name="pdf_content_type" type="varchar(255)">
+            <column name="is_emailed" type="bit">
                 <constraints nullable="true" />
             </column>
 

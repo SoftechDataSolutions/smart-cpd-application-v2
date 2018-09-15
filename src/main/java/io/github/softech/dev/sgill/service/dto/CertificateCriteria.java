@@ -30,6 +30,8 @@ public class CertificateCriteria implements Serializable {
 
     private InstantFilter timestamp;
 
+    private BooleanFilter isEmailed;
+
     private LongFilter customerId;
 
     private LongFilter coursesId;
@@ -53,6 +55,14 @@ public class CertificateCriteria implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public BooleanFilter getIsEmailed() {
+        return isEmailed;
+    }
+
+    public void setIsEmailed(BooleanFilter isEmailed) {
+        this.isEmailed = isEmailed;
+    }
+
     public LongFilter getCustomerId() {
         return customerId;
     }
@@ -74,6 +84,7 @@ public class CertificateCriteria implements Serializable {
         return "CertificateCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (timestamp != null ? "timestamp=" + timestamp + ", " : "") +
+                (isEmailed != null ? "isEmailed=" + isEmailed + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (coursesId != null ? "coursesId=" + coursesId + ", " : "") +
             "}";

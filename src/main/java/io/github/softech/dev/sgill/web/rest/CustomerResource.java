@@ -120,6 +120,14 @@ public class CustomerResource {
         return ResponseUtil.wrapOrNotFound(customer);
     }
 
+    @GetMapping("/_user/customers/{id}")
+    @Timed
+    public ResponseEntity<Customer> getbyuserCustomer(@PathVariable Long id) {
+        log.debug("REST request to get Customer : {}", id);
+        Customer customer = customerService.findbyUserId(id);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
     /**
      * DELETE  /customers/:id : delete the "id" customer.
      *

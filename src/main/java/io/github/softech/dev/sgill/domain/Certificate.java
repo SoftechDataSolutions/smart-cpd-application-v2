@@ -29,12 +29,8 @@ public class Certificate implements Serializable {
     @Column(name = "jhi_timestamp")
     private Instant timestamp;
 
-    @Lob
-    @Column(name = "pdf")
-    private byte[] pdf;
-
-    @Column(name = "pdf_content_type")
-    private String pdfContentType;
+    @Column(name = "is_emailed")
+    private Boolean isEmailed;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -66,30 +62,17 @@ public class Certificate implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public byte[] getPdf() {
-        return pdf;
+    public Boolean isIsEmailed() {
+        return isEmailed;
     }
 
-    public Certificate pdf(byte[] pdf) {
-        this.pdf = pdf;
+    public Certificate isEmailed(Boolean isEmailed) {
+        this.isEmailed = isEmailed;
         return this;
     }
 
-    public void setPdf(byte[] pdf) {
-        this.pdf = pdf;
-    }
-
-    public String getPdfContentType() {
-        return pdfContentType;
-    }
-
-    public Certificate pdfContentType(String pdfContentType) {
-        this.pdfContentType = pdfContentType;
-        return this;
-    }
-
-    public void setPdfContentType(String pdfContentType) {
-        this.pdfContentType = pdfContentType;
+    public void setIsEmailed(Boolean isEmailed) {
+        this.isEmailed = isEmailed;
     }
 
     public Customer getCustomer() {
@@ -144,8 +127,7 @@ public class Certificate implements Serializable {
         return "Certificate{" +
             "id=" + getId() +
             ", timestamp='" + getTimestamp() + "'" +
-            ", pdf='" + getPdf() + "'" +
-            ", pdfContentType='" + getPdfContentType() + "'" +
+            ", isEmailed='" + isIsEmailed() + "'" +
             "}";
     }
 }

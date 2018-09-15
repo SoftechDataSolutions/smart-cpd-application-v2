@@ -16,6 +16,7 @@ type EntityArrayResponseType = HttpResponse<ICourseCartBridge[]>;
 export class CourseCartBridgeService {
     private resourceUrl = SERVER_API_URL + 'api/course-cart-bridges';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/course-cart-bridges';
+    private resourceCollectionUrl = SERVER_API_URL + 'api/_collection/course-cart-bridges';
 
     constructor(private http: HttpClient) {}
 
@@ -24,6 +25,12 @@ export class CourseCartBridgeService {
         return this.http
             .post<ICourseCartBridge>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    collection(id: number): Observable<EntityArrayResponseType> {
+        return this.http
+            .get<ICourseCartBridge[]>(`${this.resourceCollectionUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
     update(courseCartBridge: ICourseCartBridge): Observable<EntityResponseType> {

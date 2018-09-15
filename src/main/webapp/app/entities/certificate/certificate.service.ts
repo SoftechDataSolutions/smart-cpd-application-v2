@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
@@ -16,8 +16,8 @@ type EntityArrayResponseType = HttpResponse<ICertificate[]>;
 export class CertificateService {
     private resourceUrl = SERVER_API_URL + 'api/certificates';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/certificates';
-    private resourceEmailUrl = SERVER_API_URL + 'api/_email/certificates';
-
+    private resourceEmailUrl = SERVER_API_URL + 'api/_email/certificates/';
+    private resourceAttachmentUrl = SERVER_API_URL + 'api/_attachment/certificates/';
     constructor(private http: HttpClient) {}
 
     create(certificate: ICertificate): Observable<EntityResponseType> {
@@ -34,17 +34,17 @@ export class CertificateService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    /**sendpdf(pdf: string, id: number): Observable<HttpResponse<any>> {
-        const option = createRequestOption(pdf);
-        let headers = new HttpHeaders();
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post<ICertificate>(`${this.resourceUrl}/${id}`, pdf, { headers });
-    }*/
-
-    send(pdf: string, id: number): Observable<EntityResponseType> {
-        const options = createRequestOption(pdf);
+    email(input: number): Observable<EntityResponseType> {
+        const copy = createRequestOption(input);
         return this.http
-            .put<ICertificate>(`${this.resourceEmailUrl}/${id}`, options, { observe: 'response' })
+            .put<ICertificate>(this.resourceEmailUrl, copy, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    attachment(pdf: string, id: number): Observable<EntityResponseType> {
+        const copy = createRequestOption(pdf);
+        return this.http
+            .put<ICertificate>(`${this.resourceAttachmentUrl}/${id}`, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 

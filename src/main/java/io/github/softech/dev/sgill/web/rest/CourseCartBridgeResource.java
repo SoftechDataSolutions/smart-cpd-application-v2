@@ -2,6 +2,7 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.CourseCartBridge;
+import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
 import io.github.softech.dev.sgill.service.CourseCartBridgeService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -42,9 +43,12 @@ public class CourseCartBridgeResource {
 
     private final CourseCartBridgeQueryService courseCartBridgeQueryService;
 
-    public CourseCartBridgeResource(CourseCartBridgeService courseCartBridgeService, CourseCartBridgeQueryService courseCartBridgeQueryService) {
+    private final CourseCartBridgeRepository courseCartBridgeRepository;
+
+    public CourseCartBridgeResource(CourseCartBridgeService courseCartBridgeService, CourseCartBridgeQueryService courseCartBridgeQueryService, CourseCartBridgeRepository courseCartBridgeRepository) {
         this.courseCartBridgeService = courseCartBridgeService;
         this.courseCartBridgeQueryService = courseCartBridgeQueryService;
+        this.courseCartBridgeRepository = courseCartBridgeRepository;
     }
 
     /**
@@ -117,6 +121,14 @@ public class CourseCartBridgeResource {
         log.debug("REST request to get CourseCartBridge : {}", id);
         Optional<CourseCartBridge> courseCartBridge = courseCartBridgeService.findOne(id);
         return ResponseUtil.wrapOrNotFound(courseCartBridge);
+    }
+
+    @GetMapping("/_collection/course-cart-bridges/{id}")
+    @Timed
+    public ResponseEntity<List<CourseCartBridge>> collectionCoursesCartBridge(@PathVariable Long id) {
+        log.debug("REST request to get Course from Cart : {}", id);
+        List<CourseCartBridge> courses = courseCartBridgeRepository.findCourseCartBridgesByCartId(id);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     /**

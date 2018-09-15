@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICart } from 'app/shared/model/cart.model';
+import { ICustomer } from 'app/shared/model/customer.model';
 
 type EntityResponseType = HttpResponse<ICart>;
 type EntityArrayResponseType = HttpResponse<ICart[]>;
@@ -16,6 +17,7 @@ type EntityArrayResponseType = HttpResponse<ICart[]>;
 export class CartService {
     private resourceUrl = SERVER_API_URL + 'api/carts';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/carts';
+    private resourceCheckUrl = SERVER_API_URL + 'api/_check/carts';
 
     constructor(private http: HttpClient) {}
 
@@ -36,6 +38,12 @@ export class CartService {
     find(id: number): Observable<EntityResponseType> {
         return this.http
             .get<ICart>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    check(id: number): Observable<EntityResponseType> {
+        return this.http
+            .get<ICart>(`${this.resourceCheckUrl}/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 

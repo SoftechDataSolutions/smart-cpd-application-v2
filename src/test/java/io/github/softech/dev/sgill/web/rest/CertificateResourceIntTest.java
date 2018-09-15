@@ -27,7 +27,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -56,10 +55,8 @@ public class CertificateResourceIntTest {
     private static final Instant DEFAULT_TIMESTAMP = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final byte[] DEFAULT_PDF = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PDF = TestUtil.createByteArray(2, "1");
-    private static final String DEFAULT_PDF_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_PDF_CONTENT_TYPE = "image/png";
+    private static final Boolean DEFAULT_IS_EMAILED = false;
+    private static final Boolean UPDATED_IS_EMAILED = true;
 
     @Autowired
     private CertificateRepository certificateRepository;
@@ -116,8 +113,7 @@ public class CertificateResourceIntTest {
     public static Certificate createEntity(EntityManager em) {
         Certificate certificate = new Certificate()
             .timestamp(DEFAULT_TIMESTAMP)
-            .pdf(DEFAULT_PDF)
-            .pdfContentType(DEFAULT_PDF_CONTENT_TYPE);
+            .isEmailed(DEFAULT_IS_EMAILED);
         return certificate;
     }
 
@@ -142,8 +138,7 @@ public class CertificateResourceIntTest {
         assertThat(certificateList).hasSize(databaseSizeBeforeCreate + 1);
         Certificate testCertificate = certificateList.get(certificateList.size() - 1);
         assertThat(testCertificate.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
-        assertThat(testCertificate.getPdf()).isEqualTo(DEFAULT_PDF);
-        assertThat(testCertificate.getPdfContentType()).isEqualTo(DEFAULT_PDF_CONTENT_TYPE);
+        assertThat(testCertificate.isIsEmailed()).isEqualTo(DEFAULT_IS_EMAILED);
 
         // Validate the Certificate in Elasticsearch
         verify(mockCertificateSearchRepository, times(1)).save(testCertificate);
@@ -183,8 +178,7 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
+            .andExpect(jsonPath("$.[*].isEmailed").value(hasItem(DEFAULT_IS_EMAILED.booleanValue())));
     }
     
 
@@ -200,8 +194,7 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(certificate.getId().intValue()))
             .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
-            .andExpect(jsonPath("$.pdfContentType").value(DEFAULT_PDF_CONTENT_TYPE))
-            .andExpect(jsonPath("$.pdf").value(Base64Utils.encodeToString(DEFAULT_PDF)));
+            .andExpect(jsonPath("$.isEmailed").value(DEFAULT_IS_EMAILED.booleanValue()));
     }
 
     @Test
@@ -241,6 +234,45 @@ public class CertificateResourceIntTest {
 
         // Get all the certificateList where timestamp is null
         defaultCertificateShouldNotBeFound("timestamp.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCertificatesByIsEmailedIsEqualToSomething() throws Exception {
+        // Initialize the database
+        certificateRepository.saveAndFlush(certificate);
+
+        // Get all the certificateList where isEmailed equals to DEFAULT_IS_EMAILED
+        defaultCertificateShouldBeFound("isEmailed.equals=" + DEFAULT_IS_EMAILED);
+
+        // Get all the certificateList where isEmailed equals to UPDATED_IS_EMAILED
+        defaultCertificateShouldNotBeFound("isEmailed.equals=" + UPDATED_IS_EMAILED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCertificatesByIsEmailedIsInShouldWork() throws Exception {
+        // Initialize the database
+        certificateRepository.saveAndFlush(certificate);
+
+        // Get all the certificateList where isEmailed in DEFAULT_IS_EMAILED or UPDATED_IS_EMAILED
+        defaultCertificateShouldBeFound("isEmailed.in=" + DEFAULT_IS_EMAILED + "," + UPDATED_IS_EMAILED);
+
+        // Get all the certificateList where isEmailed equals to UPDATED_IS_EMAILED
+        defaultCertificateShouldNotBeFound("isEmailed.in=" + UPDATED_IS_EMAILED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCertificatesByIsEmailedIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        certificateRepository.saveAndFlush(certificate);
+
+        // Get all the certificateList where isEmailed is not null
+        defaultCertificateShouldBeFound("isEmailed.specified=true");
+
+        // Get all the certificateList where isEmailed is null
+        defaultCertificateShouldNotBeFound("isEmailed.specified=false");
     }
 
     @Test
@@ -289,8 +321,7 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
+            .andExpect(jsonPath("$.[*].isEmailed").value(hasItem(DEFAULT_IS_EMAILED.booleanValue())));
     }
 
     /**
@@ -328,8 +359,7 @@ public class CertificateResourceIntTest {
         em.detach(updatedCertificate);
         updatedCertificate
             .timestamp(UPDATED_TIMESTAMP)
-            .pdf(UPDATED_PDF)
-            .pdfContentType(UPDATED_PDF_CONTENT_TYPE);
+            .isEmailed(UPDATED_IS_EMAILED);
 
         restCertificateMockMvc.perform(put("/api/certificates")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -341,8 +371,7 @@ public class CertificateResourceIntTest {
         assertThat(certificateList).hasSize(databaseSizeBeforeUpdate);
         Certificate testCertificate = certificateList.get(certificateList.size() - 1);
         assertThat(testCertificate.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
-        assertThat(testCertificate.getPdf()).isEqualTo(UPDATED_PDF);
-        assertThat(testCertificate.getPdfContentType()).isEqualTo(UPDATED_PDF_CONTENT_TYPE);
+        assertThat(testCertificate.isIsEmailed()).isEqualTo(UPDATED_IS_EMAILED);
 
         // Validate the Certificate in Elasticsearch
         verify(mockCertificateSearchRepository, times(1)).save(testCertificate);
@@ -403,8 +432,7 @@ public class CertificateResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificate.getId().intValue())))
             .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
-            .andExpect(jsonPath("$.[*].pdfContentType").value(hasItem(DEFAULT_PDF_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].pdf").value(hasItem(Base64Utils.encodeToString(DEFAULT_PDF))));
+            .andExpect(jsonPath("$.[*].isEmailed").value(hasItem(DEFAULT_IS_EMAILED.booleanValue())));
     }
 
     @Test

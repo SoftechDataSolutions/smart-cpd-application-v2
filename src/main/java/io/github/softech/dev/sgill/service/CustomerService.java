@@ -53,4 +53,6 @@ public interface CustomerService {
      * @return the list of entities
      */
     Page<Customer> search(String query, Pageable pageable);
+
+    Customer findbyUserId(Long id);
 }

@@ -21,9 +21,8 @@
             "fieldType": "Instant"
         },
         {
-            "fieldName": "pdf",
-            "fieldType": "byte[]",
-            "fieldTypeBlobContent": "any"
+            "fieldName": "isEmailed",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20180819063643",

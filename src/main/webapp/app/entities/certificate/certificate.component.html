@@ -31,7 +31,7 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="timestamp"><span jhiTranslate="smartCpdApp.certificate.timestamp">Timestamp</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="pdf"><span jhiTranslate="smartCpdApp.certificate.pdf">Pdf</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="isEmailed"><span jhiTranslate="smartCpdApp.certificate.isEmailed">Is Emailed</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.certificate.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="courses.normCourses"><span jhiTranslate="smartCpdApp.certificate.courses">Courses</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -41,10 +41,7 @@
             <tr *ngFor="let certificate of certificates ;trackBy: trackId">
                 <td><a [routerLink]="['/certificate', certificate.id, 'view' ]">{{certificate.id}}</a></td>
                 <td>{{certificate.timestamp | date:'medium'}}</td>
-                <td>
-                    <a *ngIf="certificate.pdf" (click)="openFile(certificate.pdfContentType, certificate.pdf)" jhiTranslate="entity.action.open">open</a>
-                    <span *ngIf="certificate.pdf">{{certificate.pdfContentType}}, {{byteSize(certificate.pdf)}}</span>
-                </td>
+                <td>{{certificate.isEmailed}}</td>
                 <td>
                     <div *ngIf="certificate.customer">
                         <a [routerLink]="['../customer', certificate.customer?.id, 'view' ]" >{{certificate.customer?.normalized}}</a>

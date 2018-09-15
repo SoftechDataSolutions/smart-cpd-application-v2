@@ -2,7 +2,11 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Cart;
+import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.repository.CartRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.service.CartService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -42,9 +47,19 @@ public class CartResource {
 
     private final CartQueryService cartQueryService;
 
-    public CartResource(CartService cartService, CartQueryService cartQueryService) {
+    private final CartRepository cartRepository;
+
+    private final CustomerRepository customerRepository;
+
+    private final CustomerService customerService;
+
+    public CartResource(CartService cartService, CartQueryService cartQueryService, CartRepository cartRepository,
+                        CustomerRepository customerRepository, CustomerService customerService) {
         this.cartService = cartService;
         this.cartQueryService = cartQueryService;
+        this.cartRepository = cartRepository;
+        this.customerRepository = customerRepository;
+        this.customerService = customerService;
     }
 
     /**
@@ -61,10 +76,43 @@ public class CartResource {
         if (cart.getId() != null) {
             throw new BadRequestAlertException("A new cart cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (cartRepository.findCartsByCustomerIdAndCheckout(cart.getCustomer().getId(), false) != null) {
+            throw new BadRequestAlertException("Cart requistion error, there is already an assigned cart resource for this customer", ENTITY_NAME, "idexists");
+        }
         Cart result = cartService.save(cart);
         return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @GetMapping("/_check/carts/{id}")
+    @Timed
+    public ResponseEntity<Cart> checkCart(@PathVariable Long id) throws URISyntaxException {
+        Customer reqdCustomer = customerService.findOne(id).get();
+        log.debug("REST request to create a new customer specific Cart : {}", reqdCustomer);
+        List<Cart> reqd = cartRepository.findCartsByCustomerIdAndCheckout(id, false);
+        Instant moment = Instant.now();
+        if (reqd == null) {
+            Cart newCart = new Cart();
+            newCart.setAmount((double)0);
+            newCart.setCheckout(false);
+            newCart.setCustomer(reqdCustomer);
+            newCart.setCreateddate(moment);
+            newCart.setLastactivedate(moment);
+            newCart.setNormCart("Cart for " + reqdCustomer.getUser().getFirstName() + " " + reqdCustomer.getUser().getLastName());
+            Cart result = cartService.save(newCart);
+            /*return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                .body(result);*/
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else{
+            Cart currentCart = reqd.get(0);
+            /*return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+                .body(result);*/
+            return new ResponseEntity<>(currentCart, HttpStatus.OK);
+        }
     }
 
     /**

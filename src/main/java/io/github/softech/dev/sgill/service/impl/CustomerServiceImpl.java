@@ -129,6 +129,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+    @Override
+    public Customer findbyUserId(Long id){
+        return customerRepository.findCustomerByUserId(id);
+    }
+
     /**
      * Search for the customer corresponding to the query.
      *

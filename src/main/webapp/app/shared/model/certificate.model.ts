@@ -5,8 +5,7 @@ import { ICourse } from 'app/shared/model//course.model';
 export interface ICertificate {
     id?: number;
     timestamp?: Moment;
-    pdfContentType?: string;
-    pdf?: any;
+    isEmailed?: boolean;
     customer?: ICustomer;
     courses?: ICourse;
 }
@@ -15,9 +14,10 @@ export class Certificate implements ICertificate {
     constructor(
         public id?: number,
         public timestamp?: Moment,
-        public pdfContentType?: string,
-        public pdf?: any,
+        public isEmailed?: boolean,
         public customer?: ICustomer,
         public courses?: ICourse
-    ) {}
+    ) {
+        this.isEmailed = this.isEmailed || false;
+    }
 }

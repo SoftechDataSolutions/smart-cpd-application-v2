@@ -15,6 +15,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
-
     Customer findCustomersByUser(User user);
+    Customer findCustomerByUserId(Long id);
 }

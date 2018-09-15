@@ -7,8 +7,15 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'n
 import { ICourse } from 'app/shared/model/course.model';
 import { Principal } from 'app/core';
 
-import { ITEMS_PER_PAGE } from 'app/shared';
+import { DATE_TIME_FORMAT, ITEMS_PER_PAGE } from 'app/shared';
 import { CourseService } from './course.service';
+import { ICustomer } from 'app/shared/model/customer.model';
+import { CustomerService } from 'app/entities/customer';
+import { CartService } from 'app/entities/cart';
+import { CourseCartBridgeService } from 'app/entities/course-cart-bridge';
+import { ICart } from 'app/shared/model/cart.model';
+import { CourseCartBridge, ICourseCartBridge } from 'app/shared/model/course-cart-bridge.model';
+import * as moment from 'moment';
 
 @Component({
     selector: 'jhi-course',
@@ -16,19 +23,29 @@ import { CourseService } from './course.service';
 })
 export class CourseComponent implements OnInit, OnDestroy {
     courses: ICourse[];
-    currentAccount: any;
+    currentAccount: Account;
     eventSubscriber: Subscription;
     itemsPerPage: number;
     links: any;
+    userId: number;
     page: any;
     predicate: any;
     queryCount: any;
     reverse: any;
     totalItems: number;
     currentSearch: string;
+    customer: ICustomer;
+    cart: ICart;
+    coursesCart: ICourse[];
+    bridgeCart: ICourseCartBridge[];
+    newBridgeCart: ICourseCartBridge;
+    timestamp: string;
 
     constructor(
         private courseService: CourseService,
+        private customerService: CustomerService,
+        private cartService: CartService,
+        private courseCartService: CourseCartBridgeService,
         private jhiAlertService: JhiAlertService,
         private dataUtils: JhiDataUtils,
         private eventManager: JhiEventManager,
@@ -119,6 +136,19 @@ export class CourseComponent implements OnInit, OnDestroy {
         this.loadAll();
         this.principal.identity().then(account => {
             this.currentAccount = account;
+            this.userId = Number(this.currentAccount.id);
+            this.customerService.getbyuser(this.userId).subscribe(value => {
+                this.customer = value.body;
+            });
+            this.cartService.check(this.customer.id).subscribe(value => {
+                this.cart = value.body;
+            });
+            this.courseCartService.collection(this.cart.id).subscribe(value => {
+                this.bridgeCart = value.body;
+            });
+            for (let i = 0; i < this.bridgeCart.length; i++) {
+                this.coursesCart.push(this.bridgeCart[i].course);
+            }
         });
         this.registerChangeInCourses();
     }
@@ -137,6 +167,15 @@ export class CourseComponent implements OnInit, OnDestroy {
 
     openFile(contentType, field) {
         return this.dataUtils.openFile(contentType, field);
+    }
+
+    addToCart(course: ICourse) {
+        this.coursesCart.push(course);
+        this.newBridgeCart = new CourseCartBridge();
+        this.newBridgeCart.course = course;
+        this.newBridgeCart.cart = this.cart;
+        this.newBridgeCart.timestamp = moment(this.timestamp, DATE_TIME_FORMAT);
+        this.courseCartService.create(this.newBridgeCart);
     }
 
     registerChangeInCourses() {

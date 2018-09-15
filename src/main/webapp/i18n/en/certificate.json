@@ -18,7 +18,7 @@
                 "title": "Certificate"
             },
             "timestamp": "Timestamp",
-            "pdf": "Pdf",
+            "isEmailed": "Is Emailed",
             "customer": "Customer",
             "courses": "Courses"
         }
