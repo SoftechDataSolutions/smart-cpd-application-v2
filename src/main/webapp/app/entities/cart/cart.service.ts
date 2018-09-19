@@ -17,7 +17,7 @@ type EntityArrayResponseType = HttpResponse<ICart[]>;
 export class CartService {
     private resourceUrl = SERVER_API_URL + 'api/carts';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/carts';
-    private resourceCheckUrl = SERVER_API_URL + 'api/_check/carts';
+    private resourceCheckUrl = SERVER_API_URL + 'api/check/carts';
 
     constructor(private http: HttpClient) {}
 
@@ -41,10 +41,8 @@ export class CartService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    check(id: number): Observable<EntityResponseType> {
-        return this.http
-            .get<ICart>(`${this.resourceCheckUrl}/${id}`, { observe: 'response' })
-            .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    check(id: number): Observable<ICart> {
+        return this.http.get<ICart>(`${this.resourceCheckUrl}/${id}`);
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {

@@ -59,13 +59,13 @@ export class CertificateDetailComponent implements OnInit {
         const data = document.getElementById('convertPdf');
         html2canvas(data).then(canvas => {
             // Few necessary setting options
-            const imgWidth = 270;
-            const pageHeight = 450;
+            const imgWidth = 300;
+            const pageHeight = 400;
             const imgHeight = canvas.height * imgWidth / canvas.width;
             const heightLeft = imgHeight;
             const reader = new FileReader();
             const contentDataURL = canvas.toDataURL('image/png');
-            this.pdf = new jspdf('p', 'mm', 'a4', 1);
+            this.pdf = new jspdf('l', 'mm', 'a4', 1);
             this.pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight, '', 'FAST');
             this.pdf.save('certificate.pdf');
             this.blob = this.pdf.output('blob');

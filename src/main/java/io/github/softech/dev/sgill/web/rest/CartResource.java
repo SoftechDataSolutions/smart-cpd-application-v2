@@ -85,33 +85,32 @@ public class CartResource {
             .body(result);
     }
 
-    @GetMapping("/_check/carts/{id}")
+    @GetMapping("/check/carts/{customerId}")
     @Timed
-    public ResponseEntity<Cart> checkCart(@PathVariable Long id) throws URISyntaxException {
-        Customer reqdCustomer = customerService.findOne(id).get();
+    public Cart checkCart(@PathVariable Long customerId) throws URISyntaxException {
+        Customer reqdCustomer = customerService.findOne(customerId).get();
         log.debug("REST request to create a new customer specific Cart : {}", reqdCustomer);
-        List<Cart> reqd = cartRepository.findCartsByCustomerIdAndCheckout(id, false);
+        List<Cart> reqd = cartRepository.findCartsByCustomerIdAndCheckout(customerId, false);
         Instant moment = Instant.now();
-        if (reqd == null) {
+        if(reqd.size() == 0) {
             Cart newCart = new Cart();
             newCart.setAmount((double)0);
             newCart.setCheckout(false);
             newCart.setCustomer(reqdCustomer);
             newCart.setCreateddate(moment);
             newCart.setLastactivedate(moment);
-            newCart.setNormCart("Cart for " + reqdCustomer.getUser().getFirstName() + " " + reqdCustomer.getUser().getLastName());
-            Cart result = cartService.save(newCart);
+            newCart.setNormCart("Cart for " + reqdCustomer.getNormalized());
+            cartService.save(newCart);
             /*return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);*/
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        else{
-            Cart currentCart = reqd.get(0);
+            return newCart;
+        } else{
+            log.debug("Customer Cart List Items: {}", reqd.get(0));
             /*return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
                 .body(result);*/
-            return new ResponseEntity<>(currentCart, HttpStatus.OK);
+            return reqd.get(0);
         }
     }
 

@@ -1,21 +1,28 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { ICourse } from 'app/shared/model/course.model';
-import { Principal } from 'app/core';
+import { Principal, UserService, IUser, Account } from 'app/core';
 
 import { DATE_TIME_FORMAT, ITEMS_PER_PAGE } from 'app/shared';
 import { CourseService } from './course.service';
 import { ICustomer } from 'app/shared/model/customer.model';
 import { CustomerService } from 'app/entities/customer';
 import { CartService } from 'app/entities/cart';
-import { CourseCartBridgeService } from 'app/entities/course-cart-bridge';
+import { courseCartBridgePopupRoute, CourseCartBridgeService } from 'app/entities/course-cart-bridge';
 import { ICart } from 'app/shared/model/cart.model';
 import { CourseCartBridge, ICourseCartBridge } from 'app/shared/model/course-cart-bridge.model';
 import * as moment from 'moment';
+import { JhiTrackerService } from 'app/core';
+import { IamUserArn } from 'aws-sdk/clients/codedeploy';
+import { __values } from 'tslib';
+import { SERVER_API_URL } from 'app/app.constants';
+import { Observable } from 'rxjs';
+import { updateSourceFile } from '@angular/compiler-cli/src/transformers/node_emitter';
 
 @Component({
     selector: 'jhi-course',
@@ -23,11 +30,11 @@ import * as moment from 'moment';
 })
 export class CourseComponent implements OnInit, OnDestroy {
     courses: ICourse[];
+    /**reqdAccount: Account;*/
     currentAccount: Account;
     eventSubscriber: Subscription;
     itemsPerPage: number;
     links: any;
-    userId: number;
     page: any;
     predicate: any;
     queryCount: any;
@@ -39,7 +46,15 @@ export class CourseComponent implements OnInit, OnDestroy {
     coursesCart: ICourse[];
     bridgeCart: ICourseCartBridge[];
     newBridgeCart: ICourseCartBridge;
+    courseNumber: number;
     timestamp: string;
+    user: IUser;
+    userID = 0;
+    message: string;
+    isSaving: boolean;
+    testNull: boolean;
+    testCartCourses: boolean;
+    initAmount = 0;
 
     constructor(
         private courseService: CourseService,
@@ -51,9 +66,13 @@ export class CourseComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager,
         private parseLinks: JhiParseLinks,
         private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        private userService: UserService,
+        private trackService: JhiTrackerService,
+        private principal: Principal,
+        private http: HttpClient
     ) {
         this.courses = [];
+        this.bridgeCart = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.page = 0;
         this.links = {
@@ -136,25 +155,23 @@ export class CourseComponent implements OnInit, OnDestroy {
         this.loadAll();
         this.principal.identity().then(account => {
             this.currentAccount = account;
-            this.userId = Number(this.currentAccount.id);
-            this.customerService.getbyuser(this.userId).subscribe(value => {
-                this.customer = value.body;
+            this.userService.getemail(account.email).subscribe(users => {
+                this.userID = users;
+                this.customerService.getuser(this.userID).subscribe(customer => {
+                    this.customer = customer;
+                    this.cartService.check(this.customer.id).subscribe(carts => {
+                        this.cart = carts;
+                        this.courseCartService.getcollection(this.cart.id).subscribe(bridges => {
+                            this.bridgeCart = bridges;
+                        });
+                    });
+                });
             });
-            this.cartService.check(this.customer.id).subscribe(value => {
-                this.cart = value.body;
-            });
-            this.courseCartService.collection(this.cart.id).subscribe(value => {
-                this.bridgeCart = value.body;
-            });
-            for (let i = 0; i < this.bridgeCart.length; i++) {
-                this.coursesCart.push(this.bridgeCart[i].course);
-            }
         });
-        this.registerChangeInCourses();
     }
 
     ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
+        /*this.eventSubscriber.unsubscribe();*/
     }
 
     trackId(index: number, item: ICourse) {
@@ -169,13 +186,78 @@ export class CourseComponent implements OnInit, OnDestroy {
         return this.dataUtils.openFile(contentType, field);
     }
 
-    addToCart(course: ICourse) {
-        this.coursesCart.push(course);
-        this.newBridgeCart = new CourseCartBridge();
-        this.newBridgeCart.course = course;
-        this.newBridgeCart.cart = this.cart;
-        this.newBridgeCart.timestamp = moment(this.timestamp, DATE_TIME_FORMAT);
-        this.courseCartService.create(this.newBridgeCart);
+    public addCourse(course: ICourse) {
+        if (this.findinCart(course)) {
+            this.message = 'This course is already added to your cart';
+        } else {
+            this.newBridgeCart = new CourseCartBridge();
+            this.newBridgeCart.course = course;
+            this.newBridgeCart.cart = this.cart;
+            this.newBridgeCart.timestamp = moment();
+            if (this.bridgeCart == null) {
+                this.bridgeCart[0] = this.newBridgeCart;
+                this.cart.amount += course.amount;
+                this.save(this.newBridgeCart);
+            } else {
+                this.bridgeCart[this.bridgeCart.length] = this.newBridgeCart;
+                this.cart.amount += course.amount;
+                this.save(this.newBridgeCart);
+            }
+            this.courseNumber = this.bridgeCart.length;
+            this.updateCartAmount(this.cart, course.amount);
+        }
+    }
+
+    updateCartAmount(temp: ICart, cost: number, point: number) {
+        this.isSaving = true;
+        if (temp.id !== undefined) {
+            this.initAmount = temp.amount;
+            temp.amount = this.initAmount + cost;
+            temp.this.subscribeToSaveCartResponse(this.cartService.update(temp));
+        } else {
+            this.subscribeToSaveCartResponse(this.cartService.create(temp));
+        }
+    }
+
+    save(temp: ICourseCartBridge) {
+        this.isSaving = true;
+        if (temp.id !== undefined) {
+            this.subscribeToSaveResponse(this.courseCartService.update(temp));
+        } else {
+            this.subscribeToSaveResponse(this.courseCartService.create(temp));
+        }
+    }
+
+    private subscribeToSaveCartResponse(result: Observable<HttpResponse<ICart>>) {
+        result.subscribe((res: HttpResponse<ICart>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    private subscribeToSaveResponse(result: Observable<HttpResponse<ICourseCartBridge>>) {
+        result.subscribe((res: HttpResponse<ICourseCartBridge>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    private onSaveSuccess() {
+        this.isSaving = false;
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
+    }
+
+    findinCart(course: ICourse) {
+        if (this.bridgeCart.length === 0) {
+            this.testNull = true;
+            return false;
+        } else {
+            for (let i = 0; i < this.bridgeCart.length; i++) {
+                if (this.bridgeCart[i].course.id === course.id) {
+                    this.testCartCourses = true;
+                    return true;
+                }
+            }
+        }
+        this.testCartCourses = false;
+        return false;
     }
 
     registerChangeInCourses() {

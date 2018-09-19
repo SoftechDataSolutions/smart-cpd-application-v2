@@ -181,6 +181,20 @@ public class UserResource {
                 .map(UserDTO::new));
     }
 
+    @PostMapping("/users/login")
+    @Timed
+    public Long getLoginUser(@RequestParam String login) {
+        log.debug("REST request to get User by login: {}", login);
+        return userService.getUserWithAuthoritiesByLogin(login).get().getId();
+    }
+
+    @GetMapping("/users/email/{email}")
+    @Timed
+    public Long getEmailUser(@PathVariable String email) {
+        log.debug("REST request to get User by email: {}", email);
+        return userRepository.findOneByEmailIgnoreCase(email).get().getId();
+    }
+
     /**
      * DELETE /users/:login : delete the "login" User.
      *

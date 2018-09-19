@@ -2,6 +2,7 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -43,9 +44,12 @@ public class CustomerResource {
 
     private final CustomerQueryService customerQueryService;
 
-    public CustomerResource(CustomerService customerService, CustomerQueryService customerQueryService) {
+    private final CustomerRepository customerRepository;
+
+    public CustomerResource(CustomerService customerService, CustomerQueryService customerQueryService, CustomerRepository customerRepository) {
         this.customerService = customerService;
         this.customerQueryService = customerQueryService;
+        this.customerRepository = customerRepository;
     }
 
     /**
@@ -120,12 +124,11 @@ public class CustomerResource {
         return ResponseUtil.wrapOrNotFound(customer);
     }
 
-    @GetMapping("/_user/customers/{id}")
+    @GetMapping("/user/customers/{userId}")
     @Timed
-    public ResponseEntity<Customer> getbyuserCustomer(@PathVariable Long id) {
-        log.debug("REST request to get Customer : {}", id);
-        Customer customer = customerService.findbyUserId(id);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+    public Customer getUserCustomer(@PathVariable Long userId) {
+        log.debug("REST request to get Customer by UserID: {}", userId);
+        return customerRepository.findCustomerByUserId(userId);
     }
 
     /**

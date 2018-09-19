@@ -216,6 +216,10 @@ public class UserService {
         return newUser;
     }
 
+    public User getUserbyEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
+
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.setLogin(userDTO.getLogin());

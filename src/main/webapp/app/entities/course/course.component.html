@@ -8,12 +8,13 @@
             </span>
         </button>
     </h2>
-    <jhi-alert></jhi-alert>
+    <div *jhiHasAnyAuthority="'ROLE_ADMIN'"><jhi-alert></jhi-alert></div>
     <div class="row">
         <div class="col-md-6 col-sm-12">
             <form name="searchForm" class="form-inline">
                 <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'smartCpdApp.course.home.search' | translate }}">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch"
+                           name="currentSearch" placeholder="{{ 'smartCpdApp.course.home.search' | translate }}">
                     <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
                         <fa-icon [icon]="'search'"></fa-icon>
                     </button>
@@ -22,8 +23,7 @@
                     </button>
                 </div>
             </form>
-        </div>
-        <div class="col-md-6 col-sm-12">
+
             <span><strong>Sort by</strong></span>
             <div jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
                 <button type="button" class="btn btn-light" jhiSortBy="amount">
@@ -31,12 +31,12 @@
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
                 <button type="button" class="btn btn-light" jhiSortBy="point">
-                <span jhiTranslate="smartCpdApp.course.point">Points</span>
-                <fa-icon [icon]="'sort'"></fa-icon>
+                    <span jhiTranslate="smartCpdApp.course.point">Points</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
                 <button type="button" class="btn btn-light" jhiSortBy="credit">
-                <span jhiTranslate="smartCpdApp.course.credit">Credit</span>
-                <fa-icon [icon]="'sort'"></fa-icon>
+                    <span jhiTranslate="smartCpdApp.course.credit">Credit</span>
+                    <fa-icon [icon]="'sort'"></fa-icon>
                 </button>
                 <button type="button" class="btn btn-light" jhiSortBy="state">
                     <span jhiTranslate="smartCpdApp.course.state">State</span>
@@ -147,7 +147,7 @@
                         </div>
                         <div class="col-2 col-xs-12">
                             <div class="row">
-                                <button class="btn btn-primary float-right jh-create-entity create-course" [routerLink]="['/cart/new']" *jhiHasAnyAuthority="'ROLE_USER'">
+                                <button class="btn btn-primary float-right jh-create-entity create-course" (click)="addCourse(course)" *jhiHasAnyAuthority="'ROLE_USER'">
                                     <fa-icon [icon]="'shopping-cart'"></fa-icon>
                                     <span class="hidden-sm-down">
                                             Add to Cart
@@ -169,5 +169,19 @@
             </div><br>
         </a>
     </div>
+    <h2>Account Email is {{currentAccount.email}}</h2>
+    <h2>User ID is {{userID}}</h2>
+    <h2>Customer ID is {{customer.id}}</h2>
+    <h2>Cart ID is {{cart.id}}</h2>
+    <h2>Length of Bridge Array is {{bridgeCart.length}}</h2>
+    <h2>Number of Courses are {{courseNumber}}</h2>
+    <h2>Bridge - Course {{newBridgeCart.course}}</h2>
+    <h2>Bridge - Course ID is {{newBridgeCart.course.id}}</h2>
+    <h2>Bridge - Cart {{newBridgeCart.cart}}</h2>
+    <h2>Bridge - Cart ID is {{newBridgeCart.cart.id}}</h2>
+    <h2>Bridge - Timestamp {{newBridgeCart.timestamp}}</h2>
+    <h2>Flag Null is {{testNull}}</h2>
+    <h2>Flag Course in Cart is {{testCartCourses}}</h2>
+    <h2>Cart Amount is {{cart.amount}}</h2>
 </div>
-</div>
+

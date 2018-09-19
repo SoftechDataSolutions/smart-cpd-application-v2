@@ -123,12 +123,11 @@ public class CourseCartBridgeResource {
         return ResponseUtil.wrapOrNotFound(courseCartBridge);
     }
 
-    @GetMapping("/_collection/course-cart-bridges/{id}")
+    @GetMapping("/collection/course-cart-bridges/{cartid}")
     @Timed
-    public ResponseEntity<List<CourseCartBridge>> collectionCoursesCartBridge(@PathVariable Long id) {
-        log.debug("REST request to get Course from Cart : {}", id);
-        List<CourseCartBridge> courses = courseCartBridgeRepository.findCourseCartBridgesByCartId(id);
-        return new ResponseEntity<>(courses, HttpStatus.OK);
+    public List<CourseCartBridge> getCollectionCoursesCartBridge(@PathVariable Long cartid) {
+        log.debug("REST request to get Course from Cart : {}", cartid);
+        return courseCartBridgeRepository.findCourseCartBridgesByCartId(cartid);
     }
 
     /**
