@@ -1,0 +1,22 @@
+
+{
+    "smartCpdApp": {
+        "companyrequest" : {
+            "home": {
+                "title": "Companyrequests",
+                "createLabel": "Create a new Companyrequest",
+                "createOrEditLabel": "Create or edit a Companyrequest",
+                "search": "Search for Companyrequest"
+            },
+            "created": "A new Companyrequest is created with identifier {{ param }}",
+            "updated": "A Companyrequest is updated with identifier {{ param }}",
+            "deleted": "A Companyrequest is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Companyrequest {{ id }}?"
+            },
+            "detail": {
+                "title": "Companyrequest"
+            }
+        }
+    }
+}

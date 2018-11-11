@@ -38,6 +38,11 @@
                     <input type="checkbox" class="form-control" name="checkout" id="field_checkout"
                         [(ngModel)]="cart.checkout" />
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.cart.points" for="field_points">Points</label>
+                    <input type="number" class="form-control" name="points" id="field_points"
+                        [(ngModel)]="cart.points" />
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.cart.customer" for="field_customer">Customer</label>

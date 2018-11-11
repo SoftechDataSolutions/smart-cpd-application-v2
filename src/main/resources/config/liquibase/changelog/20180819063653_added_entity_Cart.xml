@@ -42,6 +42,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="points" type="integer">
+                <constraints nullable="true" />
+            </column>
+
             <column name="customer_id" type="bigint">
                 <constraints nullable="true" />
             </column>

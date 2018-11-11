@@ -9,6 +9,7 @@
         </button>
     </h2>
     <div *jhiHasAnyAuthority="'ROLE_ADMIN'"><jhi-alert></jhi-alert></div>
+    <div *ngIf="message !== ''" class="alert-danger alert" style="margin-left: 30%; margin-right: 30%"><h3>{{message}}</h3></div>
     <div class="row">
         <div class="col-md-6 col-sm-12">
             <form name="searchForm" class="form-inline">
@@ -147,7 +148,7 @@
                         </div>
                         <div class="col-2 col-xs-12">
                             <div class="row">
-                                <button class="btn btn-primary float-right jh-create-entity create-course" (click)="addCourse(course)" *jhiHasAnyAuthority="'ROLE_USER'">
+                                <button class="btn btn-primary float-right jh-create-entity create-course" (click)="addCourse(course);" *jhiHasAnyAuthority="'ROLE_USER'">
                                     <fa-icon [icon]="'shopping-cart'"></fa-icon>
                                     <span class="hidden-sm-down">
                                             Add to Cart
@@ -169,19 +170,5 @@
             </div><br>
         </a>
     </div>
-    <h2>Account Email is {{currentAccount.email}}</h2>
-    <h2>User ID is {{userID}}</h2>
-    <h2>Customer ID is {{customer.id}}</h2>
-    <h2>Cart ID is {{cart.id}}</h2>
-    <h2>Length of Bridge Array is {{bridgeCart.length}}</h2>
-    <h2>Number of Courses are {{courseNumber}}</h2>
-    <h2>Bridge - Course {{newBridgeCart.course}}</h2>
-    <h2>Bridge - Course ID is {{newBridgeCart.course.id}}</h2>
-    <h2>Bridge - Cart {{newBridgeCart.cart}}</h2>
-    <h2>Bridge - Cart ID is {{newBridgeCart.cart.id}}</h2>
-    <h2>Bridge - Timestamp {{newBridgeCart.timestamp}}</h2>
-    <h2>Flag Null is {{testNull}}</h2>
-    <h2>Flag Course in Cart is {{testCartCourses}}</h2>
-    <h2>Cart Amount is {{cart.amount}}</h2>
 </div>
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { ICourseHistory } from 'app/shared/model/course-history.model';
@@ -26,6 +26,7 @@ export class CourseHistoryComponent implements OnInit, OnDestroy {
     reverse: any;
     totalItems: number;
     currentSearch: string;
+    isSaving: boolean;
 
     constructor(
         private courseHistoryService: CourseHistoryService,
@@ -152,5 +153,27 @@ export class CourseHistoryComponent implements OnInit, OnDestroy {
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    setAccess(courseHistory: ICourseHistory) {
+        courseHistory.access = true;
+        this.subscribeToSaveResponse(this.courseHistoryService.update(courseHistory));
+    }
+
+    setNoAccess(courseHistory: ICourseHistory) {
+        courseHistory.access = false;
+        this.subscribeToSaveResponse(this.courseHistoryService.update(courseHistory));
+    }
+
+    private subscribeToSaveResponse(result: Observable<HttpResponse<ICourseHistory>>) {
+        result.subscribe((res: HttpResponse<ICourseHistory>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    private onSaveSuccess() {
+        this.isSaving = false;
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
     }
 }

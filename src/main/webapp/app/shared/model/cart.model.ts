@@ -8,6 +8,7 @@ export interface ICart {
     lastactivedate?: Moment;
     amount?: number;
     checkout?: boolean;
+    points?: number;
     customer?: ICustomer;
 }
 
@@ -19,6 +20,7 @@ export class Cart implements ICart {
         public lastactivedate?: Moment,
         public amount?: number,
         public checkout?: boolean,
+        public points?: number,
         public customer?: ICustomer
     ) {
         this.checkout = this.checkout || false;

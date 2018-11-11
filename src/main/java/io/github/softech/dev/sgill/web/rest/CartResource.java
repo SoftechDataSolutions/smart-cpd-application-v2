@@ -2,8 +2,10 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Cart;
+import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.repository.CartRepository;
+import io.github.softech.dev.sgill.repository.CourseRepository;
 import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.service.CartService;
 import io.github.softech.dev.sgill.service.CustomerService;
@@ -13,6 +15,7 @@ import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
 import io.github.softech.dev.sgill.service.dto.CartCriteria;
 import io.github.softech.dev.sgill.service.CartQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.apache.lucene.document.DoubleRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -53,13 +56,16 @@ public class CartResource {
 
     private final CustomerService customerService;
 
+    private final CourseRepository courseRepository;
+
     public CartResource(CartService cartService, CartQueryService cartQueryService, CartRepository cartRepository,
-                        CustomerRepository customerRepository, CustomerService customerService) {
+                        CustomerRepository customerRepository, CustomerService customerService, CourseRepository courseRepository) {
         this.cartService = cartService;
         this.cartQueryService = cartQueryService;
         this.cartRepository = cartRepository;
         this.customerRepository = customerRepository;
         this.customerService = customerService;
+        this.courseRepository = courseRepository;
     }
 
     /**
@@ -134,6 +140,27 @@ public class CartResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cart.getId().toString()))
             .body(result);
+    }
+
+    @PutMapping("/change/carts/{id}")
+    @Timed
+    public void subAmountCart(@PathVariable Long id, @RequestParam Long identifier) throws URISyntaxException {
+        log.debug("REST request to update amount and points for the Cart by course ID: ", identifier);
+        Cart cart = cartRepository.findById(id).get();
+        Course course = courseRepository.findById(identifier).get();
+        Double initAmount = cart.getAmount();
+        int initPoints = cart.getPoints();
+        cart.setAmount(initAmount - course.getAmount());
+        cart.setPoints((int) (initPoints - course.getPoint()));
+        cartService.save(cart);
+    }
+
+    @GetMapping("/checkout/carts/{id}")
+    @Timed
+    public void checkoutCart(@PathVariable Long id) throws URISyntaxException {
+        Cart cart = cartRepository.findById(id).get();
+        cart.setCheckout(true);
+        cartService.save(cart);
     }
 
     /**

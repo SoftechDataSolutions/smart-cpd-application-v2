@@ -89,6 +89,9 @@ public class CartQueryService extends QueryService<Cart> {
             if (criteria.getCheckout() != null) {
                 specification = specification.and(buildSpecification(criteria.getCheckout(), Cart_.checkout));
             }
+            if (criteria.getPoints() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getPoints(), Cart_.points));
+            }
             if (criteria.getCustomerId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCustomerId(), Cart_.customer, Customer_.id));
             }

@@ -24,7 +24,7 @@
                 <dt><span jhiTranslate="smartCpdApp.orders.cart">Cart</span></dt>
                 <dd>
                     <div *ngIf="orders.cart">
-                        <a [routerLink]="['/cart', orders.cart?.id, 'view']">{{orders.cart?.normCart}}</a>
+                        <a [routerLink]="['/cart', orders.cart?.id, 'view']">{{orders.cart?.id}}</a>
                     </div>
                 </dd>
             </dl>

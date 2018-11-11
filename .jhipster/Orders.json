@@ -25,7 +25,6 @@
             "relationshipType": "one-to-one",
             "relationshipName": "cart",
             "otherEntityName": "cart",
-            "otherEntityField": "normCart",
             "ownerSide": true,
             "otherEntityRelationshipName": "orders"
         }

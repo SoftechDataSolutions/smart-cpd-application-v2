@@ -695,6 +695,13 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/checkout" (click)="collapseNavbar()">
+                    <span><fa-icon class="fa-lg" [icon]="'shopping-cart'"></fa-icon></span>
+                    <span *ngIf="courseNumber !== 0"  style="margin-left: -10%; margin-top: -50px; height: 22px; width: 22px; background-color: tomato; border-radius: 50%; display: inline-block;">
+                            <p style="margin-left: 25%;">{{courseNumber}}</p></span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

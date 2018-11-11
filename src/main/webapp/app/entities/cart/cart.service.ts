@@ -18,6 +18,9 @@ export class CartService {
     private resourceUrl = SERVER_API_URL + 'api/carts';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/carts';
     private resourceCheckUrl = SERVER_API_URL + 'api/check/carts';
+    private resourceAmountUrl = SERVER_API_URL + 'api/amount/carts';
+    private resourceCheckoutUrl = SERVER_API_URL + 'api/checkout/carts';
+    private resourcePointUrl = SERVER_API_URL + 'api/points/carts';
 
     constructor(private http: HttpClient) {}
 
@@ -33,6 +36,51 @@ export class CartService {
         return this.http
             .put<ICart>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    subamount(id: number, amt: number) {
+        /**const params = new HttpParams()
+         .set('amount', String(amount));*/
+        this.http
+            .put(`${this.resourceAmountUrl}/${id}`, {
+                amount: amt
+            })
+            .subscribe(
+                data => {
+                    console.log('PUT Request is successful ', data);
+                },
+                error => {
+                    console.log('Error', error);
+                }
+            );
+    }
+
+    checkout(id: number) {
+        /**const params = new HttpParams()
+         .set('amount', String(amount));*/
+        this.http.get(`${this.resourceCheckoutUrl}/${id}`).subscribe(
+            data => {
+                console.log('PUT Request is successful ', data);
+            },
+            error => {
+                console.log('Error', error);
+            }
+        );
+    }
+
+    subpoints(id: number, pts: number) {
+        this.http
+            .put(`${this.resourcePointUrl}/${id}`, {
+                point: pts
+            })
+            .subscribe(
+                data => {
+                    console.log('PUT Request is successful ', data);
+                },
+                error => {
+                    console.log('Error', error);
+                }
+            );
     }
 
     find(id: number): Observable<EntityResponseType> {

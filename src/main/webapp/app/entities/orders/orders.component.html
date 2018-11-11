@@ -34,7 +34,7 @@
             <th jhiSortBy="amount"><span jhiTranslate="smartCpdApp.orders.amount">Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="status"><span jhiTranslate="smartCpdApp.orders.status">Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="payment"><span jhiTranslate="smartCpdApp.orders.payment">Payment</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="cart.normCart"><span jhiTranslate="smartCpdApp.orders.cart">Cart</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="cart.id"><span jhiTranslate="smartCpdApp.orders.cart">Cart</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -47,7 +47,7 @@
                 <td jhiTranslate="{{'smartCpdApp.PAYMENT.' + orders.payment}}">{{orders.payment}}</td>
                 <td>
                     <div *ngIf="orders.cart">
-                        <a [routerLink]="['../cart', orders.cart?.id, 'view' ]" >{{orders.cart?.normCart}}</a>
+                        <a [routerLink]="['../cart', orders.cart?.id, 'view' ]" >{{orders.cart?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

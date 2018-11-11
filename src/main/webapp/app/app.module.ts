@@ -21,6 +21,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
+import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
 /*import { QuizFinalComponent } from './quiz-final/quiz-final.component';*/
 
 @NgModule({
@@ -43,7 +44,8 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         ErrorComponent,
         PageRibbonComponent,
         ActiveMenuDirective,
-        FooterComponent
+        FooterComponent,
+        CustomerDashboardComponent
         /*QuizFinalComponent*/
     ],
     providers: [

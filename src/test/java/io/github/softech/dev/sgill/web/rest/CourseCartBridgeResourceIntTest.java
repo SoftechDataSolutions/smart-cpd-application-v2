@@ -7,6 +7,7 @@ import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
 import io.github.softech.dev.sgill.repository.search.CourseCartBridgeSearchRepository;
+import io.github.softech.dev.sgill.service.CartService;
 import io.github.softech.dev.sgill.service.CourseCartBridgeService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CourseCartBridgeCriteria;
@@ -84,6 +85,9 @@ public class CourseCartBridgeResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private CartService cartService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restCourseCartBridgeMockMvc;
@@ -93,7 +97,7 @@ public class CourseCartBridgeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CourseCartBridgeResource courseCartBridgeResource = new CourseCartBridgeResource(courseCartBridgeService, courseCartBridgeQueryService);
+        final CourseCartBridgeResource courseCartBridgeResource = new CourseCartBridgeResource(courseCartBridgeService, courseCartBridgeQueryService, courseCartBridgeRepository, cartService);
         this.restCourseCartBridgeMockMvc = MockMvcBuilders.standaloneSetup(courseCartBridgeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

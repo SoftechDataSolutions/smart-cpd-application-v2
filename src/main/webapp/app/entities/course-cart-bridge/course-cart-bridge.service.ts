@@ -17,6 +17,7 @@ export class CourseCartBridgeService {
     private resourceUrl = SERVER_API_URL + 'api/course-cart-bridges';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/course-cart-bridges';
     private resourceCollectionUrl = SERVER_API_URL + 'api/collection/course-cart-bridges';
+    private resourceInstancesUrl = SERVER_API_URL + 'api/instances/course-cart-bridges';
 
     constructor(private http: HttpClient) {}
 
@@ -29,6 +30,10 @@ export class CourseCartBridgeService {
 
     getcollection(id: number): Observable<ICourseCartBridge[]> {
         return this.http.get<ICourseCartBridge[]>(`${this.resourceCollectionUrl}/${id}`);
+    }
+
+    getinstance(courseid: number, cartid: number): Observable<ICourseCartBridge> {
+        return this.http.post<ICourseCartBridge>(this.resourceInstancesUrl, { cartId: cartid, courseId: courseid });
     }
 
     update(courseCartBridge: ICourseCartBridge): Observable<EntityResponseType> {

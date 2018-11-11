@@ -2,6 +2,9 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Course;
+import io.github.softech.dev.sgill.domain.CourseHistory;
+import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.service.CourseService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -43,9 +46,16 @@ public class CourseResource {
 
     private final CourseQueryService courseQueryService;
 
-    public CourseResource(CourseService courseService, CourseQueryService courseQueryService) {
+    private final CustomerRepository customerRepository;
+
+    private final CourseHistoryRepository courseHistoryRepository;
+
+    public CourseResource(CourseService courseService, CourseQueryService courseQueryService, CustomerRepository customerRepository,
+                          CourseHistoryRepository courseHistoryRepository) {
         this.courseService = courseService;
         this.courseQueryService = courseQueryService;
+        this.customerRepository = customerRepository;
+        this.courseHistoryRepository = courseHistoryRepository;
     }
 
     /**
@@ -88,6 +98,13 @@ public class CourseResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, course.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/check/courses/{id}")
+    @Timed
+    public boolean checkCourses(@PathVariable Long id, @RequestParam Long customer) throws URISyntaxException {
+        CourseHistory temp = courseHistoryRepository.findCourseHistoryByCourseIdAndCustomer_Id(id, customer).get();
+        return temp.getId() == null || temp.isAccess();
     }
 
     /**

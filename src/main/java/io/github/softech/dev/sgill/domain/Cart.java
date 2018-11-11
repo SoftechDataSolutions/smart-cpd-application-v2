@@ -41,6 +41,9 @@ public class Cart implements Serializable {
     @Column(name = "checkout")
     private Boolean checkout;
 
+    @Column(name = "points")
+    private Integer points;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private Customer customer;
@@ -119,6 +122,19 @@ public class Cart implements Serializable {
         this.checkout = checkout;
     }
 
+    public Integer getPoints() {
+        return points;
+    }
+
+    public Cart points(Integer points) {
+        this.points = points;
+        return this;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
@@ -162,6 +178,7 @@ public class Cart implements Serializable {
             ", lastactivedate='" + getLastactivedate() + "'" +
             ", amount=" + getAmount() +
             ", checkout='" + isCheckout() + "'" +
+            ", points=" + getPoints() +
             "}";
     }
 }

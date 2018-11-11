@@ -55,7 +55,9 @@ export class BookmarkUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.bookmark.seconds = this.getSeconds(this.bookmark.timestamp);
+        if (this.bookmark.seconds != null) {
+            this.bookmark.seconds = this.getSeconds(this.bookmark.timestamp);
+        }
         if (this.bookmark.id !== undefined) {
             this.subscribeToSaveResponse(this.bookmarkService.update(this.bookmark));
         } else {

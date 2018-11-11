@@ -5,8 +5,11 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.repository.CartRepository;
+import io.github.softech.dev.sgill.repository.CourseRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.repository.search.CartSearchRepository;
 import io.github.softech.dev.sgill.service.CartService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CartCriteria;
 import io.github.softech.dev.sgill.service.CartQueryService;
@@ -66,6 +69,9 @@ public class CartResourceIntTest {
     private static final Boolean DEFAULT_CHECKOUT = false;
     private static final Boolean UPDATED_CHECKOUT = true;
 
+    private static final Integer DEFAULT_POINTS = 1;
+    private static final Integer UPDATED_POINTS = 2;
+
     @Autowired
     private CartRepository cartRepository;
 
@@ -95,6 +101,15 @@ public class CartResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restCartMockMvc;
@@ -104,7 +119,7 @@ public class CartResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CartResource cartResource = new CartResource(cartService, cartQueryService);
+        final CartResource cartResource = new CartResource(cartService, cartQueryService, cartRepository, customerRepository, customerService, courseRepository);
         this.restCartMockMvc = MockMvcBuilders.standaloneSetup(cartResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -124,7 +139,8 @@ public class CartResourceIntTest {
             .createddate(DEFAULT_CREATEDDATE)
             .lastactivedate(DEFAULT_LASTACTIVEDATE)
             .amount(DEFAULT_AMOUNT)
-            .checkout(DEFAULT_CHECKOUT);
+            .checkout(DEFAULT_CHECKOUT)
+            .points(DEFAULT_POINTS);
         return cart;
     }
 
@@ -153,6 +169,7 @@ public class CartResourceIntTest {
         assertThat(testCart.getLastactivedate()).isEqualTo(DEFAULT_LASTACTIVEDATE);
         assertThat(testCart.getAmount()).isEqualTo(DEFAULT_AMOUNT);
         assertThat(testCart.isCheckout()).isEqualTo(DEFAULT_CHECKOUT);
+        assertThat(testCart.getPoints()).isEqualTo(DEFAULT_POINTS);
 
         // Validate the Cart in Elasticsearch
         verify(mockCartSearchRepository, times(1)).save(testCart);
@@ -195,7 +212,8 @@ public class CartResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].lastactivedate").value(hasItem(DEFAULT_LASTACTIVEDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
-            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())));
+            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())))
+            .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)));
     }
     
 
@@ -214,7 +232,8 @@ public class CartResourceIntTest {
             .andExpect(jsonPath("$.createddate").value(DEFAULT_CREATEDDATE.toString()))
             .andExpect(jsonPath("$.lastactivedate").value(DEFAULT_LASTACTIVEDATE.toString()))
             .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT.doubleValue()))
-            .andExpect(jsonPath("$.checkout").value(DEFAULT_CHECKOUT.booleanValue()));
+            .andExpect(jsonPath("$.checkout").value(DEFAULT_CHECKOUT.booleanValue()))
+            .andExpect(jsonPath("$.points").value(DEFAULT_POINTS));
     }
 
     @Test
@@ -414,6 +433,72 @@ public class CartResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllCartsByPointsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        cartRepository.saveAndFlush(cart);
+
+        // Get all the cartList where points equals to DEFAULT_POINTS
+        defaultCartShouldBeFound("points.equals=" + DEFAULT_POINTS);
+
+        // Get all the cartList where points equals to UPDATED_POINTS
+        defaultCartShouldNotBeFound("points.equals=" + UPDATED_POINTS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCartsByPointsIsInShouldWork() throws Exception {
+        // Initialize the database
+        cartRepository.saveAndFlush(cart);
+
+        // Get all the cartList where points in DEFAULT_POINTS or UPDATED_POINTS
+        defaultCartShouldBeFound("points.in=" + DEFAULT_POINTS + "," + UPDATED_POINTS);
+
+        // Get all the cartList where points equals to UPDATED_POINTS
+        defaultCartShouldNotBeFound("points.in=" + UPDATED_POINTS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCartsByPointsIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        cartRepository.saveAndFlush(cart);
+
+        // Get all the cartList where points is not null
+        defaultCartShouldBeFound("points.specified=true");
+
+        // Get all the cartList where points is null
+        defaultCartShouldNotBeFound("points.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllCartsByPointsIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        cartRepository.saveAndFlush(cart);
+
+        // Get all the cartList where points greater than or equals to DEFAULT_POINTS
+        defaultCartShouldBeFound("points.greaterOrEqualThan=" + DEFAULT_POINTS);
+
+        // Get all the cartList where points greater than or equals to UPDATED_POINTS
+        defaultCartShouldNotBeFound("points.greaterOrEqualThan=" + UPDATED_POINTS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllCartsByPointsIsLessThanSomething() throws Exception {
+        // Initialize the database
+        cartRepository.saveAndFlush(cart);
+
+        // Get all the cartList where points less than or equals to DEFAULT_POINTS
+        defaultCartShouldNotBeFound("points.lessThan=" + DEFAULT_POINTS);
+
+        // Get all the cartList where points less than or equals to UPDATED_POINTS
+        defaultCartShouldBeFound("points.lessThan=" + UPDATED_POINTS);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllCartsByCustomerIsEqualToSomething() throws Exception {
         // Initialize the database
         Customer customer = CustomerResourceIntTest.createEntity(em);
@@ -442,7 +527,8 @@ public class CartResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].lastactivedate").value(hasItem(DEFAULT_LASTACTIVEDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
-            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())));
+            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())))
+            .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)));
     }
 
     /**
@@ -483,7 +569,8 @@ public class CartResourceIntTest {
             .createddate(UPDATED_CREATEDDATE)
             .lastactivedate(UPDATED_LASTACTIVEDATE)
             .amount(UPDATED_AMOUNT)
-            .checkout(UPDATED_CHECKOUT);
+            .checkout(UPDATED_CHECKOUT)
+            .points(UPDATED_POINTS);
 
         restCartMockMvc.perform(put("/api/carts")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -499,6 +586,7 @@ public class CartResourceIntTest {
         assertThat(testCart.getLastactivedate()).isEqualTo(UPDATED_LASTACTIVEDATE);
         assertThat(testCart.getAmount()).isEqualTo(UPDATED_AMOUNT);
         assertThat(testCart.isCheckout()).isEqualTo(UPDATED_CHECKOUT);
+        assertThat(testCart.getPoints()).isEqualTo(UPDATED_POINTS);
 
         // Validate the Cart in Elasticsearch
         verify(mockCartSearchRepository, times(1)).save(testCart);
@@ -562,7 +650,8 @@ public class CartResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].lastactivedate").value(hasItem(DEFAULT_LASTACTIVEDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
-            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())));
+            .andExpect(jsonPath("$.[*].checkout").value(hasItem(DEFAULT_CHECKOUT.booleanValue())))
+            .andExpect(jsonPath("$.[*].points").value(hasItem(DEFAULT_POINTS)));
     }
 
     @Test

@@ -35,6 +35,7 @@
             <th jhiSortBy="lastactivedate"><span jhiTranslate="smartCpdApp.cart.lastactivedate">Lastactivedate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="amount"><span jhiTranslate="smartCpdApp.cart.amount">Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="checkout"><span jhiTranslate="smartCpdApp.cart.checkout">Checkout</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="points"><span jhiTranslate="smartCpdApp.cart.points">Points</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.cart.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -47,6 +48,7 @@
                 <td>{{cart.lastactivedate | date:'medium'}}</td>
                 <td>{{cart.amount}}</td>
                 <td>{{cart.checkout}}</td>
+                <td>{{cart.points}}</td>
                 <td>
                     <div *ngIf="cart.customer">
                         <a [routerLink]="['../customer', cart.customer?.id, 'view' ]" >{{cart.customer?.normalized}}</a>

@@ -5,7 +5,9 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.Topic;
 import io.github.softech.dev.sgill.domain.Tags;
+import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
 import io.github.softech.dev.sgill.repository.CourseRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.repository.search.CourseSearchRepository;
 import io.github.softech.dev.sgill.service.CourseService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
@@ -108,6 +110,12 @@ public class CourseResourceIntTest {
     private CourseQueryService courseQueryService;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private CourseHistoryRepository courseHistoryRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -126,7 +134,7 @@ public class CourseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CourseResource courseResource = new CourseResource(courseService, courseQueryService);
+        final CourseResource courseResource = new CourseResource(courseService, courseQueryService, customerRepository, courseHistoryRepository);
         this.restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -365,7 +373,7 @@ public class CourseResourceIntTest {
     }
     
     public void getAllCoursesWithEagerRelationshipsIsEnabled() throws Exception {
-        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService);
+        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService, customerRepository, courseHistoryRepository);
         when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
@@ -381,7 +389,7 @@ public class CourseResourceIntTest {
     }
 
     public void getAllCoursesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService);
+        CourseResource courseResource = new CourseResource(courseServiceMock, courseQueryService, customerRepository, courseHistoryRepository);
             when(courseServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restCourseMockMvc = MockMvcBuilders.standaloneSetup(courseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

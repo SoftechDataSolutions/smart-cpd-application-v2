@@ -63,14 +63,14 @@ public class CertificateResource {
         if (certificate.getId() != null) {
             throw new BadRequestAlertException("A new certificate cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        certificate.setIsEmailed(true);
         Certificate result = certificateService.save(certificate);
+        certificate.setIsEmailed(true);
         Long idNum = result.getId();
         log.debug("REST request to email Certificate : {}", idNum);
         Email from = new Email("gill.shaanjot@gmail.com");
         String subject = "Your Certificate for Course Roofs 101";
         Email to = new Email("gill.shaanjots@gmail.com");
-        Content content = new Content("text/plain", "and easy to do anywhere, even with Java");
+        Content content = new Content("text/plain", "Click http://localhost:9000/certificates/" + idNum);
         Mail mail = new Mail(from, subject, to, content);
         //mail.addAttachments(attachment);
 

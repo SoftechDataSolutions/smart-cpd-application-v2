@@ -12,12 +12,17 @@ type EntityArrayResponseType = HttpResponse<ICourse[]>;
 @Injectable({ providedIn: 'root' })
 export class CourseService {
     private resourceUrl = SERVER_API_URL + 'api/courses';
+    private resourceCheckUrl = SERVER_API_URL + 'api/check/courses';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/courses';
 
     constructor(private http: HttpClient) {}
 
     create(course: ICourse): Observable<EntityResponseType> {
         return this.http.post<ICourse>(this.resourceUrl, course, { observe: 'response' });
+    }
+
+    check(id: number, customer: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.resourceCheckUrl}/${id}`, customer);
     }
 
     update(course: ICourse): Observable<EntityResponseType> {

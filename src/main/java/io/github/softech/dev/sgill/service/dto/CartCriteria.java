@@ -38,6 +38,8 @@ public class CartCriteria implements Serializable {
 
     private BooleanFilter checkout;
 
+    private IntegerFilter points;
+
     private LongFilter customerId;
 
     public CartCriteria() {
@@ -91,6 +93,14 @@ public class CartCriteria implements Serializable {
         this.checkout = checkout;
     }
 
+    public IntegerFilter getPoints() {
+        return points;
+    }
+
+    public void setPoints(IntegerFilter points) {
+        this.points = points;
+    }
+
     public LongFilter getCustomerId() {
         return customerId;
     }
@@ -108,6 +118,7 @@ public class CartCriteria implements Serializable {
                 (lastactivedate != null ? "lastactivedate=" + lastactivedate + ", " : "") +
                 (amount != null ? "amount=" + amount + ", " : "") +
                 (checkout != null ? "checkout=" + checkout + ", " : "") +
+                (points != null ? "points=" + points + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
             "}";
     }

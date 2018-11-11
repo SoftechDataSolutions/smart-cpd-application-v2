@@ -17,4 +17,5 @@ import java.util.function.LongFunction;
 @Repository
 public interface CourseCartBridgeRepository extends JpaRepository<CourseCartBridge, Long>, JpaSpecificationExecutor<CourseCartBridge> {
     List<CourseCartBridge> findCourseCartBridgesByCartId(Long id);
+    CourseCartBridge findCourseCartBridgeByCartIdAndCourseId(Long cartid, Long courseid);
 }

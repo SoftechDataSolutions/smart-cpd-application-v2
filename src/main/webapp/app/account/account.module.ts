@@ -15,7 +15,6 @@ import {
     accountState
 } from './';
 import { GooglePlacesDirective } from './register/google-places.directive';
-import { CompanyRequestComponent } from './company-request/company-request.component';
 
 @NgModule({
     imports: [
@@ -34,8 +33,7 @@ import { CompanyRequestComponent } from './company-request/company-request.compo
         PasswordStrengthBarComponent,
         PasswordResetInitComponent,
         PasswordResetFinishComponent,
-        SettingsComponent,
-        CompanyRequestComponent
+        SettingsComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

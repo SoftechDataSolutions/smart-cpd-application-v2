@@ -47,7 +47,9 @@
                 <td>{{courseHistory.lastactivedate | date:'medium'}}</td>
                 <td>{{courseHistory.isactive}}</td>
                 <td>{{courseHistory.iscompleted}}</td>
-                <td>{{courseHistory.access}}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" (click)="setAccess(courseHistory);" *ngIf="!courseHistory.access">Can Access Again</button>
+                    <button class="btn btn-success btn-sm" (click)="setNoAccess(courseHistory);" *ngIf="courseHistory.access">Cannot Access Again</button>
                 <td>
                     <div *ngIf="courseHistory.customer">
                         <a [routerLink]="['../customer', courseHistory.customer?.id, 'view' ]" >{{courseHistory.customer?.normalized}}</a>

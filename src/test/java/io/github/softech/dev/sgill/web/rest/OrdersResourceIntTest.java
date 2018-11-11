@@ -2,10 +2,13 @@ package io.github.softech.dev.sgill.web.rest;
 
 import io.github.softech.dev.sgill.SmartCpdApp;
 
+import io.github.softech.dev.sgill.domain.CourseHistory;
 import io.github.softech.dev.sgill.domain.Orders;
 import io.github.softech.dev.sgill.domain.Cart;
-import io.github.softech.dev.sgill.repository.OrdersRepository;
+import io.github.softech.dev.sgill.repository.*;
 import io.github.softech.dev.sgill.repository.search.OrdersSearchRepository;
+import io.github.softech.dev.sgill.service.CourseHistoryService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.service.OrdersService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.OrdersCriteria;
@@ -68,7 +71,20 @@ public class OrdersResourceIntTest {
     @Autowired
     private OrdersRepository ordersRepository;
 
-    
+    @Autowired
+    private CourseHistoryRepository courseHistoryRepository;
+
+    @Autowired
+    private CourseHistoryService courseHistoryService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private CourseCartBridgeRepository courseCartBridgeRepository;
 
     @Autowired
     private OrdersService ordersService;
@@ -83,6 +99,9 @@ public class OrdersResourceIntTest {
 
     @Autowired
     private OrdersQueryService ordersQueryService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -103,7 +122,8 @@ public class OrdersResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final OrdersResource ordersResource = new OrdersResource(ordersService, ordersQueryService);
+        final OrdersResource ordersResource = new OrdersResource(ordersService, ordersQueryService, courseHistoryRepository,
+            courseCartBridgeRepository, courseHistoryService, courseRepository, customerRepository, customerService);
         this.restOrdersMockMvc = MockMvcBuilders.standaloneSetup(ordersResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

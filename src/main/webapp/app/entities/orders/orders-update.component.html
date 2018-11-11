@@ -43,7 +43,7 @@
                     <label class="form-control-label" jhiTranslate="smartCpdApp.orders.cart" for="field_cart">Cart</label>
                     <select class="form-control" id="field_cart" name="cart" [(ngModel)]="orders.cart">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="cartOption.id === orders.cart?.id ? orders.cart : cartOption" *ngFor="let cartOption of carts; trackBy: trackCartById">{{cartOption.normCart}}</option>
+                        <option [ngValue]="cartOption.id === orders.cart?.id ? orders.cart : cartOption" *ngFor="let cartOption of carts; trackBy: trackCartById">{{cartOption.id}}</option>
                     </select>
                 </div>
             </div>

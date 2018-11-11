@@ -1,7 +1,14 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.github.softech.dev.sgill.domain.Orders;
+import io.github.softech.dev.sgill.domain.*;
+import io.github.softech.dev.sgill.domain.enumeration.NOTIFICATIONS;
+import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
+import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
+import io.github.softech.dev.sgill.repository.CourseRepository;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
+import io.github.softech.dev.sgill.service.CourseHistoryService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.service.OrdersService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -9,6 +16,7 @@ import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
 import io.github.softech.dev.sgill.service.dto.OrdersCriteria;
 import io.github.softech.dev.sgill.service.OrdersQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.h2.api.DatabaseEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -42,9 +52,29 @@ public class OrdersResource {
 
     private final OrdersQueryService ordersQueryService;
 
-    public OrdersResource(OrdersService ordersService, OrdersQueryService ordersQueryService) {
+    private final CourseHistoryRepository courseHistoryRepository;
+
+    private final CourseHistoryService courseHistoryService;
+
+    private final CourseCartBridgeRepository courseCartBridgeRepository;
+
+    private final CourseRepository courseRepository;
+
+    private final CustomerRepository customerRepository;
+
+    private final CustomerService customerService;
+
+    public OrdersResource(OrdersService ordersService, OrdersQueryService ordersQueryService, CourseHistoryRepository courseHistoryRepository,
+                          CourseCartBridgeRepository courseCartBridgeRepository, CourseHistoryService courseHistoryService, CourseRepository courseRepository,
+                          CustomerRepository customerRepository, CustomerService customerService) {
         this.ordersService = ordersService;
         this.ordersQueryService = ordersQueryService;
+        this.courseHistoryRepository = courseHistoryRepository;
+        this.courseCartBridgeRepository = courseCartBridgeRepository;
+        this.courseHistoryService = courseHistoryService;
+        this.customerRepository = customerRepository;
+        this.courseRepository = courseRepository;
+        this.customerService = customerService;
     }
 
     /**
@@ -80,8 +110,26 @@ public class OrdersResource {
     @Timed
     public ResponseEntity<Orders> updateOrders(@RequestBody Orders orders) throws URISyntaxException {
         log.debug("REST request to update Orders : {}", orders);
+        List<CourseCartBridge> listTemp = courseCartBridgeRepository.findCourseCartBridgesByCartId(orders.getCart().getId());
         if (orders.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (orders.getStatus() == NOTIFICATIONS.COMPLETE) {
+            Customer tempCustomer = orders.getCart().getCustomer();
+            tempCustomer.setPoints(orders.getCart().getPoints());
+            customerService.save(tempCustomer);
+            for (CourseCartBridge aListTemp : listTemp) {
+                CourseHistory temp = new CourseHistory();
+                temp.setAccess(false);
+                temp.setCourse(aListTemp.getCourse());
+                temp.setCustomer(orders.getCart().getCustomer());
+                temp.setIsactive(true);
+                temp.setIscompleted(false);
+                temp.setStartdate(Instant.now());
+                temp.setLastactivedate(Instant.now());
+                courseHistoryRepository.save(temp);
+                log.debug("REST request to create Course History Instance : {}", temp);
+            }
         }
         Orders result = ordersService.save(orders);
         return ResponseEntity.ok()

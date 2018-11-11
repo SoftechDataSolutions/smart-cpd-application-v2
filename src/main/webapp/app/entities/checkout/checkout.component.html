@@ -1,0 +1,54 @@
+<div>
+    <div class="row justify-content-center">
+        <h1 id="page-heading">
+            <span>Checkout</span>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div *ngFor="let bridge of bridgeCart">
+                <div style="border: 1px solid; padding: 15px; margin-top: 10px; margin-bottom: 5px;">
+                    <div class="row">
+                        <div class="col-4">
+                            <img class="img-responsive" height="80%" width="100%" [src]="'data:' + bridge.course.imageContentType +
+                                ';base64,' + bridge.course.image" style="max-height:150px;" alt="course image"/>
+
+                        </div>
+                        <div class="col-4 align-content-center" style="margin-top: 2%;">
+                            <span>
+                                <h3>{{bridge.course.normCourses}}</h3>
+                                <strong>Amount: </strong><h3>{{bridge.course.amount | currency:'USD'}}</h3>
+                                <strong>Points on Purchase: </strong><h3>{{bridge.course.point}}</h3>
+                            </span>
+                        </div>
+                        <div class="col-4 align-content-center">
+                            <button (click)="removeCourse(bridge);" style="margin-top: 20%;" class="alert-danger alert"><fa-icon [icon]="'trash-alt'"></fa-icon>
+                                   Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-4 align-content-center" style="border: 1px dashed; padding: 15px; margin-top: 10px; margin-bottom: 5px; text-align: center">
+            <h2><u>Total Amount for Courses</u></h2>
+            <h3>{{amount}}</h3><br><hr><br>
+            <h2><u>Total Rewardable Points for Courses</u></h2>
+            <h3>{{points}}</h3><br><hr><br>
+            <h2><u>Your Available Achievement Points</u></h2>
+            <h3>{{tempCustPoints}}</h3><br><hr><br>
+            <h2><u>Sales Tax</u></h2>
+            <h3>{{tax}}</h3><br><hr><br>
+            <h2><u>Total Amount</u></h2>
+            <h3>{{gross}}</h3>
+            <br><hr><br>
+            <div>
+                <input id="redeem" type="text" placeholder="Redeem Points" style="font-size: 20px; border: 2px solid;">
+                <input type="submit" value="Redeem" class="alert-primary alert" style="margin: 5%;"><br><hr><br>
+            </div>
+            <button (click)="processPayment();" style="width: 35%;" class="alert-success alert"><fa-icon [icon]="'trash-alt'"></fa-icon>   Pay</button>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <br/>
+</div>

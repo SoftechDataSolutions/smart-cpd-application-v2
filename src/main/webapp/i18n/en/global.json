@@ -118,6 +118,8 @@
                 "tags": "Tags",
                 "bookmarks": "Bookmarks",
                 "bookmark": "Bookmark",
+                "checkout": "Checkout",
+                "companyrequest": "Companyrequest",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

@@ -1,9 +1,13 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.softech.dev.sgill.domain.Cart;
+import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.CourseCartBridge;
 import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
+import io.github.softech.dev.sgill.service.CartService;
 import io.github.softech.dev.sgill.service.CourseCartBridgeService;
+import io.github.softech.dev.sgill.service.CourseService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
@@ -45,10 +49,14 @@ public class CourseCartBridgeResource {
 
     private final CourseCartBridgeRepository courseCartBridgeRepository;
 
-    public CourseCartBridgeResource(CourseCartBridgeService courseCartBridgeService, CourseCartBridgeQueryService courseCartBridgeQueryService, CourseCartBridgeRepository courseCartBridgeRepository) {
+    private final CartService cartService;
+
+    public CourseCartBridgeResource(CourseCartBridgeService courseCartBridgeService, CourseCartBridgeQueryService courseCartBridgeQueryService, CourseCartBridgeRepository courseCartBridgeRepository,
+                                    CartService cartService) {
         this.courseCartBridgeService = courseCartBridgeService;
         this.courseCartBridgeQueryService = courseCartBridgeQueryService;
         this.courseCartBridgeRepository = courseCartBridgeRepository;
+        this.cartService = cartService;
     }
 
     /**
@@ -65,11 +73,24 @@ public class CourseCartBridgeResource {
         if (courseCartBridge.getId() != null) {
             throw new BadRequestAlertException("A new courseCartBridge cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        Cart reqdCart = courseCartBridge.getCart();
+        Course reqdCourse = courseCartBridge.getCourse();
+        int initPoints;
+        if(reqdCart.getPoints() == null) {
+            initPoints = 0;
+        } else {
+            initPoints = reqdCart.getPoints();
+        }
+        Double initAmount = reqdCart.getAmount();
+        reqdCart.setPoints(initPoints + reqdCourse.getPoint().intValue());
+        reqdCart.setAmount(initAmount + reqdCourse.getAmount());
+        cartService.save(reqdCart);
         CourseCartBridge result = courseCartBridgeService.save(courseCartBridge);
         return ResponseEntity.created(new URI("/api/course-cart-bridges/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
 
     /**
      * PUT  /course-cart-bridges : Updates an existing courseCartBridge.
@@ -87,6 +108,18 @@ public class CourseCartBridgeResource {
         if (courseCartBridge.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        Cart reqdCart = courseCartBridge.getCart();
+        Course reqdCourse = courseCartBridge.getCourse();
+        int initPoints;
+        if(reqdCart.getPoints() == null) {
+            initPoints = 0;
+        } else {
+            initPoints = reqdCart.getPoints();
+        }
+        Double initAmount = reqdCart.getAmount();
+        reqdCart.setPoints(initPoints + reqdCourse.getPoint().intValue());
+        reqdCart.setAmount(initAmount + reqdCourse.getAmount());
+        cartService.save(reqdCart);
         CourseCartBridge result = courseCartBridgeService.save(courseCartBridge);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, courseCartBridge.getId().toString()))
@@ -130,6 +163,12 @@ public class CourseCartBridgeResource {
         return courseCartBridgeRepository.findCourseCartBridgesByCartId(cartid);
     }
 
+    /*@PostMapping("/instances/course-cart-bridges")
+    @Timed
+    public CourseCartBridge getInstanceCoursesCartBridge(@RequestParam Long cartId, @RequestParam Long courseId) {
+        return courseCartBridgeRepository.findCourseCartBridgeByCartIdAndCourseId(cartId, courseId);
+    }*/
+
     /**
      * DELETE  /course-cart-bridges/:id : delete the "id" courseCartBridge.
      *
@@ -140,6 +179,18 @@ public class CourseCartBridgeResource {
     @Timed
     public ResponseEntity<Void> deleteCourseCartBridge(@PathVariable Long id) {
         log.debug("REST request to delete CourseCartBridge : {}", id);
+        CourseCartBridge temp = courseCartBridgeService.findOne(id).get();
+        Cart reqdCart = temp.getCart();
+        Course reqdCourse = temp.getCourse();
+        int initPoints;
+        if(reqdCart.getPoints() == null) {
+            initPoints = 0;
+        } else {
+            initPoints = reqdCart.getPoints();
+        }
+        Double initAmount = reqdCart.getAmount();
+        reqdCart.setPoints(initPoints - reqdCourse.getPoint().intValue());
+        reqdCart.setAmount(initAmount - reqdCourse.getAmount());
         courseCartBridgeService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

@@ -43,7 +43,8 @@ public class CourseHistoryServiceImpl implements CourseHistoryService {
      */
     @Override
     public CourseHistory save(CourseHistory courseHistory) {
-        log.debug("Request to save CourseHistory : {}", courseHistory);        CourseHistory result = courseHistoryRepository.save(courseHistory);
+        log.debug("Request to save CourseHistory : {}", courseHistory);
+        CourseHistory result = courseHistoryRepository.save(courseHistory);
         courseHistorySearchRepository.save(result);
         return result;
     }
