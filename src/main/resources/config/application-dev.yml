@@ -22,19 +22,26 @@ logging:
 spring:
     profiles:
         active: dev
-        include: swagger
+        include:
+            - swagger
+            # Uncomment to activate TLS for the dev profile
+            #- tls
     devtools:
         restart:
             enabled: true
+            additional-exclude: .h2.server.properties
         livereload:
             enabled: false # we use Webpack dev server + BrowserSync for livereload
     jackson:
-        serialization.indent_output: true
+        serialization:
+            indent-output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:h2:file:./target/h2db/db/smartcpd;DB_CLOSE_DELAY=-1
         username: SmartCPD
         password:
+        hikari:
+            auto-commit: false
     h2:
         console:
             enabled: false
@@ -44,6 +51,7 @@ spring:
         show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
+            hibernate.connection.provider_disables_autocommit: true
             hibernate.cache.use_second_level_cache: true
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
@@ -53,19 +61,9 @@ spring:
             hibernate.cache.hazelcast.use_lite_member: true
     data:
         elasticsearch:
-            cluster_name: 35eefde526e4446ca5dc997fd712617f
             properties:
                 path:
-                    home: target/elastic
-                transport:
-                    tcp:
-                        connect_timeout:120s
-            cluster-nodes:
-        jest:
-            uri: https://35eefde526e4446ca5dc997fd712617f.us-west-2.aws.found.io:9243
-            username: elastic
-            password: BxQ65Ec4Ln6Z8LeMASreFAcm
-            multi-threaded: true
+                    home: target/elasticsearch
     liquibase:
         contexts: dev
     mail:
@@ -78,23 +76,6 @@ spring:
     thymeleaf:
         cache: false
 
-# ===================================================================
-# To enable SSL, generate a certificate using:
-# keytool -genkey -alias smartcpd -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
-#
-# You can also use Let's Encrypt:
-# https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
-#
-# Then, modify the server.ssl properties so your "server" configuration looks like:
-#
-# server:
-#    port: 8443
-#    ssl:
-#        key-store: keystore.p12
-#        key-store-password: <your-password>
-#        key-store-type: PKCS12
-#        key-alias: smartcpd
-# ===================================================================
 server:
     port: 8080
 
@@ -106,7 +87,7 @@ server:
 
 jhipster:
     http:
-        version: V_1_1 # To use HTTP/2 you will need SSL support (see above the "server.ssl" configuration)
+        version: V_1_1 # To use HTTP/2 you will need to activate TLS (see application-tls.yml)
     cache: # Cache configuration
         hazelcast: # Hazelcast distributed cache
             time-to-live-seconds: 3600
@@ -126,7 +107,8 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: my-secret-token-to-change-in-production
+                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+                base64-secret: NWIzNWM1NmZmMzczMDYzYzU1ODI4NGM0YjdkYjVmZDZmZmFiOWE3Zjg0MDNjMzhlOGM1MWI1MjEyY2VhNDRhZWUxOThlYTdiOWQwY2VhNWEzMDdmMzhlMGZiMzIxODBjNGVlMjJhNmIwZGEwMmRlOWYwOTA1NWQzYmFlYzU2MzY=
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
@@ -136,6 +118,8 @@ jhipster:
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx:
             enabled: true
+        prometheus:
+            enabled: false #expose metrics via prometheus
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds

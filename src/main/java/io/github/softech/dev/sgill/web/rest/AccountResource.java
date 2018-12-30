@@ -7,6 +7,7 @@ import io.github.softech.dev.sgill.repository.UserRepository;
 import io.github.softech.dev.sgill.security.SecurityUtils;
 import io.github.softech.dev.sgill.service.MailService;
 import io.github.softech.dev.sgill.service.UserService;
+import io.github.softech.dev.sgill.service.dto.PasswordChangeDTO;
 import io.github.softech.dev.sgill.service.dto.UserDTO;
 import io.github.softech.dev.sgill.web.rest.errors.*;
 import io.github.softech.dev.sgill.web.rest.vm.KeyAndPasswordVM;
@@ -20,9 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import io.github.softech.dev.sgill.service.dto.PasswordChangeDTO;
-
-import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -55,7 +53,6 @@ public class AccountResource {
      * @throws EmailAlreadyUsedException 400 (Bad Request) if the email is already used
      * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already used
      */
-
     @PostMapping("/register")
     @Timed
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,35 +60,13 @@ public class AccountResource {
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).ifPresent(u -> {throw new LoginAlreadyUsedException();});
-        userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getPhone(), managedUserVM.getStreetaddress(),
-            managedUserVM.getPostalcode(), managedUserVM.getCity(), managedUserVM.getStateProvince(),managedUserVM.getCountry(), managedUserVM.getCycledate(),
-            managedUserVM.getMonthYear(), managedUserVM.getLicenseNumber(), managedUserVM.getSpecialities(),managedUserVM.getTrades(),managedUserVM.getAreaserviced(),
-            managedUserVM.getCompany(),managedUserVM.isShow());
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
         mailService.sendActivationEmail(user);
     }
 
-    /*
-    @PostMapping("/register")
-    @Timed
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-        userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).ifPresent(u -> {throw new LoginAlreadyUsedException();});
-        userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).ifPresent(u -> {throw new EmailAlreadyUsedException();});
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getPhone(), managedUserVM.getStreetaddress(), managedUserVM.getPostalcode(),
-            managedUserVM.getCity(), managedUserVM.getStateProvince(), managedUserVM.getCountry(), managedUserVM.getProfilePic(), managedUserVM.getProfilePicContentType(),
-            managedUserVM.getCycledate(), managedUserVM.getAreaserviced(), managedUserVM.getSpecialities(), managedUserVM.getTrades(), managedUserVM.getMonthYear(),
-            managedUserVM.getLicenseNumber(), managedUserVM.getCompany());
-        mailService.sendActivationEmail(user);
-    }*/
-
     /**
      * GET  /activate : activate the registered user.
-     *param
+     *
      * @param key the activation key
      * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be activated
      */
@@ -152,7 +127,7 @@ public class AccountResource {
         }
         userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
             userDTO.getLangKey(), userDTO.getImageUrl());
-   }
+    }
 
     /**
      * POST  /account/change-password : changes the current user's password
@@ -167,7 +142,7 @@ public class AccountResource {
             throw new InvalidPasswordException();
         }
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
-   }
+    }
 
     /**
      * POST   /account/reset-password/init : Send an email to reset the password of the user

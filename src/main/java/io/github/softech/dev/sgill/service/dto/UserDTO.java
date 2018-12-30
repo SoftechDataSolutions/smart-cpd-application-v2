@@ -3,19 +3,13 @@ package io.github.softech.dev.sgill.service.dto;
 import io.github.softech.dev.sgill.config.Constants;
 
 import io.github.softech.dev.sgill.domain.Authority;
-import io.github.softech.dev.sgill.domain.Company;
 import io.github.softech.dev.sgill.domain.User;
-import io.github.softech.dev.sgill.domain.enumeration.TYPES;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,10 +53,6 @@ public class UserDTO {
 
     private Set<String> authorities;
 
-
-
-
-
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -84,7 +74,6 @@ public class UserDTO {
             .map(Authority::getName)
             .collect(Collectors.toSet());
     }
-
 
     public Long getId() {
         return id;
@@ -193,19 +182,18 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-            "id=" + id +
-            ", login='" + login + '\'' +
+            "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated=" + activated +
             ", langKey='" + langKey + '\'' +
-            ", createdBy='" + createdBy + '\'' +
+            ", createdBy=" + createdBy +
             ", createdDate=" + createdDate +
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
-            '}';
+            "}";
     }
 }

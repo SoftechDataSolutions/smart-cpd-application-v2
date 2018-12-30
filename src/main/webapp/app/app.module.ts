@@ -1,10 +1,11 @@
 import './vendor.ts';
 
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Ng2Webstorage, LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-import { JhiEventManager } from 'ng-jhipster';
+import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Ng2Webstorage } from 'ngx-webstorage';
+import { NgJhipsterModule } from 'ng-jhipster';
 
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
@@ -16,63 +17,56 @@ import { SmartCpdAppRoutingModule } from './app-routing.module';
 import { SmartCpdHomeModule } from './home/home.module';
 import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
-import { SmartCpdprimengModule } from './primeng/primeng.module';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
-import { NgxStripeModule } from 'ngx-stripe';
-/*import { QuizFinalComponent } from './quiz-final/quiz-final.component';*/
 
 @NgModule({
     imports: [
         BrowserModule,
         SmartCpdAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
-        SmartCpdSharedModule,
+        NgJhipsterModule.forRoot({
+            // set below to true to make alerts look like toast
+            alertAsToast: false,
+            alertTimeout: 5000,
+            i18nEnabled: true,
+            defaultI18nLang: 'en'
+        }),
+        SmartCpdSharedModule.forRoot(),
         SmartCpdCoreModule,
         SmartCpdHomeModule,
         SmartCpdAccountModule,
-        SmartCpdEntityModule,
-        SmartCpdprimengModule,
-        PdfViewerModule,
-        NgxStripeModule.forRoot('pk_test_FTFwNEdT7eeQVeZos4vyasZJ')
         // jhipster-needle-angular-add-module JHipster will add new module here
+        SmartCpdEntityModule
     ],
-    declarations: [
-        JhiMainComponent,
-        NavbarComponent,
-        ErrorComponent,
-        PageRibbonComponent,
-        ActiveMenuDirective,
-        FooterComponent
-        /*QuizFinalComponent*/
-    ],
+    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
-            multi: true,
-            deps: [LocalStorageService, SessionStorageService]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,
-            multi: true,
-            deps: [Injector]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorHandlerInterceptor,
-            multi: true,
-            deps: [JhiEventManager]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NotificationInterceptor,
-            multi: true,
-            deps: [Injector]
+            multi: true
         }
     ],
     bootstrap: [JhiMainComponent]
 })
-export class SmartCpdAppModule {}
+export class SmartCpdAppModule {
+    constructor(private dpConfig: NgbDatepickerConfig) {
+        this.dpConfig.minDate = { year: moment().year() - 100, month: 1, day: 1 };
+    }
+}

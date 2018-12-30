@@ -19,10 +19,10 @@ management:
         web:
             base-path: /management
             exposure:
-                include: ["configprops", "env", "health", "info", "threaddump"]
+                include: ["configprops", "env", "health", "info", "threaddump", "logfile" ]
     endpoint:
         health:
-            show-details: when_authorized
+            show-details: when-authorized
     info:
         git:
             mode: full
@@ -33,6 +33,8 @@ management:
         enabled: false # http://micrometer.io/ is disabled by default, as we use http://metrics.dropwizard.io/ instead
 
 spring:
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
     application:
         name: SmartCPD
     profiles:
@@ -42,6 +44,8 @@ spring:
         active: #spring.profiles.active#
     jpa:
         open-in-view: false
+        properties:
+            hibernate.jdbc.time_zone: UTC
         hibernate:
             ddl-auto: none
             naming:

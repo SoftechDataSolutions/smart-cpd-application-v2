@@ -15,9 +15,6 @@ eureka:
         hostname: smart-cpd.herokuapp.com
         non-secure-port: 80
         prefer-ip-address: false
-    client:
-        service-url:
-            defaultZone: ${JHIPSTER_REGISTRY_URL}/eureka/
 
 spring:
     datasource:
@@ -27,3 +24,6 @@ spring:
         password: ${JDBC_DATABASE_PASSWORD}
         hikari:
             maximumPoolSize: 8
+    data:
+        jest:
+            uri: ${BONSAI_URL}

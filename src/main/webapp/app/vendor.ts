@@ -39,34 +39,10 @@ import {
     faTrashAlt,
     faAsterisk,
     faTasks,
-    faHome,
-    faShoppingCart,
-    faPlay,
-    faPause,
-    faFastForward,
-    faStepForward,
-    faFastBackward,
-    faStepBackward,
-    faDownload,
-    faHistory,
-    faChalkboardTeacher,
-    faAtlas,
-    faAward,
-    faHandsHelping,
-    faInfoCircle,
-    faUserGraduate,
-    faSmile,
-    faUserTie,
-    faCheckSquare,
-    faCheck
+    faHome
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
-library.add(faChalkboardTeacher);
-library.add(faAtlas);
-library.add(faInfoCircle);
-library.add(faAward);
-library.add(faHandsHelping);
 library.add(faUser);
 library.add(faSort);
 library.add(faSortUp);
@@ -101,24 +77,5 @@ library.add(faCalendarAlt);
 library.add(faSearch);
 library.add(faTrashAlt);
 library.add(faAsterisk);
-library.add(faShoppingCart);
-library.add(faEye);
-library.add(faPlay);
-library.add(faPause);
-library.add(faFastForward);
-library.add(faStepForward);
-library.add(faFastBackward);
-library.add(faStepBackward);
-library.add(faDownload);
-library.add(faHistory);
-library.add(faUserGraduate);
-library.add(faSmile);
-library.add(faUserTie);
-library.add(faPlay);
-library.add(faCheckSquare);
-library.add(faCheck);
 
-import 'quill/dist/quill.js';
-import '../../../../node_modules/fullcalendar/dist/fullcalendar.js';
-import 'chart.js/src/chart.js';
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

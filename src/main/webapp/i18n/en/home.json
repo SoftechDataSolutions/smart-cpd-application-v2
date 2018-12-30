@@ -1,6 +1,6 @@
 {
     "home": {
-        "title": "Welcome, Smart CPD Solutions!",
+        "title": "Welcome, Java Hipster!",
         "subtitle": "This is your homepage",
         "logged": {
             "message": "You are logged in as user \"{{username}}\"."
@@ -9,10 +9,11 @@
         "link": {
             "homepage": "JHipster homepage",
             "stackoverflow": "JHipster on Stack Overflow",
+            "bugtracker": "JHipster bug tracker",
             "chat": "JHipster public chat room",
             "follow": "follow @java_hipster on Twitter"
         },
-        "like": "If you like this LMS platform or have a suggestion, don't forget to give us a star on",
+        "like": "If you like JHipster, don't forget to give us a star on",
         "github": "GitHub"
     }
 }

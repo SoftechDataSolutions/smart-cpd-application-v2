@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
@@ -8,9 +8,7 @@ import { IUser } from './user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private resourceUrl = SERVER_API_URL + 'api/users';
-    private resourceEmailUrl = SERVER_API_URL + 'api/users/email';
-    private resourceLoginUrl = SERVER_API_URL + 'api/users/login';
+    public resourceUrl = SERVER_API_URL + 'api/users';
 
     constructor(private http: HttpClient) {}
 
@@ -33,14 +31,6 @@ export class UserService {
 
     delete(login: string): Observable<HttpResponse<any>> {
         return this.http.delete(`${this.resourceUrl}/${login}`, { observe: 'response' });
-    }
-
-    getlogin(parameter: string): Observable<number> {
-        return this.http.post<number>(this.resourceLoginUrl, parameter);
-    }
-
-    getemail(parameter: string): Observable<number> {
-        return this.http.get<number>(`${this.resourceEmailUrl}/${parameter}`);
     }
 
     authorities(): Observable<string[]> {
