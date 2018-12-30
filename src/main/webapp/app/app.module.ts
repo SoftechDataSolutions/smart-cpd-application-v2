@@ -18,10 +18,9 @@ import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
 import { SmartCpdprimengModule } from './primeng/primeng.module';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
-import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
+import { NgxStripeModule } from 'ngx-stripe';
 /*import { QuizFinalComponent } from './quiz-final/quiz-final.component';*/
 
 @NgModule({
@@ -35,7 +34,8 @@ import { CustomerDashboardComponent } from './customer-dashboard/customer-dashbo
         SmartCpdAccountModule,
         SmartCpdEntityModule,
         SmartCpdprimengModule,
-        PdfViewerModule
+        PdfViewerModule,
+        NgxStripeModule.forRoot('pk_test_FTFwNEdT7eeQVeZos4vyasZJ')
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
@@ -44,8 +44,7 @@ import { CustomerDashboardComponent } from './customer-dashboard/customer-dashbo
         ErrorComponent,
         PageRibbonComponent,
         ActiveMenuDirective,
-        FooterComponent,
-        CustomerDashboardComponent
+        FooterComponent
         /*QuizFinalComponent*/
     ],
     providers: [

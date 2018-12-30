@@ -20,6 +20,7 @@
             "startdate": "Startdate",
             "lastactivedate": "Lastactivedate",
             "watched": "Watched",
+            "stamp": "Stamp",
             "customer": "Customer",
             "section": "Section"
         }

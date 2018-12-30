@@ -7,6 +7,7 @@ import io.github.softech.dev.sgill.domain.Company;
 import io.github.softech.dev.sgill.domain.User;
 import io.github.softech.dev.sgill.repository.CustomerRepository;
 import io.github.softech.dev.sgill.repository.search.CustomerSearchRepository;
+import io.github.softech.dev.sgill.service.CompanyService;
 import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CustomerCriteria;
@@ -143,10 +144,12 @@ public class CustomerResourceIntTest {
 
     private Customer customer;
 
+    private CompanyService companyService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CustomerResource customerResource = new CustomerResource(customerService, customerQueryService, customerRepository);
+        final CustomerResource customerResource = new CustomerResource(customerService, customerQueryService, customerRepository, companyService);
         this.restCustomerMockMvc = MockMvcBuilders.standaloneSetup(customerResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

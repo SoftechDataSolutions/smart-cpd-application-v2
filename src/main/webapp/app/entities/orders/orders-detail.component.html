@@ -21,6 +21,38 @@
                 <dd>
                     <span jhiTranslate="{{'smartCpdApp.PAYMENT.' + orders.payment}}">{{orders.payment}}</span>
                 </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.gateway_id">Gateway Id</span></dt>
+                <dd>
+                    <span>{{orders.gateway_id}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.seller_message">Seller Message</span></dt>
+                <dd>
+                    <span>{{orders.seller_message}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.network_status">Network Status</span></dt>
+                <dd>
+                    <span>{{orders.network_status}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.seller_status">Seller Status</span></dt>
+                <dd>
+                    <span>{{orders.seller_status}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.gateway_amt">Gateway Amt</span></dt>
+                <dd>
+                    <span>{{orders.gateway_amt}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.seller_type">Seller Type</span></dt>
+                <dd>
+                    <span>{{orders.seller_type}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.card_type">Card Type</span></dt>
+                <dd>
+                    <span>{{orders.card_type}}</span>
+                </dd>
+                <dt><span jhiTranslate="smartCpdApp.orders.last4">Last 4</span></dt>
+                <dd>
+                    <span>{{orders.last4}}</span>
+                </dd>
                 <dt><span jhiTranslate="smartCpdApp.orders.cart">Cart</span></dt>
                 <dd>
                     <div *ngIf="orders.cart">

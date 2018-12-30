@@ -2,17 +2,13 @@ package io.github.softech.dev.sgill.web.rest;
 
 import io.github.softech.dev.sgill.SmartCpdApp;
 
-import io.github.softech.dev.sgill.domain.CourseHistory;
 import io.github.softech.dev.sgill.domain.Orders;
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.repository.*;
 import io.github.softech.dev.sgill.repository.search.OrdersSearchRepository;
-import io.github.softech.dev.sgill.service.CourseHistoryService;
-import io.github.softech.dev.sgill.service.CustomerService;
-import io.github.softech.dev.sgill.service.OrdersService;
+import io.github.softech.dev.sgill.service.*;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.OrdersCriteria;
-import io.github.softech.dev.sgill.service.OrdersQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -68,23 +64,32 @@ public class OrdersResourceIntTest {
     private static final PAYMENT DEFAULT_PAYMENT = PAYMENT.PAYPAL;
     private static final PAYMENT UPDATED_PAYMENT = PAYMENT.STRIPE;
 
+    private static final String DEFAULT_GATEWAY_ID = "AAAAAAAAAA";
+    private static final String UPDATED_GATEWAY_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SELLER_MESSAGE = "AAAAAAAAAA";
+    private static final String UPDATED_SELLER_MESSAGE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NETWORK_STATUS = "AAAAAAAAAA";
+    private static final String UPDATED_NETWORK_STATUS = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SELLER_STATUS = "AAAAAAAAAA";
+    private static final String UPDATED_SELLER_STATUS = "BBBBBBBBBB";
+
+    private static final String DEFAULT_GATEWAY_AMT = "AAAAAAAAAA";
+    private static final String UPDATED_GATEWAY_AMT = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SELLER_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_SELLER_TYPE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CARD_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_CARD_TYPE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_LAST_4 = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_4 = "BBBBBBBBBB";
+
     @Autowired
     private OrdersRepository ordersRepository;
-
-    @Autowired
-    private CourseHistoryRepository courseHistoryRepository;
-
-    @Autowired
-    private CourseHistoryService courseHistoryService;
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private CourseCartBridgeRepository courseCartBridgeRepository;
 
     @Autowired
     private OrdersService ordersService;
@@ -99,9 +104,6 @@ public class OrdersResourceIntTest {
 
     @Autowired
     private OrdersQueryService ordersQueryService;
-
-    @Autowired
-    private CustomerService customerService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -119,11 +121,33 @@ public class OrdersResourceIntTest {
 
     private Orders orders;
 
+    @Autowired
+    private CourseHistoryRepository courseHistoryRepository;
+
+    @Autowired
+    private CourseCartBridgeRepository courseCartBridgeRepository;
+
+    @Autowired
+    private CourseHistoryService courseHistoryService;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CartService cartService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final OrdersResource ordersResource = new OrdersResource(ordersService, ordersQueryService, courseHistoryRepository,
-            courseCartBridgeRepository, courseHistoryService, courseRepository, customerRepository, customerService);
+        final OrdersResource ordersResource = new OrdersResource(ordersService, ordersQueryService,
+            courseHistoryRepository, courseCartBridgeRepository, courseHistoryService, courseRepository,
+            customerRepository, customerService, cartService, ordersRepository);
         this.restOrdersMockMvc = MockMvcBuilders.standaloneSetup(ordersResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -142,7 +166,15 @@ public class OrdersResourceIntTest {
             .createddate(DEFAULT_CREATEDDATE)
             .amount(DEFAULT_AMOUNT)
             .status(DEFAULT_STATUS)
-            .payment(DEFAULT_PAYMENT);
+            .payment(DEFAULT_PAYMENT)
+            .gateway_id(DEFAULT_GATEWAY_ID)
+            .seller_message(DEFAULT_SELLER_MESSAGE)
+            .network_status(DEFAULT_NETWORK_STATUS)
+            .seller_status(DEFAULT_SELLER_STATUS)
+            .gateway_amt(DEFAULT_GATEWAY_AMT)
+            .seller_type(DEFAULT_SELLER_TYPE)
+            .card_type(DEFAULT_CARD_TYPE)
+            .last4(DEFAULT_LAST_4);
         return orders;
     }
 
@@ -170,6 +202,14 @@ public class OrdersResourceIntTest {
         assertThat(testOrders.getAmount()).isEqualTo(DEFAULT_AMOUNT);
         assertThat(testOrders.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testOrders.getPayment()).isEqualTo(DEFAULT_PAYMENT);
+        assertThat(testOrders.getGateway_id()).isEqualTo(DEFAULT_GATEWAY_ID);
+        assertThat(testOrders.getSeller_message()).isEqualTo(DEFAULT_SELLER_MESSAGE);
+        assertThat(testOrders.getNetwork_status()).isEqualTo(DEFAULT_NETWORK_STATUS);
+        assertThat(testOrders.getSeller_status()).isEqualTo(DEFAULT_SELLER_STATUS);
+        assertThat(testOrders.getGateway_amt()).isEqualTo(DEFAULT_GATEWAY_AMT);
+        assertThat(testOrders.getSeller_type()).isEqualTo(DEFAULT_SELLER_TYPE);
+        assertThat(testOrders.getCard_type()).isEqualTo(DEFAULT_CARD_TYPE);
+        assertThat(testOrders.getLast4()).isEqualTo(DEFAULT_LAST_4);
 
         // Validate the Orders in Elasticsearch
         verify(mockOrdersSearchRepository, times(1)).save(testOrders);
@@ -211,7 +251,15 @@ public class OrdersResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())));
+            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())))
+            .andExpect(jsonPath("$.[*].gateway_id").value(hasItem(DEFAULT_GATEWAY_ID.toString())))
+            .andExpect(jsonPath("$.[*].seller_message").value(hasItem(DEFAULT_SELLER_MESSAGE.toString())))
+            .andExpect(jsonPath("$.[*].network_status").value(hasItem(DEFAULT_NETWORK_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].seller_status").value(hasItem(DEFAULT_SELLER_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].gateway_amt").value(hasItem(DEFAULT_GATEWAY_AMT.toString())))
+            .andExpect(jsonPath("$.[*].seller_type").value(hasItem(DEFAULT_SELLER_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].card_type").value(hasItem(DEFAULT_CARD_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].last4").value(hasItem(DEFAULT_LAST_4.toString())));
     }
     
 
@@ -229,7 +277,15 @@ public class OrdersResourceIntTest {
             .andExpect(jsonPath("$.createddate").value(DEFAULT_CREATEDDATE.toString()))
             .andExpect(jsonPath("$.amount").value(DEFAULT_AMOUNT.doubleValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.payment").value(DEFAULT_PAYMENT.toString()));
+            .andExpect(jsonPath("$.payment").value(DEFAULT_PAYMENT.toString()))
+            .andExpect(jsonPath("$.gateway_id").value(DEFAULT_GATEWAY_ID.toString()))
+            .andExpect(jsonPath("$.seller_message").value(DEFAULT_SELLER_MESSAGE.toString()))
+            .andExpect(jsonPath("$.network_status").value(DEFAULT_NETWORK_STATUS.toString()))
+            .andExpect(jsonPath("$.seller_status").value(DEFAULT_SELLER_STATUS.toString()))
+            .andExpect(jsonPath("$.gateway_amt").value(DEFAULT_GATEWAY_AMT.toString()))
+            .andExpect(jsonPath("$.seller_type").value(DEFAULT_SELLER_TYPE.toString()))
+            .andExpect(jsonPath("$.card_type").value(DEFAULT_CARD_TYPE.toString()))
+            .andExpect(jsonPath("$.last4").value(DEFAULT_LAST_4.toString()));
     }
 
     @Test
@@ -390,6 +446,318 @@ public class OrdersResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllOrdersByGateway_idIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_id equals to DEFAULT_GATEWAY_ID
+        defaultOrdersShouldBeFound("gateway_id.equals=" + DEFAULT_GATEWAY_ID);
+
+        // Get all the ordersList where gateway_id equals to UPDATED_GATEWAY_ID
+        defaultOrdersShouldNotBeFound("gateway_id.equals=" + UPDATED_GATEWAY_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByGateway_idIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_id in DEFAULT_GATEWAY_ID or UPDATED_GATEWAY_ID
+        defaultOrdersShouldBeFound("gateway_id.in=" + DEFAULT_GATEWAY_ID + "," + UPDATED_GATEWAY_ID);
+
+        // Get all the ordersList where gateway_id equals to UPDATED_GATEWAY_ID
+        defaultOrdersShouldNotBeFound("gateway_id.in=" + UPDATED_GATEWAY_ID);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByGateway_idIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_id is not null
+        defaultOrdersShouldBeFound("gateway_id.specified=true");
+
+        // Get all the ordersList where gateway_id is null
+        defaultOrdersShouldNotBeFound("gateway_id.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_messageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_message equals to DEFAULT_SELLER_MESSAGE
+        defaultOrdersShouldBeFound("seller_message.equals=" + DEFAULT_SELLER_MESSAGE);
+
+        // Get all the ordersList where seller_message equals to UPDATED_SELLER_MESSAGE
+        defaultOrdersShouldNotBeFound("seller_message.equals=" + UPDATED_SELLER_MESSAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_messageIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_message in DEFAULT_SELLER_MESSAGE or UPDATED_SELLER_MESSAGE
+        defaultOrdersShouldBeFound("seller_message.in=" + DEFAULT_SELLER_MESSAGE + "," + UPDATED_SELLER_MESSAGE);
+
+        // Get all the ordersList where seller_message equals to UPDATED_SELLER_MESSAGE
+        defaultOrdersShouldNotBeFound("seller_message.in=" + UPDATED_SELLER_MESSAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_messageIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_message is not null
+        defaultOrdersShouldBeFound("seller_message.specified=true");
+
+        // Get all the ordersList where seller_message is null
+        defaultOrdersShouldNotBeFound("seller_message.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByNetwork_statusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where network_status equals to DEFAULT_NETWORK_STATUS
+        defaultOrdersShouldBeFound("network_status.equals=" + DEFAULT_NETWORK_STATUS);
+
+        // Get all the ordersList where network_status equals to UPDATED_NETWORK_STATUS
+        defaultOrdersShouldNotBeFound("network_status.equals=" + UPDATED_NETWORK_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByNetwork_statusIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where network_status in DEFAULT_NETWORK_STATUS or UPDATED_NETWORK_STATUS
+        defaultOrdersShouldBeFound("network_status.in=" + DEFAULT_NETWORK_STATUS + "," + UPDATED_NETWORK_STATUS);
+
+        // Get all the ordersList where network_status equals to UPDATED_NETWORK_STATUS
+        defaultOrdersShouldNotBeFound("network_status.in=" + UPDATED_NETWORK_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByNetwork_statusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where network_status is not null
+        defaultOrdersShouldBeFound("network_status.specified=true");
+
+        // Get all the ordersList where network_status is null
+        defaultOrdersShouldNotBeFound("network_status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_statusIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_status equals to DEFAULT_SELLER_STATUS
+        defaultOrdersShouldBeFound("seller_status.equals=" + DEFAULT_SELLER_STATUS);
+
+        // Get all the ordersList where seller_status equals to UPDATED_SELLER_STATUS
+        defaultOrdersShouldNotBeFound("seller_status.equals=" + UPDATED_SELLER_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_statusIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_status in DEFAULT_SELLER_STATUS or UPDATED_SELLER_STATUS
+        defaultOrdersShouldBeFound("seller_status.in=" + DEFAULT_SELLER_STATUS + "," + UPDATED_SELLER_STATUS);
+
+        // Get all the ordersList where seller_status equals to UPDATED_SELLER_STATUS
+        defaultOrdersShouldNotBeFound("seller_status.in=" + UPDATED_SELLER_STATUS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_statusIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_status is not null
+        defaultOrdersShouldBeFound("seller_status.specified=true");
+
+        // Get all the ordersList where seller_status is null
+        defaultOrdersShouldNotBeFound("seller_status.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByGateway_amtIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_amt equals to DEFAULT_GATEWAY_AMT
+        defaultOrdersShouldBeFound("gateway_amt.equals=" + DEFAULT_GATEWAY_AMT);
+
+        // Get all the ordersList where gateway_amt equals to UPDATED_GATEWAY_AMT
+        defaultOrdersShouldNotBeFound("gateway_amt.equals=" + UPDATED_GATEWAY_AMT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByGateway_amtIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_amt in DEFAULT_GATEWAY_AMT or UPDATED_GATEWAY_AMT
+        defaultOrdersShouldBeFound("gateway_amt.in=" + DEFAULT_GATEWAY_AMT + "," + UPDATED_GATEWAY_AMT);
+
+        // Get all the ordersList where gateway_amt equals to UPDATED_GATEWAY_AMT
+        defaultOrdersShouldNotBeFound("gateway_amt.in=" + UPDATED_GATEWAY_AMT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByGateway_amtIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where gateway_amt is not null
+        defaultOrdersShouldBeFound("gateway_amt.specified=true");
+
+        // Get all the ordersList where gateway_amt is null
+        defaultOrdersShouldNotBeFound("gateway_amt.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_typeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_type equals to DEFAULT_SELLER_TYPE
+        defaultOrdersShouldBeFound("seller_type.equals=" + DEFAULT_SELLER_TYPE);
+
+        // Get all the ordersList where seller_type equals to UPDATED_SELLER_TYPE
+        defaultOrdersShouldNotBeFound("seller_type.equals=" + UPDATED_SELLER_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_typeIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_type in DEFAULT_SELLER_TYPE or UPDATED_SELLER_TYPE
+        defaultOrdersShouldBeFound("seller_type.in=" + DEFAULT_SELLER_TYPE + "," + UPDATED_SELLER_TYPE);
+
+        // Get all the ordersList where seller_type equals to UPDATED_SELLER_TYPE
+        defaultOrdersShouldNotBeFound("seller_type.in=" + UPDATED_SELLER_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersBySeller_typeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where seller_type is not null
+        defaultOrdersShouldBeFound("seller_type.specified=true");
+
+        // Get all the ordersList where seller_type is null
+        defaultOrdersShouldNotBeFound("seller_type.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByCard_typeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where card_type equals to DEFAULT_CARD_TYPE
+        defaultOrdersShouldBeFound("card_type.equals=" + DEFAULT_CARD_TYPE);
+
+        // Get all the ordersList where card_type equals to UPDATED_CARD_TYPE
+        defaultOrdersShouldNotBeFound("card_type.equals=" + UPDATED_CARD_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByCard_typeIsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where card_type in DEFAULT_CARD_TYPE or UPDATED_CARD_TYPE
+        defaultOrdersShouldBeFound("card_type.in=" + DEFAULT_CARD_TYPE + "," + UPDATED_CARD_TYPE);
+
+        // Get all the ordersList where card_type equals to UPDATED_CARD_TYPE
+        defaultOrdersShouldNotBeFound("card_type.in=" + UPDATED_CARD_TYPE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByCard_typeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where card_type is not null
+        defaultOrdersShouldBeFound("card_type.specified=true");
+
+        // Get all the ordersList where card_type is null
+        defaultOrdersShouldNotBeFound("card_type.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByLast4IsEqualToSomething() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where last4 equals to DEFAULT_LAST_4
+        defaultOrdersShouldBeFound("last4.equals=" + DEFAULT_LAST_4);
+
+        // Get all the ordersList where last4 equals to UPDATED_LAST_4
+        defaultOrdersShouldNotBeFound("last4.equals=" + UPDATED_LAST_4);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByLast4IsInShouldWork() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where last4 in DEFAULT_LAST_4 or UPDATED_LAST_4
+        defaultOrdersShouldBeFound("last4.in=" + DEFAULT_LAST_4 + "," + UPDATED_LAST_4);
+
+        // Get all the ordersList where last4 equals to UPDATED_LAST_4
+        defaultOrdersShouldNotBeFound("last4.in=" + UPDATED_LAST_4);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByLast4IsNullOrNotNull() throws Exception {
+        // Initialize the database
+        ordersRepository.saveAndFlush(orders);
+
+        // Get all the ordersList where last4 is not null
+        defaultOrdersShouldBeFound("last4.specified=true");
+
+        // Get all the ordersList where last4 is null
+        defaultOrdersShouldNotBeFound("last4.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllOrdersByCartIsEqualToSomething() throws Exception {
         // Initialize the database
         Cart cart = CartResourceIntTest.createEntity(em);
@@ -417,7 +785,15 @@ public class OrdersResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())));
+            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())))
+            .andExpect(jsonPath("$.[*].gateway_id").value(hasItem(DEFAULT_GATEWAY_ID.toString())))
+            .andExpect(jsonPath("$.[*].seller_message").value(hasItem(DEFAULT_SELLER_MESSAGE.toString())))
+            .andExpect(jsonPath("$.[*].network_status").value(hasItem(DEFAULT_NETWORK_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].seller_status").value(hasItem(DEFAULT_SELLER_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].gateway_amt").value(hasItem(DEFAULT_GATEWAY_AMT.toString())))
+            .andExpect(jsonPath("$.[*].seller_type").value(hasItem(DEFAULT_SELLER_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].card_type").value(hasItem(DEFAULT_CARD_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].last4").value(hasItem(DEFAULT_LAST_4.toString())));
     }
 
     /**
@@ -457,7 +833,15 @@ public class OrdersResourceIntTest {
             .createddate(UPDATED_CREATEDDATE)
             .amount(UPDATED_AMOUNT)
             .status(UPDATED_STATUS)
-            .payment(UPDATED_PAYMENT);
+            .payment(UPDATED_PAYMENT)
+            .gateway_id(UPDATED_GATEWAY_ID)
+            .seller_message(UPDATED_SELLER_MESSAGE)
+            .network_status(UPDATED_NETWORK_STATUS)
+            .seller_status(UPDATED_SELLER_STATUS)
+            .gateway_amt(UPDATED_GATEWAY_AMT)
+            .seller_type(UPDATED_SELLER_TYPE)
+            .card_type(UPDATED_CARD_TYPE)
+            .last4(UPDATED_LAST_4);
 
         restOrdersMockMvc.perform(put("/api/orders")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -472,6 +856,14 @@ public class OrdersResourceIntTest {
         assertThat(testOrders.getAmount()).isEqualTo(UPDATED_AMOUNT);
         assertThat(testOrders.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testOrders.getPayment()).isEqualTo(UPDATED_PAYMENT);
+        assertThat(testOrders.getGateway_id()).isEqualTo(UPDATED_GATEWAY_ID);
+        assertThat(testOrders.getSeller_message()).isEqualTo(UPDATED_SELLER_MESSAGE);
+        assertThat(testOrders.getNetwork_status()).isEqualTo(UPDATED_NETWORK_STATUS);
+        assertThat(testOrders.getSeller_status()).isEqualTo(UPDATED_SELLER_STATUS);
+        assertThat(testOrders.getGateway_amt()).isEqualTo(UPDATED_GATEWAY_AMT);
+        assertThat(testOrders.getSeller_type()).isEqualTo(UPDATED_SELLER_TYPE);
+        assertThat(testOrders.getCard_type()).isEqualTo(UPDATED_CARD_TYPE);
+        assertThat(testOrders.getLast4()).isEqualTo(UPDATED_LAST_4);
 
         // Validate the Orders in Elasticsearch
         verify(mockOrdersSearchRepository, times(1)).save(testOrders);
@@ -534,7 +926,15 @@ public class OrdersResourceIntTest {
             .andExpect(jsonPath("$.[*].createddate").value(hasItem(DEFAULT_CREATEDDATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(DEFAULT_AMOUNT.doubleValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())));
+            .andExpect(jsonPath("$.[*].payment").value(hasItem(DEFAULT_PAYMENT.toString())))
+            .andExpect(jsonPath("$.[*].gateway_id").value(hasItem(DEFAULT_GATEWAY_ID.toString())))
+            .andExpect(jsonPath("$.[*].seller_message").value(hasItem(DEFAULT_SELLER_MESSAGE.toString())))
+            .andExpect(jsonPath("$.[*].network_status").value(hasItem(DEFAULT_NETWORK_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].seller_status").value(hasItem(DEFAULT_SELLER_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].gateway_amt").value(hasItem(DEFAULT_GATEWAY_AMT.toString())))
+            .andExpect(jsonPath("$.[*].seller_type").value(hasItem(DEFAULT_SELLER_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].card_type").value(hasItem(DEFAULT_CARD_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].last4").value(hasItem(DEFAULT_LAST_4.toString())));
     }
 
     @Test

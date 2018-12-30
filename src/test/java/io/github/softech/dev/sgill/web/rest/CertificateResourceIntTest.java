@@ -8,6 +8,8 @@ import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.repository.CertificateRepository;
 import io.github.softech.dev.sgill.repository.search.CertificateSearchRepository;
 import io.github.softech.dev.sgill.service.CertificateService;
+import io.github.softech.dev.sgill.service.CourseService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CertificateCriteria;
 import io.github.softech.dev.sgill.service.CertificateQueryService;
@@ -93,10 +95,15 @@ public class CertificateResourceIntTest {
 
     private Certificate certificate;
 
+    private CustomerService customerService;
+
+    private CourseService courseService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CertificateResource certificateResource = new CertificateResource(certificateService, certificateQueryService);
+        final CertificateResource certificateResource = new CertificateResource(certificateService, certificateQueryService, customerService,
+            certificateRepository, courseService);
         this.restCertificateMockMvc = MockMvcBuilders.standaloneSetup(certificateResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

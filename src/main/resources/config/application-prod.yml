@@ -58,9 +58,9 @@ spring:
                     tcp:
                         connect_timeout:120s
         jest:
-            uri: https://045a2a4cccb1481b8ce68341816450f1.us-west-2.aws.found.io:9243
+            uri: https://cf720167fb42471993bcf9ebf3c8d01a.us-west1.gcp.cloud.es.io:9243
             username: elastic
-            password: mbWYBzZnyiFSxoa2ryXXQCFG
+            password: foNk6nF11Eh0wxxOPikCUosb
             multi-threaded: true
     liquibase:
         contexts: prod

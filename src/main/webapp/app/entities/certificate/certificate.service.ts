@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICertificate } from 'app/shared/model/certificate.model';
+import { ICart } from 'app/shared/model/cart.model';
 
 type EntityResponseType = HttpResponse<ICertificate>;
 type EntityArrayResponseType = HttpResponse<ICertificate[]>;
@@ -18,6 +19,7 @@ export class CertificateService {
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/certificates';
     private resourceEmailUrl = SERVER_API_URL + 'api/_email/certificates/';
     private resourceAttachmentUrl = SERVER_API_URL + 'api/_attachment/certificates/';
+    private resourceCustomerUrl = SERVER_API_URL + 'api/all/certificates/';
     constructor(private http: HttpClient) {}
 
     create(certificate: ICertificate): Observable<EntityResponseType> {
@@ -39,6 +41,10 @@ export class CertificateService {
         return this.http
             .put<ICertificate>(this.resourceEmailUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    getcustomer(id: number): Observable<ICertificate[]> {
+        return this.http.get<ICertificate[]>(`${this.resourceCustomerUrl}/${id}`);
     }
 
     attachment(pdf: string, id: number): Observable<EntityResponseType> {

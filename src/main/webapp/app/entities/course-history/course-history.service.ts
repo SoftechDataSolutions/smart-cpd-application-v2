@@ -8,6 +8,8 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICourseHistory } from 'app/shared/model/course-history.model';
+import { ISection } from 'app/shared/model/section.model';
+import { ICourse } from 'app/shared/model/course.model';
 
 type EntityResponseType = HttpResponse<ICourseHistory>;
 type EntityArrayResponseType = HttpResponse<ICourseHistory[]>;
@@ -16,6 +18,7 @@ type EntityArrayResponseType = HttpResponse<ICourseHistory[]>;
 export class CourseHistoryService {
     private resourceUrl = SERVER_API_URL + 'api/course-histories';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/course-histories';
+    private resourceCourseUrl = SERVER_API_URL + 'api/recent/course-history/';
 
     constructor(private http: HttpClient) {}
 
@@ -48,6 +51,10 @@ export class CourseHistoryService {
 
     delete(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    }
+
+    getrecent(id: number): Observable<ICourse> {
+        return this.http.get<ICourse>(`${this.resourceCourseUrl}/${id}`);
     }
 
     search(req?: any): Observable<EntityArrayResponseType> {

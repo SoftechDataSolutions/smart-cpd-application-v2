@@ -37,6 +37,38 @@
             <column name="payment" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+
+            <column name="gateway_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="seller_message" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="network_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="seller_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="gateway_amt" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="seller_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="card_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_4" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="cart_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_orders_cart_id" />
             </column>

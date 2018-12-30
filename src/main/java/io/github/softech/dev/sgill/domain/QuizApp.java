@@ -33,17 +33,13 @@ public class QuizApp implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private Customer customer;
-
-    @ManyToOne
-    @JsonIgnoreProperties("")
     private Section currSection;
 
     @ManyToOne
     @JsonIgnoreProperties("")
     private Section newSection;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "quiz_app_questions",
                joinColumns = @JoinColumn(name = "quiz_apps_id", referencedColumnName = "id"),
@@ -70,19 +66,6 @@ public class QuizApp implements Serializable {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public QuizApp customer(Customer customer) {
-        this.customer = customer;
-        return this;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public Section getCurrSection() {

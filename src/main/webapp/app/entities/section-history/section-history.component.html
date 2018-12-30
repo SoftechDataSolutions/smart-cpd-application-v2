@@ -33,6 +33,7 @@
             <th jhiSortBy="startdate"><span jhiTranslate="smartCpdApp.sectionHistory.startdate">Startdate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="lastactivedate"><span jhiTranslate="smartCpdApp.sectionHistory.lastactivedate">Lastactivedate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="watched"><span jhiTranslate="smartCpdApp.sectionHistory.watched">Watched</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="stamp"><span jhiTranslate="smartCpdApp.sectionHistory.stamp">Stamp</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.sectionHistory.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="section.normSection"><span jhiTranslate="smartCpdApp.sectionHistory.section">Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -44,6 +45,7 @@
                 <td>{{sectionHistory.startdate | date:'medium'}}</td>
                 <td>{{sectionHistory.lastactivedate | date:'medium'}}</td>
                 <td>{{sectionHistory.watched}}</td>
+                <td>{{sectionHistory.stamp}}</td>
                 <td>
                     <div *ngIf="sectionHistory.customer">
                         <a [routerLink]="['../customer', sectionHistory.customer?.id, 'view' ]" >{{sectionHistory.customer?.normalized}}</a>

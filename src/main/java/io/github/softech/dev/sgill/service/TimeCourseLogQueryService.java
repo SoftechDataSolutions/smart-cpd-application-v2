@@ -74,15 +74,12 @@ public class TimeCourseLogQueryService extends QueryService<TimeCourseLog> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), TimeCourseLog_.id));
             }
-            if (criteria.getLoggedin() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLoggedin(), TimeCourseLog_.loggedin));
-            }
-            if (criteria.getLoggedout() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLoggedout(), TimeCourseLog_.loggedout));
-            }
             if (criteria.getTimespent() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTimespent(), TimeCourseLog_.timespent));
             }
+            /**if (criteria.getRecorddate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getRecorddate(), TimeCourseLog_.recorddate));
+            }*/
             if (criteria.getCustomerId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCustomerId(), TimeCourseLog_.customer, Customer_.id));
             }

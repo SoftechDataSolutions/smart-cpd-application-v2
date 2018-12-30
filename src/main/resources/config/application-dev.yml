@@ -30,7 +30,6 @@ spring:
             enabled: false # we use Webpack dev server + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
-        serialization.write-dates-as-timestamps: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:h2:file:./target/h2db/db/smartcpd;DB_CLOSE_DELAY=-1
@@ -54,16 +53,18 @@ spring:
             hibernate.cache.hazelcast.use_lite_member: true
     data:
         elasticsearch:
+            cluster_name: 35eefde526e4446ca5dc997fd712617f
             properties:
                 path:
                     home: target/elastic
                 transport:
                     tcp:
                         connect_timeout:120s
+            cluster-nodes:
         jest:
-            uri: https://5af639b7d7cb4aba86f1edc57978b9f8.us-west1.gcp.cloud.es.io:9243
+            uri: https://35eefde526e4446ca5dc997fd712617f.us-west-2.aws.found.io:9243
             username: elastic
-            password: 4Hu1T7p9CV55Ce0lJ7EyMyn4
+            password: BxQ65Ec4Ln6Z8LeMASreFAcm
             multi-threaded: true
     liquibase:
         contexts: dev

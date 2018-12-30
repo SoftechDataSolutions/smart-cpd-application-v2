@@ -1,6 +1,10 @@
 package io.github.softech.dev.sgill.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,14 +30,21 @@ public class SectionHistory implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     @Column(name = "startdate")
     private Instant startdate;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     @Column(name = "lastactivedate")
     private Instant lastactivedate;
 
     @Column(name = "watched")
     private Boolean watched;
+
+    @Column(name = "stamp")
+    private Integer stamp;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -91,6 +102,19 @@ public class SectionHistory implements Serializable {
         this.watched = watched;
     }
 
+    public Integer getStamp() {
+        return stamp;
+    }
+
+    public SectionHistory stamp(Integer stamp) {
+        this.stamp = stamp;
+        return this;
+    }
+
+    public void setStamp(Integer stamp) {
+        this.stamp = stamp;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
@@ -145,6 +169,7 @@ public class SectionHistory implements Serializable {
             ", startdate='" + getStartdate() + "'" +
             ", lastactivedate='" + getLastactivedate() + "'" +
             ", watched='" + isWatched() + "'" +
+            ", stamp=" + getStamp() +
             "}";
     }
 }

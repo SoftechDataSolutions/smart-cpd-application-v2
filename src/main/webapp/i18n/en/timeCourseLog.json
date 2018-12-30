@@ -17,9 +17,8 @@
             "detail": {
                 "title": "Time Course Log"
             },
-            "loggedin": "Loggedin",
-            "loggedout": "Loggedout",
             "timespent": "Timespent",
+            "recorddate": "Recorddate",
             "customer": "Customer",
             "course": "Course"
         }

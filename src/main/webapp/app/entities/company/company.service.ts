@@ -16,6 +16,7 @@ type EntityArrayResponseType = HttpResponse<ICompany[]>;
 export class CompanyService {
     private resourceUrl = SERVER_API_URL + 'api/companies';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/companies';
+    private resourceCompanyUrl = SERVER_API_URL + 'api/company';
 
     constructor(private http: HttpClient) {}
 
@@ -31,6 +32,10 @@ export class CompanyService {
         return this.http
             .put<ICompany>(this.resourceUrl, copy, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    createfromrequest(id: number): Observable<ICompany> {
+        return this.http.post<ICompany>(`${this.resourceCompanyUrl}/${id}`, {});
     }
 
     find(id: number): Observable<EntityResponseType> {

@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IOrders } from 'app/shared/model/orders.model';
+import { ICart } from 'app/shared/model/cart.model';
 
 type EntityResponseType = HttpResponse<IOrders>;
 type EntityArrayResponseType = HttpResponse<IOrders[]>;
@@ -16,6 +17,7 @@ type EntityArrayResponseType = HttpResponse<IOrders[]>;
 export class OrdersService {
     private resourceUrl = SERVER_API_URL + 'api/orders';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/orders';
+    private resourceOrderCartUrl = SERVER_API_URL + 'api/cart/order';
 
     constructor(private http: HttpClient) {}
 
@@ -55,6 +57,10 @@ export class OrdersService {
         return this.http
             .get<IOrders[]>(this.resourceSearchUrl, { params: options, observe: 'response' })
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+    }
+
+    getsinglecart(id: number): Observable<IOrders> {
+        return this.http.get<IOrders>(`${this.resourceOrderCartUrl}/${id}`);
     }
 
     private convertDateFromClient(orders: IOrders): IOrders {

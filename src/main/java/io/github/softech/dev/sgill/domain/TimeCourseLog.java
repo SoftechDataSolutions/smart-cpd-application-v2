@@ -1,6 +1,10 @@
 package io.github.softech.dev.sgill.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,14 +30,13 @@ public class TimeCourseLog implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "loggedin")
-    private Instant loggedin;
-
-    @Column(name = "loggedout")
-    private Instant loggedout;
-
     @Column(name = "timespent")
     private Long timespent;
+
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
+    @Column(name = "recorddate")
+    private Instant recorddate;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -52,32 +55,6 @@ public class TimeCourseLog implements Serializable {
         this.id = id;
     }
 
-    public Instant getLoggedin() {
-        return loggedin;
-    }
-
-    public TimeCourseLog loggedin(Instant loggedin) {
-        this.loggedin = loggedin;
-        return this;
-    }
-
-    public void setLoggedin(Instant loggedin) {
-        this.loggedin = loggedin;
-    }
-
-    public Instant getLoggedout() {
-        return loggedout;
-    }
-
-    public TimeCourseLog loggedout(Instant loggedout) {
-        this.loggedout = loggedout;
-        return this;
-    }
-
-    public void setLoggedout(Instant loggedout) {
-        this.loggedout = loggedout;
-    }
-
     public Long getTimespent() {
         return timespent;
     }
@@ -89,6 +66,19 @@ public class TimeCourseLog implements Serializable {
 
     public void setTimespent(Long timespent) {
         this.timespent = timespent;
+    }
+
+    public Instant getRecorddate() {
+        return recorddate;
+    }
+
+    public TimeCourseLog recorddate(Instant recorddate) {
+        this.recorddate = recorddate;
+        return this;
+    }
+
+    public void setRecorddate(Instant recorddate) {
+        this.recorddate = recorddate;
     }
 
     public Customer getCustomer() {
@@ -142,9 +132,8 @@ public class TimeCourseLog implements Serializable {
     public String toString() {
         return "TimeCourseLog{" +
             "id=" + getId() +
-            ", loggedin='" + getLoggedin() + "'" +
-            ", loggedout='" + getLoggedout() + "'" +
             ", timespent=" + getTimespent() +
+            ", recorddate='" + getRecorddate() + "'" +
             "}";
     }
 }

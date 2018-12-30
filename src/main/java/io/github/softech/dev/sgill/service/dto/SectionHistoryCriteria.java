@@ -34,6 +34,8 @@ public class SectionHistoryCriteria implements Serializable {
 
     private BooleanFilter watched;
 
+    private IntegerFilter stamp;
+
     private LongFilter customerId;
 
     private LongFilter sectionId;
@@ -73,6 +75,14 @@ public class SectionHistoryCriteria implements Serializable {
         this.watched = watched;
     }
 
+    public IntegerFilter getStamp() {
+        return stamp;
+    }
+
+    public void setStamp(IntegerFilter stamp) {
+        this.stamp = stamp;
+    }
+
     public LongFilter getCustomerId() {
         return customerId;
     }
@@ -96,6 +106,7 @@ public class SectionHistoryCriteria implements Serializable {
                 (startdate != null ? "startdate=" + startdate + ", " : "") +
                 (lastactivedate != null ? "lastactivedate=" + lastactivedate + ", " : "") +
                 (watched != null ? "watched=" + watched + ", " : "") +
+                (stamp != null ? "stamp=" + stamp + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (sectionId != null ? "sectionId=" + sectionId + ", " : "") +
             "}";

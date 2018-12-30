@@ -9,12 +9,6 @@
             "otherEntityField": "name"
         },
         {
-            "relationshipName": "customer",
-            "otherEntityName": "customer",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "normalized"
-        },
-        {
             "relationshipName": "currSection",
             "otherEntityName": "section",
             "relationshipType": "many-to-one",

@@ -74,14 +74,17 @@ public class SectionHistoryQueryService extends QueryService<SectionHistory> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), SectionHistory_.id));
             }
-            if (criteria.getStartdate() != null) {
+            /**if (criteria.getStartdate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStartdate(), SectionHistory_.startdate));
-            }
-            if (criteria.getLastactivedate() != null) {
+            }*/
+            /**if (criteria.getLastactivedate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getLastactivedate(), SectionHistory_.lastactivedate));
-            }
+            }*/
             if (criteria.getWatched() != null) {
                 specification = specification.and(buildSpecification(criteria.getWatched(), SectionHistory_.watched));
+            }
+            if (criteria.getStamp() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getStamp(), SectionHistory_.stamp));
             }
             if (criteria.getCustomerId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCustomerId(), SectionHistory_.customer, Customer_.id));

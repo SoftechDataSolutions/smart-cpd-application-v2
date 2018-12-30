@@ -3,18 +3,12 @@ package io.github.softech.dev.sgill.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.*;
 import io.github.softech.dev.sgill.domain.enumeration.NOTIFICATIONS;
-import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
-import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
-import io.github.softech.dev.sgill.repository.CourseRepository;
-import io.github.softech.dev.sgill.repository.CustomerRepository;
-import io.github.softech.dev.sgill.service.CourseHistoryService;
-import io.github.softech.dev.sgill.service.CustomerService;
-import io.github.softech.dev.sgill.service.OrdersService;
+import io.github.softech.dev.sgill.repository.*;
+import io.github.softech.dev.sgill.service.*;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
 import io.github.softech.dev.sgill.service.dto.OrdersCriteria;
-import io.github.softech.dev.sgill.service.OrdersQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.h2.api.DatabaseEventListener;
 import org.slf4j.Logger;
@@ -64,9 +58,13 @@ public class OrdersResource {
 
     private final CustomerService customerService;
 
+    private final CartService cartService;
+
+    private final OrdersRepository ordersRepository;
+
     public OrdersResource(OrdersService ordersService, OrdersQueryService ordersQueryService, CourseHistoryRepository courseHistoryRepository,
                           CourseCartBridgeRepository courseCartBridgeRepository, CourseHistoryService courseHistoryService, CourseRepository courseRepository,
-                          CustomerRepository customerRepository, CustomerService customerService) {
+                          CustomerRepository customerRepository, CustomerService customerService, CartService cartService, OrdersRepository ordersRepository) {
         this.ordersService = ordersService;
         this.ordersQueryService = ordersQueryService;
         this.courseHistoryRepository = courseHistoryRepository;
@@ -75,6 +73,8 @@ public class OrdersResource {
         this.customerRepository = customerRepository;
         this.courseRepository = courseRepository;
         this.customerService = customerService;
+        this.cartService = cartService;
+        this.ordersRepository = ordersRepository;
     }
 
     /**
@@ -165,6 +165,21 @@ public class OrdersResource {
         log.debug("REST request to get Orders : {}", id);
         Optional<Orders> orders = ordersService.findOne(id);
         return ResponseUtil.wrapOrNotFound(orders);
+    }
+
+    @GetMapping("/cart/orders/{cartid}")
+    @Timed
+    public List<Orders> getCartOrders(@PathVariable Long cartid) {
+        log.debug("REST request to get Orders by Cart ID : {}", cartid);
+        Cart tempCart = cartService.findOne(cartid).get();
+        return ordersRepository.getOrdersByCart(tempCart);
+    }
+
+    @GetMapping("/cart/order/{cartid}")
+    @Timed
+    public Orders getSingleCartOrders(@PathVariable Long cartid) {
+        log.debug("REST request to get Orders by Cart ID : {}", cartid);
+        return ordersRepository.getOrdersByCartId(cartid);
     }
 
     /**

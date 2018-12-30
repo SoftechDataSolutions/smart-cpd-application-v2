@@ -35,6 +35,10 @@ public class Quiz implements Serializable {
     @Column(name = "passingscore")
     private Integer passingscore;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Section newSection;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -81,6 +85,19 @@ public class Quiz implements Serializable {
 
     public void setPassingscore(Integer passingscore) {
         this.passingscore = passingscore;
+    }
+
+    public Section getNewSection() {
+        return newSection;
+    }
+
+    public Quiz newSection(Section section) {
+        this.newSection = section;
+        return this;
+    }
+
+    public void setNewSection(Section section) {
+        this.newSection = section;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

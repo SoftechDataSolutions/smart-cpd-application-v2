@@ -74,9 +74,9 @@ public class QuizHistoryQueryService extends QueryService<QuizHistory> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), QuizHistory_.id));
             }
-            if (criteria.getStart() != null) {
+            /**if (criteria.getStart() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStart(), QuizHistory_.start));
-            }
+            }*/
             if (criteria.getPassed() != null) {
                 specification = specification.and(buildSpecification(criteria.getPassed(), QuizHistory_.passed));
             }

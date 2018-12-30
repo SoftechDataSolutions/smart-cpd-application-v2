@@ -74,12 +74,12 @@ public class CourseHistoryQueryService extends QueryService<CourseHistory> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), CourseHistory_.id));
             }
-            if (criteria.getStartdate() != null) {
+            /**if (criteria.getStartdate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getStartdate(), CourseHistory_.startdate));
             }
             if (criteria.getLastactivedate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getLastactivedate(), CourseHistory_.lastactivedate));
-            }
+            }*/
             if (criteria.getIsactive() != null) {
                 specification = specification.and(buildSpecification(criteria.getIsactive(), CourseHistory_.isactive));
             }

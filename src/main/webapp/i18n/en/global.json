@@ -120,6 +120,8 @@
                 "bookmark": "Bookmark",
                 "checkout": "Checkout",
                 "companyrequest": "Companyrequest",
+                "companyRequest": "Company Request",
+                "dashboards": "Dashboards",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

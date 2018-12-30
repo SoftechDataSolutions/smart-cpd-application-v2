@@ -31,6 +31,13 @@
                         [(ngModel)]="quiz.passingscore" />
                 </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="smartCpdApp.quiz.newSection" for="field_newSection">New Section</label>
+                    <select class="form-control" id="field_newSection" name="newSection" [(ngModel)]="quiz.newSection">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="sectionOption.id === quiz.newSection?.id ? quiz.newSection : sectionOption" *ngFor="let sectionOption of newsections; trackBy: trackSectionById">{{sectionOption.name}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

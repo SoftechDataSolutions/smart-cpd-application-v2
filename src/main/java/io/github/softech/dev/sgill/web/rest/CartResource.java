@@ -1,19 +1,19 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.github.softech.dev.sgill.domain.Cart;
-import io.github.softech.dev.sgill.domain.Course;
-import io.github.softech.dev.sgill.domain.Customer;
-import io.github.softech.dev.sgill.repository.CartRepository;
-import io.github.softech.dev.sgill.repository.CourseRepository;
-import io.github.softech.dev.sgill.repository.CustomerRepository;
-import io.github.softech.dev.sgill.service.CartService;
-import io.github.softech.dev.sgill.service.CustomerService;
+import com.stripe.model.Card;
+import com.stripe.model.Charge;
+import com.stripe.model.Order;
+import com.stripe.model.Source;
+import io.github.softech.dev.sgill.domain.*;
+import io.github.softech.dev.sgill.domain.enumeration.NOTIFICATIONS;
+import io.github.softech.dev.sgill.domain.enumeration.PAYMENT;
+import io.github.softech.dev.sgill.repository.*;
+import io.github.softech.dev.sgill.service.*;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
 import io.github.softech.dev.sgill.service.dto.CartCriteria;
-import io.github.softech.dev.sgill.service.CartQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.lucene.document.DoubleRange;
 import org.slf4j.Logger;
@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -58,14 +59,35 @@ public class CartResource {
 
     private final CourseRepository courseRepository;
 
+    private final OrdersRepository ordersRepository;
+
+    private final CourseHistoryService courseHistoryService;
+
+    private final CourseHistoryRepository courseHistoryRepository;
+
+    private final OrdersService ordersService;
+
+    private StripeClient stripeClient;
+
+    private final CourseCartBridgeRepository courseCartBridgeRepository;
+
     public CartResource(CartService cartService, CartQueryService cartQueryService, CartRepository cartRepository,
-                        CustomerRepository customerRepository, CustomerService customerService, CourseRepository courseRepository) {
+                        CustomerRepository customerRepository, CustomerService customerService
+                        , StripeClient stripeClient, CourseRepository courseRepository, OrdersRepository ordersRepository,
+                        OrdersService ordersService, CourseHistoryRepository courseHistoryRepository, CourseHistoryService courseHistoryService,
+                        CourseCartBridgeRepository courseCartBridgeRepository) {
         this.cartService = cartService;
         this.cartQueryService = cartQueryService;
         this.cartRepository = cartRepository;
         this.customerRepository = customerRepository;
         this.customerService = customerService;
         this.courseRepository = courseRepository;
+        this.stripeClient = stripeClient;
+        this.ordersRepository = ordersRepository;
+        this.ordersService = ordersService;
+        this.courseHistoryRepository = courseHistoryRepository;
+        this.courseHistoryService = courseHistoryService;
+        this.courseCartBridgeRepository = courseCartBridgeRepository;
     }
 
     /**
@@ -89,6 +111,62 @@ public class CartResource {
         return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/carts/charge")
+    @Timed
+    public String chargeCard(HttpServletRequest request, @RequestBody Cart cart) throws Exception {
+        String token = request.getHeader("token");
+        double amount = Double.parseDouble(request.getHeader("amount"));
+        Long cartId = Long.parseLong(request.getHeader("cartId"));
+        int redeem = Integer.parseInt("redeem");
+        log.debug("Rest Request - Token : {}", token);
+        log.debug("REST request - Amount : {}", request.getHeader("amount"));
+        log.debug("REST request - Amount (double) : {}", amount);
+        Cart tempCart = this.cartService.findOne(cartId).get();
+        Charge temp = this.stripeClient.chargeNewCard(token, amount);
+        if(temp.getStatus()=="succeeded"&&temp.getPaid()) {
+            Orders newOrder = new Orders();
+            Source tempSource = Source.retrieve(temp.getSource().getId());
+            newOrder.setAmount(cart.getAmount());
+            newOrder.setCart(cart);
+            newOrder.setCreateddate(Instant.now());
+            newOrder.setGateway_amt(Long.toString(temp.getAmount()));
+            newOrder.setGateway_id(temp.getId());
+            newOrder.setPayment(PAYMENT.STRIPE);
+            newOrder.setSeller_status(tempSource.getStatus());
+            if (newOrder.getSeller_status().equals("succeeded")) {
+                newOrder.setStatus(NOTIFICATIONS.COMPLETE);
+                List<CourseCartBridge> tempCartCourses = this.courseCartBridgeRepository.findCourseCartBridgesByCartId(tempCart.getId());
+                for (CourseCartBridge tempLoopVar: tempCartCourses) {
+                    CourseHistory tempHistory = courseHistoryRepository.findCourseHistoryByCourseAndCustomer(tempLoopVar.getCourse(), tempCart.getCustomer());
+                    if (tempHistory==null) {
+                        tempHistory = new CourseHistory();
+                        tempHistory.setAccess(true);
+                        tempHistory.setCourse(tempLoopVar.getCourse());
+                        tempHistory.setCustomer(tempCart.getCustomer());
+                        tempHistory.setIscompleted(false);
+                        tempHistory.setIsactive(true);
+                        tempHistory.setStartdate(Instant.now());
+                    } else {
+                        tempHistory.setAccess(true);
+                        tempHistory.setIsactive(true);
+                        tempHistory.setStartdate(Instant.now());
+                    }
+                    courseHistoryService.save(tempHistory);
+                }
+            } else if (newOrder.getSeller_status().equals("pending")) {
+                newOrder.setStatus(NOTIFICATIONS.ORDERPROCESSING);
+            } else {
+                newOrder.setStatus(NOTIFICATIONS.ONHOLD);
+            }
+            this.ordersService.save(newOrder);
+            Customer tempCustomer = cart.getCustomer();
+            int tempCustPts = tempCustomer.getPoints();
+            tempCustomer.setPoints(tempCustPts + cart.getPoints() - redeem);
+            this.customerService.save(tempCustomer);
+        }
+        return temp.toJson();
     }
 
     @GetMapping("/check/carts/{customerId}")
@@ -118,6 +196,15 @@ public class CartResource {
                 .body(result);*/
             return reqd.get(0);
         }
+    }
+
+    @GetMapping("/all/carts/{customerId}")
+    @Timed
+    public List<Cart> getCustomerCarts(@PathVariable Long customerId) throws URISyntaxException {
+        Customer reqdCustomer = customerService.findOne(customerId).get();
+        log.debug("REST request to get all carts for a customer : {}", reqdCustomer);
+        List<Cart> reqd = cartRepository.getCartsByCustomer(reqdCustomer);
+        return reqd;
     }
 
     /**

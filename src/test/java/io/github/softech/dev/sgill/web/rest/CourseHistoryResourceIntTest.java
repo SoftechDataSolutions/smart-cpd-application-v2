@@ -8,6 +8,8 @@ import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
 import io.github.softech.dev.sgill.repository.search.CourseHistorySearchRepository;
 import io.github.softech.dev.sgill.service.CourseHistoryService;
+import io.github.softech.dev.sgill.service.CourseService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CourseHistoryCriteria;
 import io.github.softech.dev.sgill.service.CourseHistoryQueryService;
@@ -102,10 +104,15 @@ public class CourseHistoryResourceIntTest {
 
     private CourseHistory courseHistory;
 
+    private CustomerService customerService;
+
+    private CourseService courseService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CourseHistoryResource courseHistoryResource = new CourseHistoryResource(courseHistoryService, courseHistoryQueryService);
+        final CourseHistoryResource courseHistoryResource = new CourseHistoryResource(courseHistoryService, courseHistoryQueryService, courseHistoryRepository,
+            customerService, courseService);
         this.restCourseHistoryMockMvc = MockMvcBuilders.standaloneSetup(courseHistoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

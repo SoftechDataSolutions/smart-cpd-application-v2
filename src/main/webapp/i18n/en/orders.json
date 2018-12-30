@@ -21,6 +21,14 @@
             "amount": "Amount",
             "status": "Status",
             "payment": "Payment",
+            "gateway_id": "Gateway Id",
+            "seller_message": "Seller Message",
+            "network_status": "Network Status",
+            "seller_status": "Seller Status",
+            "gateway_amt": "Gateway Amt",
+            "seller_type": "Seller Type",
+            "card_type": "Card Type",
+            "last4": "Last 4",
             "cart": "Cart"
         }
     }

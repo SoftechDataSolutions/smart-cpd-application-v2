@@ -1,11 +1,7 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.github.softech.dev.sgill.domain.Question;
-import io.github.softech.dev.sgill.domain.Quiz;
 import io.github.softech.dev.sgill.domain.QuizApp;
-import io.github.softech.dev.sgill.repository.QuestionRepository;
-import io.github.softech.dev.sgill.service.QuestionService;
 import io.github.softech.dev.sgill.service.QuizAppService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -25,10 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -51,7 +45,6 @@ public class QuizAppResource {
     public QuizAppResource(QuizAppService quizAppService, QuizAppQueryService quizAppQueryService) {
         this.quizAppService = quizAppService;
         this.quizAppQueryService = quizAppQueryService;
-
     }
 
     /**

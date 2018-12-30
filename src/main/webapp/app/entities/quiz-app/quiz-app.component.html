@@ -31,7 +31,6 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="quiz.name"><span jhiTranslate="smartCpdApp.quizApp.quiz">Quiz</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.quizApp.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="currSection.name"><span jhiTranslate="smartCpdApp.quizApp.currSection">Curr Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="newSection.name"><span jhiTranslate="smartCpdApp.quizApp.newSection">New Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -43,11 +42,6 @@
                 <td>
                     <div *ngIf="quizApp.quiz">
                         <a [routerLink]="['../quiz', quizApp.quiz?.id, 'view' ]" >{{quizApp.quiz?.name}}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngIf="quizApp.customer">
-                        <a [routerLink]="['../customer', quizApp.customer?.id, 'view' ]" >{{quizApp.customer?.normalized}}</a>
                     </div>
                 </td>
                 <td>

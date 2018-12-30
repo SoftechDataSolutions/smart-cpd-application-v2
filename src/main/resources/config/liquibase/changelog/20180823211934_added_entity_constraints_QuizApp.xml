@@ -14,12 +14,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="quiz"/>
 
-        <addForeignKeyConstraint baseColumnNames="customer_id"
-                                 baseTableName="quiz_app"
-                                 constraintName="fk_quiz_app_customer_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="customer"/>
-
         <addForeignKeyConstraint baseColumnNames="curr_section_id"
                                  baseTableName="quiz_app"
                                  constraintName="fk_quiz_app_curr_section_id"

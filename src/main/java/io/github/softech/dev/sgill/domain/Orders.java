@@ -43,6 +43,30 @@ public class Orders implements Serializable {
     @Column(name = "payment")
     private PAYMENT payment;
 
+    @Column(name = "gateway_id")
+    private String gateway_id;
+
+    @Column(name = "seller_message")
+    private String seller_message;
+
+    @Column(name = "network_status")
+    private String network_status;
+
+    @Column(name = "seller_status")
+    private String seller_status;
+
+    @Column(name = "gateway_amt")
+    private String gateway_amt;
+
+    @Column(name = "seller_type")
+    private String seller_type;
+
+    @Column(name = "card_type")
+    private String card_type;
+
+    @Column(name = "last_4")
+    private String last4;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Cart cart;
@@ -108,6 +132,110 @@ public class Orders implements Serializable {
         this.payment = payment;
     }
 
+    public String getGateway_id() {
+        return gateway_id;
+    }
+
+    public Orders gateway_id(String gateway_id) {
+        this.gateway_id = gateway_id;
+        return this;
+    }
+
+    public void setGateway_id(String gateway_id) {
+        this.gateway_id = gateway_id;
+    }
+
+    public String getSeller_message() {
+        return seller_message;
+    }
+
+    public Orders seller_message(String seller_message) {
+        this.seller_message = seller_message;
+        return this;
+    }
+
+    public void setSeller_message(String seller_message) {
+        this.seller_message = seller_message;
+    }
+
+    public String getNetwork_status() {
+        return network_status;
+    }
+
+    public Orders network_status(String network_status) {
+        this.network_status = network_status;
+        return this;
+    }
+
+    public void setNetwork_status(String network_status) {
+        this.network_status = network_status;
+    }
+
+    public String getSeller_status() {
+        return seller_status;
+    }
+
+    public Orders seller_status(String seller_status) {
+        this.seller_status = seller_status;
+        return this;
+    }
+
+    public void setSeller_status(String seller_status) {
+        this.seller_status = seller_status;
+    }
+
+    public String getGateway_amt() {
+        return gateway_amt;
+    }
+
+    public Orders gateway_amt(String gateway_amt) {
+        this.gateway_amt = gateway_amt;
+        return this;
+    }
+
+    public void setGateway_amt(String gateway_amt) {
+        this.gateway_amt = gateway_amt;
+    }
+
+    public String getSeller_type() {
+        return seller_type;
+    }
+
+    public Orders seller_type(String seller_type) {
+        this.seller_type = seller_type;
+        return this;
+    }
+
+    public void setSeller_type(String seller_type) {
+        this.seller_type = seller_type;
+    }
+
+    public String getCard_type() {
+        return card_type;
+    }
+
+    public Orders card_type(String card_type) {
+        this.card_type = card_type;
+        return this;
+    }
+
+    public void setCard_type(String card_type) {
+        this.card_type = card_type;
+    }
+
+    public String getLast4() {
+        return last4;
+    }
+
+    public Orders last4(String last4) {
+        this.last4 = last4;
+        return this;
+    }
+
+    public void setLast4(String last4) {
+        this.last4 = last4;
+    }
+
     public Cart getCart() {
         return cart;
     }
@@ -150,6 +278,14 @@ public class Orders implements Serializable {
             ", amount=" + getAmount() +
             ", status='" + getStatus() + "'" +
             ", payment='" + getPayment() + "'" +
+            ", gateway_id='" + getGateway_id() + "'" +
+            ", seller_message='" + getSeller_message() + "'" +
+            ", network_status='" + getNetwork_status() + "'" +
+            ", seller_status='" + getSeller_status() + "'" +
+            ", gateway_amt='" + getGateway_amt() + "'" +
+            ", seller_type='" + getSeller_type() + "'" +
+            ", card_type='" + getCard_type() + "'" +
+            ", last4='" + getLast4() + "'" +
             "}";
     }
 }

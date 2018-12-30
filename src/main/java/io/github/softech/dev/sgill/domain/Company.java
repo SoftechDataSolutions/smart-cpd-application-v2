@@ -1,5 +1,11 @@
 package io.github.softech.dev.sgill.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
+import io.github.softech.dev.sgill.domain.serialization.ZonedDateTimeDeserializer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,8 +13,12 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+import sun.text.resources.de.FormatData_de_AT;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -63,8 +73,15 @@ public class Company implements Serializable {
     @Column(name = "country", nullable = false)
     private String country;
 
+    //final DateTimeFormatter FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
+
     @NotNull
     @Column(name = "cycledate", nullable = false)
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    //@DateTimeFormat(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    //@JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    //@JsonSerialize(using = ZonedDateTimeSerializer.class)
+    //@JsonIgnoreProperties
     private ZonedDateTime cycledate;
 
     @Column(name = "url")

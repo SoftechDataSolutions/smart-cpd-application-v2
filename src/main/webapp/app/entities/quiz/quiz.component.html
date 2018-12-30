@@ -33,6 +33,7 @@
             <th jhiSortBy="name"><span jhiTranslate="smartCpdApp.quiz.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="difficulty"><span jhiTranslate="smartCpdApp.quiz.difficulty">Difficulty</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="passingscore"><span jhiTranslate="smartCpdApp.quiz.passingscore">Passingscore</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="newSection.name"><span jhiTranslate="smartCpdApp.quiz.newSection">New Section</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -42,6 +43,11 @@
                 <td>{{quiz.name}}</td>
                 <td>{{quiz.difficulty}}</td>
                 <td>{{quiz.passingscore}}</td>
+                <td>
+                    <div *ngIf="quiz.newSection">
+                        <a [routerLink]="['../section', quiz.newSection?.id, 'view' ]" >{{quiz.newSection?.name}}</a>
+                    </div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

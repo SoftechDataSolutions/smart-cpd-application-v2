@@ -19,7 +19,8 @@
             },
             "name": "Name",
             "difficulty": "Difficulty",
-            "passingscore": "Passingscore"
+            "passingscore": "Passingscore",
+            "newSection": "New Section"
         }
     }
 }

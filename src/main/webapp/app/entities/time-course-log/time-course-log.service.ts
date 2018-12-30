@@ -59,22 +59,19 @@ export class TimeCourseLogService {
 
     private convertDateFromClient(timeCourseLog: ITimeCourseLog): ITimeCourseLog {
         const copy: ITimeCourseLog = Object.assign({}, timeCourseLog, {
-            loggedin: timeCourseLog.loggedin != null && timeCourseLog.loggedin.isValid() ? timeCourseLog.loggedin.toJSON() : null,
-            loggedout: timeCourseLog.loggedout != null && timeCourseLog.loggedout.isValid() ? timeCourseLog.loggedout.toJSON() : null
+            recorddate: timeCourseLog.recorddate != null && timeCourseLog.recorddate.isValid() ? timeCourseLog.recorddate.toJSON() : null
         });
         return copy;
     }
 
     private convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        res.body.loggedin = res.body.loggedin != null ? moment(res.body.loggedin) : null;
-        res.body.loggedout = res.body.loggedout != null ? moment(res.body.loggedout) : null;
+        res.body.recorddate = res.body.recorddate != null ? moment(res.body.recorddate) : null;
         return res;
     }
 
     private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
         res.body.forEach((timeCourseLog: ITimeCourseLog) => {
-            timeCourseLog.loggedin = timeCourseLog.loggedin != null ? moment(timeCourseLog.loggedin) : null;
-            timeCourseLog.loggedout = timeCourseLog.loggedout != null ? moment(timeCourseLog.loggedout) : null;
+            timeCourseLog.recorddate = timeCourseLog.recorddate != null ? moment(timeCourseLog.recorddate) : null;
         });
         return res;
     }

@@ -7,7 +7,9 @@ import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.repository.SectionHistoryRepository;
 import io.github.softech.dev.sgill.repository.search.SectionHistorySearchRepository;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.service.SectionHistoryService;
+import io.github.softech.dev.sgill.service.SectionService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.SectionHistoryCriteria;
 import io.github.softech.dev.sgill.service.SectionHistoryQueryService;
@@ -96,10 +98,15 @@ public class SectionHistoryResourceIntTest {
 
     private SectionHistory sectionHistory;
 
+    private CustomerService customerService;
+
+    private SectionService sectionService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SectionHistoryResource sectionHistoryResource = new SectionHistoryResource(sectionHistoryService, sectionHistoryQueryService);
+        final SectionHistoryResource sectionHistoryResource = new SectionHistoryResource(sectionHistoryService, sectionHistoryQueryService,
+            sectionHistoryRepository, customerService, sectionService);
         this.restSectionHistoryMockMvc = MockMvcBuilders.standaloneSetup(sectionHistoryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -26,10 +26,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="customer_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
-
             <column name="curr_section_id" type="bigint">
                 <constraints nullable="true" />
             </column>

@@ -4,15 +4,11 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Customer;
-import io.github.softech.dev.sgill.repository.CartRepository;
-import io.github.softech.dev.sgill.repository.CourseRepository;
-import io.github.softech.dev.sgill.repository.CustomerRepository;
+import io.github.softech.dev.sgill.repository.*;
 import io.github.softech.dev.sgill.repository.search.CartSearchRepository;
-import io.github.softech.dev.sgill.service.CartService;
-import io.github.softech.dev.sgill.service.CustomerService;
+import io.github.softech.dev.sgill.service.*;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CartCriteria;
-import io.github.softech.dev.sgill.service.CartQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -116,10 +112,29 @@ public class CartResourceIntTest {
 
     private Cart cart;
 
+    private StripeClient stripeClient;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
+
+    @Autowired
+    private OrdersService ordersService;
+
+    @Autowired
+    private CourseHistoryService courseHistoryService;
+
+    @Autowired
+    private CourseHistoryRepository courseHistoryRepository;
+
+    @Autowired
+    private CourseCartBridgeRepository courseCartBridgeRepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CartResource cartResource = new CartResource(cartService, cartQueryService, cartRepository, customerRepository, customerService, courseRepository);
+        final CartResource cartResource = new CartResource(cartService, cartQueryService, cartRepository,
+            customerRepository, customerService, stripeClient, courseRepository, ordersRepository, ordersService,
+            courseHistoryRepository, courseHistoryService, courseCartBridgeRepository);
         this.restCartMockMvc = MockMvcBuilders.standaloneSetup(cartResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

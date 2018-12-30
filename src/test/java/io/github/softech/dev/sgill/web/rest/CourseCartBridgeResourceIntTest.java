@@ -5,10 +5,12 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.CourseCartBridge;
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Course;
+import io.github.softech.dev.sgill.repository.CartRepository;
 import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
 import io.github.softech.dev.sgill.repository.search.CourseCartBridgeSearchRepository;
 import io.github.softech.dev.sgill.service.CartService;
 import io.github.softech.dev.sgill.service.CourseCartBridgeService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CourseCartBridgeCriteria;
 import io.github.softech.dev.sgill.service.CourseCartBridgeQueryService;
@@ -94,10 +96,15 @@ public class CourseCartBridgeResourceIntTest {
 
     private CourseCartBridge courseCartBridge;
 
+    private CartRepository cartRepository;
+
+    private CustomerService customerService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CourseCartBridgeResource courseCartBridgeResource = new CourseCartBridgeResource(courseCartBridgeService, courseCartBridgeQueryService, courseCartBridgeRepository, cartService);
+        final CourseCartBridgeResource courseCartBridgeResource = new CourseCartBridgeResource(courseCartBridgeService, courseCartBridgeQueryService, courseCartBridgeRepository, cartService,
+            cartRepository, customerService);
         this.restCourseCartBridgeMockMvc = MockMvcBuilders.standaloneSetup(courseCartBridgeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

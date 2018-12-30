@@ -2,6 +2,8 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Company;
+import io.github.softech.dev.sgill.domain.CompanyRequest;
+import io.github.softech.dev.sgill.service.CompanyRequestService;
 import io.github.softech.dev.sgill.service.CompanyService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -43,9 +46,12 @@ public class CompanyResource {
 
     private final CompanyQueryService companyQueryService;
 
-    public CompanyResource(CompanyService companyService, CompanyQueryService companyQueryService) {
+    private final CompanyRequestService companyRequestService;
+
+    public CompanyResource(CompanyService companyService, CompanyQueryService companyQueryService, CompanyRequestService companyRequestService) {
         this.companyService = companyService;
         this.companyQueryService = companyQueryService;
+        this.companyRequestService = companyRequestService;
     }
 
     /**
@@ -66,6 +72,27 @@ public class CompanyResource {
         return ResponseEntity.created(new URI("/api/companies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    @PostMapping("/company/{requestid}")
+    @Timed
+    public Company createFromRequestCompany(@PathVariable Long requestid) throws URISyntaxException {
+        log.debug("REST request to save Company from user Request: {}", requestid);
+        CompanyRequest temp = companyRequestService.findOne(requestid).get();
+        Company company = new Company();
+        company.setCity(temp.getCity());
+        company.setCountry(temp.getCountry());
+        company.setCycledate(temp.getCycledate());
+        company.setDescription(temp.getDescription());
+        company.setName(temp.getName());
+        company.setPhone(temp.getPhone());
+        company.setPostalCode(temp.getPostalCode());
+        company.setShow(true);
+        company.setStateProvince(temp.getStateProvince());
+        company.setStreetAddress(temp.getStreetAddress());
+        company.setUrl(temp.getUrl());
+        company.setDescription("Added from application request feature on " + Instant.now().toString());
+        return companyService.save(company);
     }
 
     /**

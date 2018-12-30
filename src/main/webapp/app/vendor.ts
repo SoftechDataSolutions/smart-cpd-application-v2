@@ -47,10 +47,26 @@ import {
     faStepForward,
     faFastBackward,
     faStepBackward,
-    faDownload
+    faDownload,
+    faHistory,
+    faChalkboardTeacher,
+    faAtlas,
+    faAward,
+    faHandsHelping,
+    faInfoCircle,
+    faUserGraduate,
+    faSmile,
+    faUserTie,
+    faCheckSquare,
+    faCheck
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
+library.add(faChalkboardTeacher);
+library.add(faAtlas);
+library.add(faInfoCircle);
+library.add(faAward);
+library.add(faHandsHelping);
 library.add(faUser);
 library.add(faSort);
 library.add(faSortUp);
@@ -94,6 +110,13 @@ library.add(faStepForward);
 library.add(faFastBackward);
 library.add(faStepBackward);
 library.add(faDownload);
+library.add(faHistory);
+library.add(faUserGraduate);
+library.add(faSmile);
+library.add(faUserTie);
+library.add(faPlay);
+library.add(faCheckSquare);
+library.add(faCheck);
 
 import 'quill/dist/quill.js';
 import '../../../../node_modules/fullcalendar/dist/fullcalendar.js';

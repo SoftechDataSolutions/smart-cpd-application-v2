@@ -22,7 +22,7 @@ import { GooglePlacesDirective } from './register/google-places.directive';
         RouterModule.forChild(accountState),
         FormsModule,
         AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyCYfQIX7JEpjyF5KheM9PNmCUQdmtxEJJE',
+            apiKey: 'AIzaSyDLwKI-Tr33ZXmQ-b90c0OcmugQ4qkq3PA',
             libraries: ['places']
         })
     ],

@@ -74,9 +74,9 @@ public class CourseCartBridgeQueryService extends QueryService<CourseCartBridge>
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), CourseCartBridge_.id));
             }
-            if (criteria.getTimestamp() != null) {
+            /**if (criteria.getTimestamp() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTimestamp(), CourseCartBridge_.timestamp));
-            }
+            }*/
             if (criteria.getCartId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCartId(), CourseCartBridge_.cart, Cart_.id));
             }

@@ -74,9 +74,9 @@ public class OrdersQueryService extends QueryService<Orders> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), Orders_.id));
             }
-            if (criteria.getCreateddate() != null) {
+            /**if (criteria.getCreateddate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreateddate(), Orders_.createddate));
-            }
+            }*/
             if (criteria.getAmount() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getAmount(), Orders_.amount));
             }
@@ -85,6 +85,30 @@ public class OrdersQueryService extends QueryService<Orders> {
             }
             if (criteria.getPayment() != null) {
                 specification = specification.and(buildSpecification(criteria.getPayment(), Orders_.payment));
+            }
+            if (criteria.getGateway_id() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getGateway_id(), Orders_.gateway_id));
+            }
+            if (criteria.getSeller_message() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSeller_message(), Orders_.seller_message));
+            }
+            if (criteria.getNetwork_status() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getNetwork_status(), Orders_.network_status));
+            }
+            if (criteria.getSeller_status() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSeller_status(), Orders_.seller_status));
+            }
+            if (criteria.getGateway_amt() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getGateway_amt(), Orders_.gateway_amt));
+            }
+            if (criteria.getSeller_type() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSeller_type(), Orders_.seller_type));
+            }
+            if (criteria.getCard_type() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCard_type(), Orders_.card_type));
+            }
+            if (criteria.getLast4() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLast4(), Orders_.last4));
             }
             if (criteria.getCartId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCartId(), Orders_.cart, Cart_.id));

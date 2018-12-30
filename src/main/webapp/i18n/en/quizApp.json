@@ -18,7 +18,6 @@
                 "title": "Quiz App"
             },
             "quiz": "Quiz",
-            "customer": "Customer",
             "currSection": "Curr Section",
             "newSection": "New Section",
             "questions": "Questions"

@@ -1,8 +1,10 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.softech.dev.sgill.domain.Company;
 import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.repository.CustomerRepository;
+import io.github.softech.dev.sgill.service.CompanyService;
 import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -46,10 +48,14 @@ public class CustomerResource {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerResource(CustomerService customerService, CustomerQueryService customerQueryService, CustomerRepository customerRepository) {
+    private final CompanyService companyService;
+
+    public CustomerResource(CustomerService customerService, CustomerQueryService customerQueryService, CustomerRepository customerRepository,
+                            CompanyService companyService) {
         this.customerService = customerService;
         this.customerQueryService = customerQueryService;
         this.customerRepository = customerRepository;
+        this.companyService = companyService;
     }
 
     /**
@@ -129,6 +135,28 @@ public class CustomerResource {
     public Customer getUserCustomer(@PathVariable Long userId) {
         log.debug("REST request to get Customer by UserID: {}", userId);
         return customerRepository.findCustomerByUserId(userId);
+    }
+
+    @GetMapping("/area/customers/{area}")
+    @Timed
+    public List<Customer> getAreaCustomers(@PathVariable String area) {
+        log.debug("REST request to get Customer by area: {}", area);
+        return customerRepository.findCustomersByAreaserviced(area);
+    }
+
+    @GetMapping("/city/customers/{userId}")
+    @Timed
+    public List<Customer> getCityCustomers(@PathVariable String city) {
+        log.debug("REST request to get Customer by city: {}", city);
+        return customerRepository.findCustomersByCity(city);
+    }
+
+    @GetMapping("/company/customers/{userId}")
+    @Timed
+    public List<Customer> getCompanyCustomers(@PathVariable Long companyId) {
+        log.debug("REST request to get Customer by companyID: {}", companyId);
+        Company reqdCompany = companyService.findOne(companyId).get();
+        return customerRepository.findCustomersByCompany(reqdCompany);
     }
 
     /**

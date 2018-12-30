@@ -22,7 +22,8 @@ import { SmartCpdQuestionHistoryModule } from './question-history/question-histo
 import { SmartCpdTagsModule } from './tags/tags.module';
 import { SmartCpdBookmarkModule } from './bookmark/bookmark.module';
 import { SmartCpdCheckoutModule } from './checkout/checkout.module';
-import { SmartCpdCompanyrequestModule } from './companyrequest/companyrequest.module';
+import { SmartCpdCompanyRequestModule } from './company-request/company-request.module';
+import { SmartCpdDashboardsModule } from './dashboards/dashboards.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -50,7 +51,8 @@ import { SmartCpdCompanyrequestModule } from './companyrequest/companyrequest.mo
         SmartCpdTagsModule,
         SmartCpdBookmarkModule,
         SmartCpdCheckoutModule,
-        SmartCpdCompanyrequestModule,
+        SmartCpdCompanyRequestModule,
+        SmartCpdDashboardsModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

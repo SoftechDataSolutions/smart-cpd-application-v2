@@ -26,6 +26,7 @@
     <include file="config/liquibase/changelog/20180823211934_added_entity_QuizApp.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180827020534_added_entity_Tags.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180904211039_added_entity_Bookmark.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180819063654_added_entity_CompanyRequest.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20180819063638_added_entity_constraints_Customer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180819063641_added_entity_constraints_Course.xml" relativeToChangelogFile="false"/>
@@ -45,6 +46,7 @@
     <include file="config/liquibase/changelog/20180819063649_added_entity_constraints_QuestionHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180904211039_added_entity_constraints_Bookmark.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20180823211934_added_entity_constraints_QuizApp.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180819063645_added_entity_constraints_Quiz.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
 
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

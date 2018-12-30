@@ -33,7 +33,9 @@
             <column name="passingscore" type="integer">
                 <constraints nullable="true" />
             </column>
-
+            <column name="new_section_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_quiz_new_section_id" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         

@@ -2,6 +2,7 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.TimeCourseLog;
+import io.github.softech.dev.sgill.repository.TimeCourseLogRepository;
 import io.github.softech.dev.sgill.service.TimeCourseLogService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
@@ -42,9 +43,12 @@ public class TimeCourseLogResource {
 
     private final TimeCourseLogQueryService timeCourseLogQueryService;
 
-    public TimeCourseLogResource(TimeCourseLogService timeCourseLogService, TimeCourseLogQueryService timeCourseLogQueryService) {
+    private final TimeCourseLogRepository timeCourseLogRepository;
+
+    public TimeCourseLogResource(TimeCourseLogService timeCourseLogService, TimeCourseLogQueryService timeCourseLogQueryService, TimeCourseLogRepository timeCourseLogRepository) {
         this.timeCourseLogService = timeCourseLogService;
         this.timeCourseLogQueryService = timeCourseLogQueryService;
+        this.timeCourseLogRepository = timeCourseLogRepository;
     }
 
     /**
@@ -117,6 +121,14 @@ public class TimeCourseLogResource {
         log.debug("REST request to get TimeCourseLog : {}", id);
         Optional<TimeCourseLog> timeCourseLog = timeCourseLogService.findOne(id);
         return ResponseUtil.wrapOrNotFound(timeCourseLog);
+    }
+
+    @GetMapping("{courseid}/time-course-logs/{customerid}")
+    @Timed
+    public Long getSpentTimeCourseLogs(@PathVariable Long courseid, @PathVariable Long customerid) {
+        log.debug("REST request to get Time Spent by Course ID : {}", courseid);
+        log.debug("REST request to get Time Spent by Customer ID : {}", customerid);
+        return timeCourseLogRepository.findTimeSpentbyCustomerAndCourse(customerid, courseid);
     }
 
     /**

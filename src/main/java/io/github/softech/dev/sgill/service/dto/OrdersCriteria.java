@@ -50,6 +50,22 @@ public class OrdersCriteria implements Serializable {
 
     private PAYMENTFilter payment;
 
+    private StringFilter gateway_id;
+
+    private StringFilter seller_message;
+
+    private StringFilter network_status;
+
+    private StringFilter seller_status;
+
+    private StringFilter gateway_amt;
+
+    private StringFilter seller_type;
+
+    private StringFilter card_type;
+
+    private StringFilter last4;
+
     private LongFilter cartId;
 
     public OrdersCriteria() {
@@ -95,6 +111,70 @@ public class OrdersCriteria implements Serializable {
         this.payment = payment;
     }
 
+    public StringFilter getGateway_id() {
+        return gateway_id;
+    }
+
+    public void setGateway_id(StringFilter gateway_id) {
+        this.gateway_id = gateway_id;
+    }
+
+    public StringFilter getSeller_message() {
+        return seller_message;
+    }
+
+    public void setSeller_message(StringFilter seller_message) {
+        this.seller_message = seller_message;
+    }
+
+    public StringFilter getNetwork_status() {
+        return network_status;
+    }
+
+    public void setNetwork_status(StringFilter network_status) {
+        this.network_status = network_status;
+    }
+
+    public StringFilter getSeller_status() {
+        return seller_status;
+    }
+
+    public void setSeller_status(StringFilter seller_status) {
+        this.seller_status = seller_status;
+    }
+
+    public StringFilter getGateway_amt() {
+        return gateway_amt;
+    }
+
+    public void setGateway_amt(StringFilter gateway_amt) {
+        this.gateway_amt = gateway_amt;
+    }
+
+    public StringFilter getSeller_type() {
+        return seller_type;
+    }
+
+    public void setSeller_type(StringFilter seller_type) {
+        this.seller_type = seller_type;
+    }
+
+    public StringFilter getCard_type() {
+        return card_type;
+    }
+
+    public void setCard_type(StringFilter card_type) {
+        this.card_type = card_type;
+    }
+
+    public StringFilter getLast4() {
+        return last4;
+    }
+
+    public void setLast4(StringFilter last4) {
+        this.last4 = last4;
+    }
+
     public LongFilter getCartId() {
         return cartId;
     }
@@ -111,6 +191,14 @@ public class OrdersCriteria implements Serializable {
                 (amount != null ? "amount=" + amount + ", " : "") +
                 (status != null ? "status=" + status + ", " : "") +
                 (payment != null ? "payment=" + payment + ", " : "") +
+                (gateway_id != null ? "gateway_id=" + gateway_id + ", " : "") +
+                (seller_message != null ? "seller_message=" + seller_message + ", " : "") +
+                (network_status != null ? "network_status=" + network_status + ", " : "") +
+                (seller_status != null ? "seller_status=" + seller_status + ", " : "") +
+                (gateway_amt != null ? "gateway_amt=" + gateway_amt + ", " : "") +
+                (seller_type != null ? "seller_type=" + seller_type + ", " : "") +
+                (card_type != null ? "card_type=" + card_type + ", " : "") +
+                (last4 != null ? "last4=" + last4 + ", " : "") +
                 (cartId != null ? "cartId=" + cartId + ", " : "") +
             "}";
     }

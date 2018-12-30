@@ -2,8 +2,14 @@ package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sendgrid.*;
+import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Certificate;
+import io.github.softech.dev.sgill.domain.Course;
+import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.repository.CertificateRepository;
 import io.github.softech.dev.sgill.service.CertificateService;
+import io.github.softech.dev.sgill.service.CourseService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
@@ -44,9 +50,19 @@ public class CertificateResource {
 
     private final CertificateQueryService certificateQueryService;
 
-    public CertificateResource(CertificateService certificateService, CertificateQueryService certificateQueryService) {
+    private final CustomerService customerService;
+
+    private final CourseService courseService;
+
+    private final CertificateRepository certificateRepository;
+
+    public CertificateResource(CertificateService certificateService, CertificateQueryService certificateQueryService, CustomerService customerService, CertificateRepository certificateRepository,
+                               CourseService courseService) {
         this.certificateService = certificateService;
         this.certificateQueryService = certificateQueryService;
+        this.customerService = customerService;
+        this.certificateRepository = certificateRepository;
+        this.courseService = courseService;
     }
 
     /**
@@ -128,6 +144,24 @@ public class CertificateResource {
         Page<Certificate> page = certificateQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/certificates");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/all/certificates/{customerId}")
+    @Timed
+    public List<Certificate> getCustomerCertificates(@PathVariable Long customerId) throws URISyntaxException {
+        Customer reqdCustomer = customerService.findOne(customerId).get();
+        log.debug("REST request to get all certificates for a customer : {}", reqdCustomer);
+        return certificateRepository.getCertificatesByCustomer(reqdCustomer);
+    }
+
+    @GetMapping("/{courseId}/certificates/{customerId}")
+    @Timed
+    public Certificate getByCourseCertificates(@PathVariable Long customerId, @PathVariable Long courseId) throws URISyntaxException {
+        Customer reqdCustomer = customerService.findOne(customerId).get();
+        Course reqdCourse = courseService.findOne(courseId).get();
+        log.debug("REST request to get a certificate for a customer : {}", reqdCustomer);
+        log.debug("REST request to get a certificate for a course : {}", reqdCourse);
+        return certificateRepository.getCertificateByCoursesAndCustomer(reqdCourse,reqdCustomer);
     }
 
     /**

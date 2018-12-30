@@ -101,9 +101,6 @@ public class CompanyQueryService extends QueryService<Company> {
             if (criteria.getCountry() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCountry(), Company_.country));
             }
-            if (criteria.getCycledate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCycledate(), Company_.cycledate));
-            }
             if (criteria.getUrl() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getUrl(), Company_.url));
             }

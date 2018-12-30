@@ -52,14 +52,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SmartCpdApp.class)
 public class TimeCourseLogResourceIntTest {
 
-    private static final Instant DEFAULT_LOGGEDIN = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_LOGGEDIN = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final Instant DEFAULT_LOGGEDOUT = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_LOGGEDOUT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
     private static final Long DEFAULT_TIMESPENT = 1L;
     private static final Long UPDATED_TIMESPENT = 2L;
+
+    private static final Instant DEFAULT_RECORDDATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_RECORDDATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private TimeCourseLogRepository timeCourseLogRepository;
@@ -99,7 +96,7 @@ public class TimeCourseLogResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final TimeCourseLogResource timeCourseLogResource = new TimeCourseLogResource(timeCourseLogService, timeCourseLogQueryService);
+        final TimeCourseLogResource timeCourseLogResource = new TimeCourseLogResource(timeCourseLogService, timeCourseLogQueryService, timeCourseLogRepository);
         this.restTimeCourseLogMockMvc = MockMvcBuilders.standaloneSetup(timeCourseLogResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -115,9 +112,8 @@ public class TimeCourseLogResourceIntTest {
      */
     public static TimeCourseLog createEntity(EntityManager em) {
         TimeCourseLog timeCourseLog = new TimeCourseLog()
-            .loggedin(DEFAULT_LOGGEDIN)
-            .loggedout(DEFAULT_LOGGEDOUT)
-            .timespent(DEFAULT_TIMESPENT);
+            .timespent(DEFAULT_TIMESPENT)
+            .recorddate(DEFAULT_RECORDDATE);
         return timeCourseLog;
     }
 
@@ -141,9 +137,8 @@ public class TimeCourseLogResourceIntTest {
         List<TimeCourseLog> timeCourseLogList = timeCourseLogRepository.findAll();
         assertThat(timeCourseLogList).hasSize(databaseSizeBeforeCreate + 1);
         TimeCourseLog testTimeCourseLog = timeCourseLogList.get(timeCourseLogList.size() - 1);
-        assertThat(testTimeCourseLog.getLoggedin()).isEqualTo(DEFAULT_LOGGEDIN);
-        assertThat(testTimeCourseLog.getLoggedout()).isEqualTo(DEFAULT_LOGGEDOUT);
         assertThat(testTimeCourseLog.getTimespent()).isEqualTo(DEFAULT_TIMESPENT);
+        assertThat(testTimeCourseLog.getRecorddate()).isEqualTo(DEFAULT_RECORDDATE);
 
         // Validate the TimeCourseLog in Elasticsearch
         verify(mockTimeCourseLogSearchRepository, times(1)).save(testTimeCourseLog);
@@ -182,9 +177,8 @@ public class TimeCourseLogResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(timeCourseLog.getId().intValue())))
-            .andExpect(jsonPath("$.[*].loggedin").value(hasItem(DEFAULT_LOGGEDIN.toString())))
-            .andExpect(jsonPath("$.[*].loggedout").value(hasItem(DEFAULT_LOGGEDOUT.toString())))
-            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())));
+            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())))
+            .andExpect(jsonPath("$.[*].recorddate").value(hasItem(DEFAULT_RECORDDATE.toString())));
     }
     
 
@@ -199,87 +193,8 @@ public class TimeCourseLogResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(timeCourseLog.getId().intValue()))
-            .andExpect(jsonPath("$.loggedin").value(DEFAULT_LOGGEDIN.toString()))
-            .andExpect(jsonPath("$.loggedout").value(DEFAULT_LOGGEDOUT.toString()))
-            .andExpect(jsonPath("$.timespent").value(DEFAULT_TIMESPENT.intValue()));
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedinIsEqualToSomething() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedin equals to DEFAULT_LOGGEDIN
-        defaultTimeCourseLogShouldBeFound("loggedin.equals=" + DEFAULT_LOGGEDIN);
-
-        // Get all the timeCourseLogList where loggedin equals to UPDATED_LOGGEDIN
-        defaultTimeCourseLogShouldNotBeFound("loggedin.equals=" + UPDATED_LOGGEDIN);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedinIsInShouldWork() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedin in DEFAULT_LOGGEDIN or UPDATED_LOGGEDIN
-        defaultTimeCourseLogShouldBeFound("loggedin.in=" + DEFAULT_LOGGEDIN + "," + UPDATED_LOGGEDIN);
-
-        // Get all the timeCourseLogList where loggedin equals to UPDATED_LOGGEDIN
-        defaultTimeCourseLogShouldNotBeFound("loggedin.in=" + UPDATED_LOGGEDIN);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedinIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedin is not null
-        defaultTimeCourseLogShouldBeFound("loggedin.specified=true");
-
-        // Get all the timeCourseLogList where loggedin is null
-        defaultTimeCourseLogShouldNotBeFound("loggedin.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedoutIsEqualToSomething() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedout equals to DEFAULT_LOGGEDOUT
-        defaultTimeCourseLogShouldBeFound("loggedout.equals=" + DEFAULT_LOGGEDOUT);
-
-        // Get all the timeCourseLogList where loggedout equals to UPDATED_LOGGEDOUT
-        defaultTimeCourseLogShouldNotBeFound("loggedout.equals=" + UPDATED_LOGGEDOUT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedoutIsInShouldWork() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedout in DEFAULT_LOGGEDOUT or UPDATED_LOGGEDOUT
-        defaultTimeCourseLogShouldBeFound("loggedout.in=" + DEFAULT_LOGGEDOUT + "," + UPDATED_LOGGEDOUT);
-
-        // Get all the timeCourseLogList where loggedout equals to UPDATED_LOGGEDOUT
-        defaultTimeCourseLogShouldNotBeFound("loggedout.in=" + UPDATED_LOGGEDOUT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTimeCourseLogsByLoggedoutIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        timeCourseLogRepository.saveAndFlush(timeCourseLog);
-
-        // Get all the timeCourseLogList where loggedout is not null
-        defaultTimeCourseLogShouldBeFound("loggedout.specified=true");
-
-        // Get all the timeCourseLogList where loggedout is null
-        defaultTimeCourseLogShouldNotBeFound("loggedout.specified=false");
+            .andExpect(jsonPath("$.timespent").value(DEFAULT_TIMESPENT.intValue()))
+            .andExpect(jsonPath("$.recorddate").value(DEFAULT_RECORDDATE.toString()));
     }
 
     @Test
@@ -350,6 +265,45 @@ public class TimeCourseLogResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllTimeCourseLogsByRecorddateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        timeCourseLogRepository.saveAndFlush(timeCourseLog);
+
+        // Get all the timeCourseLogList where recorddate equals to DEFAULT_RECORDDATE
+        defaultTimeCourseLogShouldBeFound("recorddate.equals=" + DEFAULT_RECORDDATE);
+
+        // Get all the timeCourseLogList where recorddate equals to UPDATED_RECORDDATE
+        defaultTimeCourseLogShouldNotBeFound("recorddate.equals=" + UPDATED_RECORDDATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTimeCourseLogsByRecorddateIsInShouldWork() throws Exception {
+        // Initialize the database
+        timeCourseLogRepository.saveAndFlush(timeCourseLog);
+
+        // Get all the timeCourseLogList where recorddate in DEFAULT_RECORDDATE or UPDATED_RECORDDATE
+        defaultTimeCourseLogShouldBeFound("recorddate.in=" + DEFAULT_RECORDDATE + "," + UPDATED_RECORDDATE);
+
+        // Get all the timeCourseLogList where recorddate equals to UPDATED_RECORDDATE
+        defaultTimeCourseLogShouldNotBeFound("recorddate.in=" + UPDATED_RECORDDATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllTimeCourseLogsByRecorddateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        timeCourseLogRepository.saveAndFlush(timeCourseLog);
+
+        // Get all the timeCourseLogList where recorddate is not null
+        defaultTimeCourseLogShouldBeFound("recorddate.specified=true");
+
+        // Get all the timeCourseLogList where recorddate is null
+        defaultTimeCourseLogShouldNotBeFound("recorddate.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllTimeCourseLogsByCustomerIsEqualToSomething() throws Exception {
         // Initialize the database
         Customer customer = CustomerResourceIntTest.createEntity(em);
@@ -393,9 +347,8 @@ public class TimeCourseLogResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(timeCourseLog.getId().intValue())))
-            .andExpect(jsonPath("$.[*].loggedin").value(hasItem(DEFAULT_LOGGEDIN.toString())))
-            .andExpect(jsonPath("$.[*].loggedout").value(hasItem(DEFAULT_LOGGEDOUT.toString())))
-            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())));
+            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())))
+            .andExpect(jsonPath("$.[*].recorddate").value(hasItem(DEFAULT_RECORDDATE.toString())));
     }
 
     /**
@@ -432,9 +385,8 @@ public class TimeCourseLogResourceIntTest {
         // Disconnect from session so that the updates on updatedTimeCourseLog are not directly saved in db
         em.detach(updatedTimeCourseLog);
         updatedTimeCourseLog
-            .loggedin(UPDATED_LOGGEDIN)
-            .loggedout(UPDATED_LOGGEDOUT)
-            .timespent(UPDATED_TIMESPENT);
+            .timespent(UPDATED_TIMESPENT)
+            .recorddate(UPDATED_RECORDDATE);
 
         restTimeCourseLogMockMvc.perform(put("/api/time-course-logs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -445,9 +397,8 @@ public class TimeCourseLogResourceIntTest {
         List<TimeCourseLog> timeCourseLogList = timeCourseLogRepository.findAll();
         assertThat(timeCourseLogList).hasSize(databaseSizeBeforeUpdate);
         TimeCourseLog testTimeCourseLog = timeCourseLogList.get(timeCourseLogList.size() - 1);
-        assertThat(testTimeCourseLog.getLoggedin()).isEqualTo(UPDATED_LOGGEDIN);
-        assertThat(testTimeCourseLog.getLoggedout()).isEqualTo(UPDATED_LOGGEDOUT);
         assertThat(testTimeCourseLog.getTimespent()).isEqualTo(UPDATED_TIMESPENT);
+        assertThat(testTimeCourseLog.getRecorddate()).isEqualTo(UPDATED_RECORDDATE);
 
         // Validate the TimeCourseLog in Elasticsearch
         verify(mockTimeCourseLogSearchRepository, times(1)).save(testTimeCourseLog);
@@ -507,9 +458,8 @@ public class TimeCourseLogResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(timeCourseLog.getId().intValue())))
-            .andExpect(jsonPath("$.[*].loggedin").value(hasItem(DEFAULT_LOGGEDIN.toString())))
-            .andExpect(jsonPath("$.[*].loggedout").value(hasItem(DEFAULT_LOGGEDOUT.toString())))
-            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())));
+            .andExpect(jsonPath("$.[*].timespent").value(hasItem(DEFAULT_TIMESPENT.intValue())))
+            .andExpect(jsonPath("$.[*].recorddate").value(hasItem(DEFAULT_RECORDDATE.toString())));
     }
 
     @Test

@@ -4,10 +4,26 @@ import { JhiDataUtils } from 'ng-jhipster';
 import { ISection } from 'app/shared/model/section.model';
 import { VgAPI } from 'videogular2/core';
 import { BookmarkService } from 'app/entities/bookmark';
+import { TimeCourseLogService } from 'app/entities/time-course-log';
+import { ITimeCourseLog } from 'app/shared/model/time-course-log.model';
 import { IBookmark } from 'app/shared/model/bookmark.model';
+import { Account, Principal } from 'app/core';
+import { CustomerService } from 'app/entities/customer';
+import { UserService } from 'app/core';
+import { CourseService } from 'app/entities/course';
 import { interval } from 'rxjs';
 import { templateJitUrl } from '@angular/compiler';
 import { numberOfBytes } from 'ng-jhipster/src/directive/number-of-bytes';
+import { logsRoute } from 'app/admin';
+import { Customer, ICustomer } from 'app/shared/model/customer.model';
+import { __values } from 'tslib';
+import { Course } from 'app/shared/model/course.model';
+import { SectionHistoryService } from 'app/entities/section-history';
+import { ISectionHistory } from 'app/shared/model/section-history.model';
+import * as moment from 'moment';
+import { IQuizApp } from 'app/shared/model/quiz-app.model';
+import { QuestionService } from 'app/entities/question';
+import { QuizAppService } from 'app/entities/quiz-app';
 
 @Component({
     selector: 'jhi-section-detail',
@@ -30,6 +46,7 @@ export class SectionDetailComponent implements OnInit {
     pause = false;
     startDate: Date;
     nowDate: Date;
+    lastActive: Date;
     counter = 0;
     diff: any;
     isComplete: Boolean;
@@ -37,11 +54,30 @@ export class SectionDetailComponent implements OnInit {
     currentTime: number;
     arrayBuffer: any;
     contentFile: Object;
+    custEmail: string;
+    reqdCourse: Course;
+    logs: ITimeCourseLog;
+    currentAccount: any;
+    tempHistory: ISectionHistory;
+    prevHistory: ISectionHistory;
+    counter2 = 0;
+    timeLog: ITimeCourseLog;
+    customer: ICustomer;
+    tempQuizApp: IQuizApp;
+
     constructor(
         private dataUtils: JhiDataUtils,
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        private bookmarkService: BookmarkService
+        private bookmarkService: BookmarkService,
+        private timeCourseLogService: TimeCourseLogService,
+        private account: Account,
+        private customerService: CustomerService,
+        private userService: UserService,
+        private principal: Principal,
+        private sectionHistoryService: SectionHistoryService,
+        private questionService: QuestionService,
+        private quizAppService: QuizAppService
     ) {}
 
     ngOnInit() {
@@ -51,18 +87,76 @@ export class SectionDetailComponent implements OnInit {
         this.bookmarkService.getsection(this.section.id).subscribe(data => {
             this.bookmarks = data.body;
         });
+        this.principal.identity().then(account => {
+            this.currentAccount = account;
+            this.custEmail = this.currentAccount.email;
+        });
         this.startDate = new Date();
+        this.userService.getemail(this.custEmail).subscribe(userId => {
+            this.customerService.getuser(userId).subscribe(customer => {
+                this.customer = customer;
+                this.sectionHistoryService.getpersistance(customer.id, this.section.id).subscribe(history => {
+                    if (history === null) {
+                        this.tempHistory.section = this.section;
+                        this.tempHistory.customer = customer;
+                        this.tempHistory.startdate = moment(this.startDate);
+                        this.sectionHistoryService.create(this.tempHistory).subscribe(() => {
+                            this.sectionHistoryService.getbycustomercourse(customer.id, this.section.id).subscribe(sectionhistory => {
+                                this.prevHistory = sectionhistory;
+                            });
+                        });
+                    } else {
+                        this.prevHistory = history;
+                        if (this.counter2 === 0 && this.section.type === 'pdf') {
+                            this.pageNum = this.prevHistory.stamp;
+                            this.counter2++;
+                        } else if (this.counter2 === 0) {
+                            this.api.seekTime(this.prevHistory.stamp, false);
+                            this.onPlay();
+                            this.counter2++;
+                        }
+                    }
+                });
+            });
+        });
         if (this.section.type === 'pdf') {
             setInterval(() => {
                 this.ticksDate();
+                this.userService.getemail(this.custEmail).subscribe(userId => {
+                    this.customerService.getuser(userId).subscribe(customer => {
+                        this.reqdCourse = this.section.course;
+                        this.customer = customer;
+                    });
+                });
+                this.lastActive = new Date();
+                this.prevHistory.lastactivedate = moment(this.lastActive);
+                this.prevHistory.stamp = this.pageNum;
+                this.sectionHistoryService.update(this.prevHistory);
             }, 1000);
         } else {
             setInterval(() => {
                 this.ticksSecond();
                 this.isCompleted();
-                if (this.isComplete) {
-                    this.comingAgainFlag = true;
-                }
+                this.custEmail = this.account.email;
+                this.userService.getemail(this.custEmail).subscribe(userId => {
+                    this.customerService.getuser(userId).subscribe(customer => {
+                        this.reqdCourse = this.section.course;
+                        this.customer = customer;
+                        /**if (this.isComplete) {
+                            if (!this.comingAgainFlag) {
+                                this.logs.timespent = this.ellapsed;
+                                this.logs.course = this.reqdCourse;
+                                this.logs.customer = customer;
+                                this.timeCourseLogService.create(this.logs);
+                            }
+                            this.comingAgainFlag = true;
+                        }*/
+                    });
+                });
+                this.lastActive = new Date();
+                this.prevHistory.lastactivedate = moment(this.lastActive);
+                this.prevHistory.stamp = this.ellapsed;
+                this.sectionHistoryService.update(this.prevHistory);
             }, 1000);
         }
         this.contentFile = this.section.content;
@@ -226,6 +320,17 @@ export class SectionDetailComponent implements OnInit {
     }
 
     moveToQuiz() {
-        this.router.navigateByUrl('quiz/' + this.section.quiz.id.toString() + '/view');
+        this.logs.timespent = this.ellapsed;
+        this.logs.course = this.reqdCourse;
+        this.logs.customer = this.customer;
+        this.logs.recorddate = moment();
+        this.timeCourseLogService.create(this.logs);
+        this.tempQuizApp.currSection = this.section;
+        this.tempQuizApp.newSection = this.section.quiz.newSection;
+        this.tempQuizApp.quiz = this.section.quiz;
+        this.tempQuizApp.questions = this.questionService.findbyquiz(this.section.quiz.id).flatMap[0];
+        this.quizAppService.create(this.tempQuizApp).subscribe(() => {
+            this.router.navigateByUrl('quiz-app/' + this.tempQuizApp.id.toString() + '/view');
+        });
     }
 }

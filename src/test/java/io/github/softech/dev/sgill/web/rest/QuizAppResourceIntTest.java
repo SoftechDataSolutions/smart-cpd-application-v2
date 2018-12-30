@@ -4,14 +4,11 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 
 import io.github.softech.dev.sgill.domain.QuizApp;
 import io.github.softech.dev.sgill.domain.Quiz;
-import io.github.softech.dev.sgill.domain.Customer;
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.Question;
-import io.github.softech.dev.sgill.repository.QuestionRepository;
 import io.github.softech.dev.sgill.repository.QuizAppRepository;
 import io.github.softech.dev.sgill.repository.search.QuizAppSearchRepository;
-import io.github.softech.dev.sgill.service.QuestionService;
 import io.github.softech.dev.sgill.service.QuizAppService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.QuizAppCriteria;
@@ -81,12 +78,6 @@ public class QuizAppResourceIntTest {
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private QuestionRepository questionRepository;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
@@ -243,25 +234,6 @@ public class QuizAppResourceIntTest {
 
         // Get all the quizAppList where quiz equals to quizId + 1
         defaultQuizAppShouldNotBeFound("quizId.equals=" + (quizId + 1));
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllQuizAppsByCustomerIsEqualToSomething() throws Exception {
-        // Initialize the database
-        Customer customer = CustomerResourceIntTest.createEntity(em);
-        em.persist(customer);
-        em.flush();
-        quizApp.setCustomer(customer);
-        quizAppRepository.saveAndFlush(quizApp);
-        Long customerId = customer.getId();
-
-        // Get all the quizAppList where customer equals to customerId
-        defaultQuizAppShouldBeFound("customerId.equals=" + customerId);
-
-        // Get all the quizAppList where customer equals to customerId + 1
-        defaultQuizAppShouldNotBeFound("customerId.equals=" + (customerId + 1));
     }
 
 

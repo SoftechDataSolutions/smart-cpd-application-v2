@@ -1,8 +1,14 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.domain.Section;
 import io.github.softech.dev.sgill.domain.SectionHistory;
+import io.github.softech.dev.sgill.repository.CustomerRepository;
+import io.github.softech.dev.sgill.repository.SectionHistoryRepository;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.service.SectionHistoryService;
+import io.github.softech.dev.sgill.service.SectionService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
@@ -42,9 +48,19 @@ public class SectionHistoryResource {
 
     private final SectionHistoryQueryService sectionHistoryQueryService;
 
-    public SectionHistoryResource(SectionHistoryService sectionHistoryService, SectionHistoryQueryService sectionHistoryQueryService) {
+    private final SectionHistoryRepository sectionHistoryRepository;
+
+    private final CustomerService customerService;
+
+    private final SectionService sectionService;
+
+    public SectionHistoryResource(SectionHistoryService sectionHistoryService, SectionHistoryQueryService sectionHistoryQueryService,
+                                  SectionHistoryRepository sectionHistoryRepository, CustomerService customerService, SectionService sectionService) {
         this.sectionHistoryService = sectionHistoryService;
         this.sectionHistoryQueryService = sectionHistoryQueryService;
+        this.sectionHistoryRepository = sectionHistoryRepository;
+        this.customerService = customerService;
+        this.sectionService = sectionService;
     }
 
     /**
@@ -105,6 +121,22 @@ public class SectionHistoryResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/{courseId}/section-histories/{customerId}")
+    @Timed
+    public SectionHistory getLastCourseSectionHistories(@PathVariable Long courseId, @PathVariable Long customerId) {
+        log.debug("REST request to get most recent Section by Course ID: {}", courseId);
+        log.debug("REST request to get most recent Section by Customer ID: {}", customerId);
+        return sectionHistoryRepository.getSectionByCourse(customerId, courseId);
+    }
+
+    @GetMapping("/{courseId}/section-history/{customerId}")
+    @Timed
+    public SectionHistory getByCustomerCourseSectionHistories(@PathVariable Long courseId, @PathVariable Long customerId) {
+        log.debug("REST request to get most recent Section by Course ID: {}", courseId);
+        log.debug("REST request to get most recent Section by Customer ID: {}", customerId);
+        return sectionHistoryRepository.getSectionHistoryByCustomerIdAndSectionId(customerId, courseId);
+    }
+
     /**
      * GET  /section-histories/:id : get the "id" sectionHistory.
      *
@@ -117,6 +149,29 @@ public class SectionHistoryResource {
         log.debug("REST request to get SectionHistory : {}", id);
         Optional<SectionHistory> sectionHistory = sectionHistoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(sectionHistory);
+    }
+
+    @GetMapping("/customer/section-histories/{customerid}")
+    @Timed
+    public List<SectionHistory> getCustomerSectionHistories(@PathVariable Long customerid) {
+        log.debug("REST request to get SectionHistories by customer : {}", customerid);
+        Customer reqdCustomer = customerService.findOne(customerid).get();
+        return sectionHistoryRepository.getSectionHistoriesByCustomer(reqdCustomer);
+    }
+
+    @GetMapping("/recent/section-history/{customerid}")
+    @Timed
+    public Section getRecentSectionHistory(@PathVariable Long customerid) {
+        log.debug("REST request to get recent Section by customer : {}", customerid);
+        SectionHistory temp = sectionHistoryRepository.getRecentSectionHistory(customerid);
+        return sectionService.findOne(temp.getSection().getId()).get();
+    }
+
+    @GetMapping("/customer/{customerid}/section-history/{sectionid}")
+    @Timed
+    public SectionHistory getPersistanceSectionHistory(@PathVariable Long customerid, @PathVariable Long sectionid) {
+        log.debug("REST request to get SectionHistory by customer and Section : {}", customerid);
+        return sectionHistoryRepository.getSectionHistoryByCustomerIdAndSectionId(customerid, sectionid);
     }
 
     /**

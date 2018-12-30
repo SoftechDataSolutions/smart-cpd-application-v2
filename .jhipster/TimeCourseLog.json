@@ -2,16 +2,12 @@
     "name": "TimeCourseLog",
     "fields": [
         {
-            "fieldName": "loggedin",
-            "fieldType": "Instant"
-        },
-        {
-            "fieldName": "loggedout",
-            "fieldType": "Instant"
-        },
-        {
             "fieldName": "timespent",
             "fieldType": "Long"
+        },
+        {
+            "fieldName": "recorddate",
+            "fieldType": "Instant"
         }
     ],
     "relationships": [

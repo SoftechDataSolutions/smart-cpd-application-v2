@@ -74,9 +74,9 @@ public class QuestionHistoryQueryService extends QueryService<QuestionHistory> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildSpecification(criteria.getId(), QuestionHistory_.id));
             }
-            if (criteria.getTimestamp() != null) {
+            /**if (criteria.getTimestamp() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTimestamp(), QuestionHistory_.timestamp));
-            }
+            }*/
             if (criteria.getCorrect() != null) {
                 specification = specification.and(buildSpecification(criteria.getCorrect(), QuestionHistory_.correct));
             }

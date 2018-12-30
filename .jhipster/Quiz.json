@@ -1,7 +1,15 @@
 {
     "fluentMethods": true,
     "clientRootFolder": "",
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "newSection",
+            "otherEntityName": "section",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "name",
+            "ownerSide": true
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",

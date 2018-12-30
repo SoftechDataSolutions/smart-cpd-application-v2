@@ -31,7 +31,10 @@
     ],
     "clientFramework": "angularX",
     "jhiPrefix": "jhi",
-    "herokuAppName": "smart-cpd"
+    "herokuAppName": "smart-cpd",
+    "jhipsterVersion": "5.7.2",
+    "jwtSecretKey": "NWIzNWM1NmZmMzczMDYzYzU1ODI4NGM0YjdkYjVmZDZmZmFiOWE3Zjg0MDNjMzhlOGM1MWI1MjEyY2VhNDRhZWUxOThlYTdiOWQwY2VhNWEzMDdmMzhlMGZiMzIxODBjNGVlMjJhNmIwZGEwMmRlOWYwOTA1NWQzYmFlYzU2MzY=",
+    "otherModules": []
   },
   "git-provider": "GitHub",
   "git-company": "SoftechDataSolutions",

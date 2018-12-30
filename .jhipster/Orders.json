@@ -18,6 +18,38 @@
             "fieldName": "payment",
             "fieldType": "PAYMENT",
             "fieldValues": "PAYPAL,STRIPE"
+        },
+        {
+            "fieldName": "gateway_id",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "seller_message",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "network_status",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "seller_status",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "gateway_amt",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "seller_type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "card_type",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "last4",
+            "fieldType": "String"
         }
     ],
     "relationships": [

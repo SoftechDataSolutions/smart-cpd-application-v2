@@ -30,7 +30,7 @@ export const companyRoute: Routes = [
         path: 'company',
         component: CompanyComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: [],
             pageTitle: 'smartCpdApp.company.home.title'
         },
         canActivate: [UserRouteAccessService]

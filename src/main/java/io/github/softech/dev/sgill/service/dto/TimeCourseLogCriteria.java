@@ -28,11 +28,9 @@ public class TimeCourseLogCriteria implements Serializable {
 
     private LongFilter id;
 
-    private InstantFilter loggedin;
-
-    private InstantFilter loggedout;
-
     private LongFilter timespent;
+
+    private InstantFilter recorddate;
 
     private LongFilter customerId;
 
@@ -49,28 +47,20 @@ public class TimeCourseLogCriteria implements Serializable {
         this.id = id;
     }
 
-    public InstantFilter getLoggedin() {
-        return loggedin;
-    }
-
-    public void setLoggedin(InstantFilter loggedin) {
-        this.loggedin = loggedin;
-    }
-
-    public InstantFilter getLoggedout() {
-        return loggedout;
-    }
-
-    public void setLoggedout(InstantFilter loggedout) {
-        this.loggedout = loggedout;
-    }
-
     public LongFilter getTimespent() {
         return timespent;
     }
 
     public void setTimespent(LongFilter timespent) {
         this.timespent = timespent;
+    }
+
+    public InstantFilter getRecorddate() {
+        return recorddate;
+    }
+
+    public void setRecorddate(InstantFilter recorddate) {
+        this.recorddate = recorddate;
     }
 
     public LongFilter getCustomerId() {
@@ -93,9 +83,8 @@ public class TimeCourseLogCriteria implements Serializable {
     public String toString() {
         return "TimeCourseLogCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
-                (loggedin != null ? "loggedin=" + loggedin + ", " : "") +
-                (loggedout != null ? "loggedout=" + loggedout + ", " : "") +
                 (timespent != null ? "timespent=" + timespent + ", " : "") +
+                (recorddate != null ? "recorddate=" + recorddate + ", " : "") +
                 (customerId != null ? "customerId=" + customerId + ", " : "") +
                 (courseId != null ? "courseId=" + courseId + ", " : "") +
             "}";

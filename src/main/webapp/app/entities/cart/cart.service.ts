@@ -21,6 +21,7 @@ export class CartService {
     private resourceAmountUrl = SERVER_API_URL + 'api/amount/carts';
     private resourceCheckoutUrl = SERVER_API_URL + 'api/checkout/carts';
     private resourcePointUrl = SERVER_API_URL + 'api/points/carts';
+    private resourceCustomerUrl = SERVER_API_URL + '/all/carts';
 
     constructor(private http: HttpClient) {}
 
@@ -91,6 +92,10 @@ export class CartService {
 
     check(id: number): Observable<ICart> {
         return this.http.get<ICart>(`${this.resourceCheckUrl}/${id}`);
+    }
+
+    getcustomer(id: number): Observable<ICart[]> {
+        return this.http.get<ICart[]>(`${this.resourceCustomerUrl}/${id}`);
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {

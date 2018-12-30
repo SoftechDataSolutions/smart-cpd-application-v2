@@ -7,11 +7,11 @@
         <img src="smart_cpd_certificate_temp.png" width="100%" height="100%">
         <div style="margin-top: -47%; text-align: center;">
             <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;">Presented to<!--{{certificate.customer.}}--></strong><br>
-            <strong style="font-size: 400%; font-weight: bolder; font-family: Cambria;">Shaanjot Gill</strong><br>
+            <strong style="font-size: 400%; font-weight: bolder; font-family: Cambria;">{{certificate.customer.normalized}}<!--Shaanjot Gill--></strong><br>
             <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;">has successfully completed and earned </strong><br>
-            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>5<!--{{certificate.courses.credit}}--> CPD points</u> for</strong><br>
-            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>Roofs 101</u> <!--{{certificate.courses.normCourses}}--> course on </strong>
-            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>11/5/2018</u> <!--{{certificate.timestamp}}--></strong><br><hr><br>
+            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>{{certificate.courses.credit}} CPD points</u> for</strong><br>
+            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>{{certificate.courses.normCourses}}</u> course on </strong>
+            <strong style="font-size: 275%; font-weight: bold; font-family: Cambria;"><u>{{certificate.timestamp}}</u></strong><br><hr><br>
         </div>
     </div>
     <div class="col-2"></div>

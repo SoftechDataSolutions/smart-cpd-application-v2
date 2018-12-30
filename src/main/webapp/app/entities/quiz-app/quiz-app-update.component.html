@@ -18,13 +18,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.customer" for="field_customer">Customer</label>
-                    <select class="form-control" id="field_customer" name="customer" [(ngModel)]="quizApp.customer" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="customerOption.id === quizApp.customer?.id ? quizApp.customer : customerOption" *ngFor="let customerOption of customers; trackBy: trackCustomerById">{{customerOption.normalized}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.quizApp.currSection" for="field_currSection">Curr Section</label>
                     <select class="form-control" id="field_currSection" name="currSection" [(ngModel)]="quizApp.currSection" >
                         <option [ngValue]="null"></option>
@@ -38,12 +31,12 @@
                         <option [ngValue]="sectionOption.id === quizApp.newSection?.id ? quizApp.newSection : sectionOption" *ngFor="let sectionOption of sections; trackBy: trackSectionById">{{sectionOption.name}}</option>
                     </select>
                 </div>
-                <!--<div class="form-group">
+                <div class="form-group">
                     <label jhiTranslate="smartCpdApp.quizApp.questions" for="field_questions">Questions</label>
                     <select class="form-control" id="field_questions" multiple name="questions" [(ngModel)]="quizApp.questions">
                         <option [ngValue]="getSelected(quizApp.questions, questionOption)" *ngFor="let questionOption of questions; trackBy: trackQuestionById">{{questionOption.textQuestion}}</option>
                     </select>
-                </div>-->
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

@@ -12,6 +12,10 @@
         {
             "fieldName": "watched",
             "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "stamp",
+            "fieldType": "Integer"
         }
     ],
     "relationships": [

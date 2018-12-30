@@ -95,18 +95,18 @@ public class CustomerQueryService extends QueryService<Customer> {
             if (criteria.getCountry() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getCountry(), Customer_.country));
             }
-            if (criteria.getRegistered() != null) {
+            /**if (criteria.getRegistered() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getRegistered(), Customer_.registered));
-            }
-            if (criteria.getLastactive() != null) {
+            }*/
+            /**if (criteria.getLastactive() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getLastactive(), Customer_.lastactive));
-            }
+            }*/
             if (criteria.getPoints() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPoints(), Customer_.points));
             }
-            if (criteria.getCycledate() != null) {
+            /**if (criteria.getCycledate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCycledate(), Customer_.cycledate));
-            }
+            }*/
             if (criteria.getAreaserviced() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getAreaserviced(), Customer_.areaserviced));
             }

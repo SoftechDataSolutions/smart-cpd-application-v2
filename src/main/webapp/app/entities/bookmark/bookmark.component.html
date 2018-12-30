@@ -1,4 +1,4 @@
-<div>
+<div *jhiHasAnyAuthority="'ROLE_ADMIN'">
     <h2 id="page-heading">
         <span jhiTranslate="smartCpdApp.bookmark.home.title">Bookmarks</span>
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-bookmark" [routerLink]="['/bookmark/new']">

@@ -1,8 +1,11 @@
 package io.github.softech.dev.sgill.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import io.github.softech.dev.sgill.domain.CourseHistory;
+import io.github.softech.dev.sgill.domain.*;
+import io.github.softech.dev.sgill.repository.CourseHistoryRepository;
 import io.github.softech.dev.sgill.service.CourseHistoryService;
+import io.github.softech.dev.sgill.service.CourseService;
+import io.github.softech.dev.sgill.service.CustomerService;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
@@ -42,9 +45,19 @@ public class CourseHistoryResource {
 
     private final CourseHistoryQueryService courseHistoryQueryService;
 
-    public CourseHistoryResource(CourseHistoryService courseHistoryService, CourseHistoryQueryService courseHistoryQueryService) {
+    private final CourseHistoryRepository courseHistoryRepository;
+
+    private final CustomerService customerService;
+
+    private final CourseService courseService;
+
+    public CourseHistoryResource(CourseHistoryService courseHistoryService, CourseHistoryQueryService courseHistoryQueryService, CourseHistoryRepository courseHistoryRepository,
+                                 CustomerService customerService, CourseService courseService) {
         this.courseHistoryService = courseHistoryService;
         this.courseHistoryQueryService = courseHistoryQueryService;
+        this.courseHistoryRepository = courseHistoryRepository;
+        this.customerService = customerService;
+        this.courseService = courseService;
     }
 
     /**
@@ -117,6 +130,22 @@ public class CourseHistoryResource {
         log.debug("REST request to get CourseHistory : {}", id);
         Optional<CourseHistory> courseHistory = courseHistoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(courseHistory);
+    }
+
+    @GetMapping("/recent/course-history/{customerid}")
+    @Timed
+    public Course getRecentCourseHistory(@PathVariable Long customerid) {
+        log.debug("REST request to get recent Course by customer : {}", customerid);
+        CourseHistory temp = courseHistoryRepository.findRecentCourseHistory(customerid);
+        return courseService.findOne(temp.getCourse().getId()).get();
+    }
+
+    @GetMapping("customer/course-histories/{customerId}")
+    @Timed
+    public List<CourseHistory> getCustomerCourseHistories(@PathVariable Long customerId) {
+        log.debug("REST request to get CourseHistories by customer : {}", customerId);
+        Customer reqdCustomer = customerService.findOne(customerId).get();
+        return courseHistoryRepository.getCourseHistoriesByCustomer(reqdCustomer);
     }
 
     /**

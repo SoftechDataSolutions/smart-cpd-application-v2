@@ -16,4 +16,5 @@ import java.util.List;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long>, JpaSpecificationExecutor<Cart> {
     List<Cart> findCartsByCustomerIdAndCheckout(Long id, Boolean flag);
+    List<Cart> getCartsByCustomer(Customer customer);
 }

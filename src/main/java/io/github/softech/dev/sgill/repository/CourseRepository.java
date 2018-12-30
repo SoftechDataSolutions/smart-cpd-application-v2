@@ -1,6 +1,7 @@
 package io.github.softech.dev.sgill.repository;
 
 import io.github.softech.dev.sgill.domain.Course;
+import io.github.softech.dev.sgill.domain.Section;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;

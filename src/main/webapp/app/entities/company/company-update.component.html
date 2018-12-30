@@ -51,16 +51,14 @@
                         </small>
                     </div>
                 </div>
+                <div class="form-group" >
+                    <label class="form-control-label">Enter Your Address</label>
+                    <input type="text" placeholder="Search for Location" autocorrect="off" autocapitalize="off" spellcheck="off" class="form-control" #search>
+                </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.streetAddress" for="field_streetAddress">Street Address</label>
                     <input type="text" class="form-control" name="streetAddress" id="field_streetAddress"
-                        [(ngModel)]="company.streetAddress" required/>
-                    <div [hidden]="!(editForm.controls.streetAddress?.dirty && editForm.controls.streetAddress?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.streetAddress?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
+                        [(ngModel)]="company.streetAddress" placeholder=" {{addr}}" disabled="true" required/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.postalCode" for="field_postalCode">Postal Code</label>
@@ -80,35 +78,17 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.city" for="field_city">City</label>
                     <input type="text" class="form-control" name="city" id="field_city"
-                        [(ngModel)]="company.city" required/>
-                    <div [hidden]="!(editForm.controls.city?.dirty && editForm.controls.city?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.city?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
+                        [(ngModel)]="company.city" placeholder=" {{city}}" disabled="true" required/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.stateProvince" for="field_stateProvince">State Province</label>
                     <input type="text" class="form-control" name="stateProvince" id="field_stateProvince"
-                        [(ngModel)]="company.stateProvince" required/>
-                    <div [hidden]="!(editForm.controls.stateProvince?.dirty && editForm.controls.stateProvince?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.stateProvince?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
+                        [(ngModel)]="company.stateProvince" placeholder=" {{state}}" disabled="true" required/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.country" for="field_country">Country</label>
                     <input type="text" class="form-control" name="country" id="field_country"
-                        [(ngModel)]="company.country" required/>
-                    <div [hidden]="!(editForm.controls.country?.dirty && editForm.controls.country?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.country?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
+                        [(ngModel)]="company.country" placeholder=" {{country}}" disabled="true" required/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="smartCpdApp.company.cycledate" for="field_cycledate">Cycledate</label>

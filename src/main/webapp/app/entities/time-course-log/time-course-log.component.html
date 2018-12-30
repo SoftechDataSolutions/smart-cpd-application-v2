@@ -30,9 +30,8 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="loggedin"><span jhiTranslate="smartCpdApp.timeCourseLog.loggedin">Loggedin</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="loggedout"><span jhiTranslate="smartCpdApp.timeCourseLog.loggedout">Loggedout</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="timespent"><span jhiTranslate="smartCpdApp.timeCourseLog.timespent">Timespent</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="recorddate"><span jhiTranslate="smartCpdApp.timeCourseLog.recorddate">Recorddate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="customer.normalized"><span jhiTranslate="smartCpdApp.timeCourseLog.customer">Customer</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="course.title"><span jhiTranslate="smartCpdApp.timeCourseLog.course">Course</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -41,9 +40,8 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let timeCourseLog of timeCourseLogs ;trackBy: trackId">
                 <td><a [routerLink]="['/time-course-log', timeCourseLog.id, 'view' ]">{{timeCourseLog.id}}</a></td>
-                <td>{{timeCourseLog.loggedin | date:'medium'}}</td>
-                <td>{{timeCourseLog.loggedout | date:'medium'}}</td>
                 <td>{{timeCourseLog.timespent}}</td>
+                <td>{{timeCourseLog.recorddate | date:'medium'}}</td>
                 <td>
                     <div *ngIf="timeCourseLog.customer">
                         <a [routerLink]="['../customer', timeCourseLog.customer?.id, 'view' ]" >{{timeCourseLog.customer?.normalized}}</a>

@@ -5,6 +5,7 @@ import io.github.softech.dev.sgill.SmartCpdApp;
 import io.github.softech.dev.sgill.domain.Company;
 import io.github.softech.dev.sgill.repository.CompanyRepository;
 import io.github.softech.dev.sgill.repository.search.CompanySearchRepository;
+import io.github.softech.dev.sgill.service.CompanyRequestService;
 import io.github.softech.dev.sgill.service.CompanyService;
 import io.github.softech.dev.sgill.web.rest.errors.ExceptionTranslator;
 import io.github.softech.dev.sgill.service.dto.CompanyCriteria;
@@ -124,10 +125,13 @@ public class CompanyResourceIntTest {
 
     private Company company;
 
+    @Autowired
+    private CompanyRequestService companyRequestService;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CompanyResource companyResource = new CompanyResource(companyService, companyQueryService);
+        final CompanyResource companyResource = new CompanyResource(companyService, companyQueryService, companyRequestService);
         this.restCompanyMockMvc = MockMvcBuilders.standaloneSetup(companyResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

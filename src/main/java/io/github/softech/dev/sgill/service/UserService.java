@@ -314,17 +314,24 @@ public class UserService {
     public void deleteUser(String login) {
             User user = userRepository.findOneByLogin(login).get();
             Customer customer = customerRepository.findCustomersByUser(user);
-            Servicelist listing = servicelistRepository.findServicelistByCustomer(customer);
-            customerRepository.delete(customer);
-            customerSearchRepository.delete(customer);
+            if(customer.getId() == null) {
+                userRepository.delete(user);
+                //userSearchRepository.delete(user);
+                this.clearUserCaches(user);
+                log.debug("Deleted User: {}", user);
+            } else {
+                Servicelist listing = servicelistRepository.findServicelistByCustomer(customer);
+                customerRepository.delete(customer);
+                customerSearchRepository.delete(customer);
 
-            servicelistRepository.delete(listing);
-            servicelistSearchRepository.delete(listing);
+                servicelistRepository.delete(listing);
+                servicelistSearchRepository.delete(listing);
 
-            userRepository.delete(user);
-            userSearchRepository.delete(user);
-            this.clearUserCaches(user);
-            log.debug("Deleted User: {}", user);
+                userRepository.delete(user);
+                userSearchRepository.delete(user);
+                this.clearUserCaches(user);
+                log.debug("Deleted User: {}", user);
+            }
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {

@@ -4,15 +4,14 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Course;
 import io.github.softech.dev.sgill.domain.CourseCartBridge;
+import io.github.softech.dev.sgill.domain.Customer;
+import io.github.softech.dev.sgill.repository.CartRepository;
 import io.github.softech.dev.sgill.repository.CourseCartBridgeRepository;
-import io.github.softech.dev.sgill.service.CartService;
-import io.github.softech.dev.sgill.service.CourseCartBridgeService;
-import io.github.softech.dev.sgill.service.CourseService;
+import io.github.softech.dev.sgill.service.*;
 import io.github.softech.dev.sgill.web.rest.errors.BadRequestAlertException;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
 import io.github.softech.dev.sgill.web.rest.util.PaginationUtil;
 import io.github.softech.dev.sgill.service.dto.CourseCartBridgeCriteria;
-import io.github.softech.dev.sgill.service.CourseCartBridgeQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -51,12 +51,18 @@ public class CourseCartBridgeResource {
 
     private final CartService cartService;
 
+    private final CartRepository cartRepository;
+
+    private final CustomerService customerService;
+
     public CourseCartBridgeResource(CourseCartBridgeService courseCartBridgeService, CourseCartBridgeQueryService courseCartBridgeQueryService, CourseCartBridgeRepository courseCartBridgeRepository,
-                                    CartService cartService) {
+                                    CartService cartService, CartRepository cartRepository, CustomerService customerService) {
         this.courseCartBridgeService = courseCartBridgeService;
         this.courseCartBridgeQueryService = courseCartBridgeQueryService;
         this.courseCartBridgeRepository = courseCartBridgeRepository;
         this.cartService = cartService;
+        this.cartRepository = cartRepository;
+        this.customerService = customerService;
     }
 
     /**
@@ -140,6 +146,22 @@ public class CourseCartBridgeResource {
         Page<CourseCartBridge> page = courseCartBridgeQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/course-cart-bridges");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/cart/course-cart-bridges/{customerId}")
+    @Timed
+    public List<CourseCartBridge> getCartsCourseCartBridges(@PathVariable Long customerId) {
+        log.debug("REST request to get CourseCartBridges by Customers: {}", customerId);
+        Customer reqdCustomer = customerService.findOne(customerId).get();
+        List<Cart> carts = cartRepository.getCartsByCustomer(reqdCustomer);
+        List<CourseCartBridge> reqd = new ArrayList<CourseCartBridge>();
+        for (Cart cart: carts) {
+            List<CourseCartBridge> temp = courseCartBridgeRepository.findCourseCartBridgesByCartId(cart.getId());
+            for (CourseCartBridge bridge: temp) {
+                reqd.add(bridge);
+            }
+        }
+        return reqd;
     }
 
     /**
