@@ -1,11 +1,10 @@
 import './vendor.ts';
 
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Ng2Webstorage } from 'ngx-webstorage';
-import { NgJhipsterModule } from 'ng-jhipster';
+import { Ng2Webstorage, LocalStorageService, SessionStorageService } from 'ngx-webstorage';
+import { JhiEventManager } from 'ng-jhipster';
 
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
@@ -17,7 +16,6 @@ import { SmartCpdAppRoutingModule } from './app-routing.module';
 import { SmartCpdHomeModule } from './home/home.module';
 import { SmartCpdAccountModule } from './account/account.module';
 import { SmartCpdEntityModule } from './entities/entity.module';
-import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 
@@ -26,47 +24,40 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         BrowserModule,
         SmartCpdAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
-        NgJhipsterModule.forRoot({
-            // set below to true to make alerts look like toast
-            alertAsToast: false,
-            alertTimeout: 5000,
-            i18nEnabled: true,
-            defaultI18nLang: 'en'
-        }),
-        SmartCpdSharedModule.forRoot(),
+        SmartCpdSharedModule,
         SmartCpdCoreModule,
         SmartCpdHomeModule,
         SmartCpdAccountModule,
-        // jhipster-needle-angular-add-module JHipster will add new module here
         SmartCpdEntityModule
+        // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
-            multi: true
+            multi: true,
+            deps: [LocalStorageService, SessionStorageService]
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,
-            multi: true
+            multi: true,
+            deps: [Injector]
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorHandlerInterceptor,
-            multi: true
+            multi: true,
+            deps: [JhiEventManager]
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NotificationInterceptor,
-            multi: true
+            multi: true,
+            deps: [Injector]
         }
     ],
     bootstrap: [JhiMainComponent]
 })
-export class SmartCpdAppModule {
-    constructor(private dpConfig: NgbDatepickerConfig) {
-        this.dpConfig.minDate = { year: moment().year() - 100, month: 1, day: 1 };
-    }
-}
+export class SmartCpdAppModule {}

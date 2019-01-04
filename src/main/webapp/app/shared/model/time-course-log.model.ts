@@ -4,8 +4,9 @@ import { ICourse } from 'app/shared/model//course.model';
 
 export interface ITimeCourseLog {
     id?: number;
+    loggedin?: Moment;
+    loggedout?: Moment;
     timespent?: number;
-    recorddate?: Moment;
     customer?: ICustomer;
     course?: ICourse;
 }
@@ -13,8 +14,9 @@ export interface ITimeCourseLog {
 export class TimeCourseLog implements ITimeCourseLog {
     constructor(
         public id?: number,
+        public loggedin?: Moment,
+        public loggedout?: Moment,
         public timespent?: number,
-        public recorddate?: Moment,
         public customer?: ICustomer,
         public course?: ICourse
     ) {}

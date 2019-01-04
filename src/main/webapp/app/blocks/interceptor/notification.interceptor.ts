@@ -1,12 +1,16 @@
 import { JhiAlertService } from 'ng-jhipster';
 import { HttpInterceptor, HttpRequest, HttpResponse, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-@Injectable()
 export class NotificationInterceptor implements HttpInterceptor {
-    constructor(private alertService: JhiAlertService) {}
+    private alertService: JhiAlertService;
+
+    // tslint:disable-next-line: no-unused-variable
+    constructor(private injector: Injector) {
+        setTimeout(() => (this.alertService = injector.get(JhiAlertService)));
+    }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
@@ -25,7 +29,9 @@ export class NotificationInterceptor implements HttpInterceptor {
                         });
                         if (alert) {
                             if (typeof alert === 'string') {
-                                this.alertService.success(alert, { param: alertParams }, null);
+                                if (this.alertService) {
+                                    this.alertService.success(alert, { param: alertParams }, null);
+                                }
                             }
                         }
                     }

@@ -64,6 +64,11 @@ spring:
             properties:
                 path:
                     home: target/elasticsearch
+        jest:
+            uri: https://35eefde526e4446ca5dc997fd712617f.us-west-2.aws.found.io:9243
+            username: elastic
+            password: BxQ65Ec4Ln6Z8LeMASreFAcm
+            multi-threaded: true
     liquibase:
         contexts: dev
     mail:

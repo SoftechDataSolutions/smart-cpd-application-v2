@@ -8,8 +8,6 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ISectionHistory } from 'app/shared/model/section-history.model';
-import { ICart } from 'app/shared/model/cart.model';
-import { ISection } from 'app/shared/model/section.model';
 
 type EntityResponseType = HttpResponse<ISectionHistory>;
 type EntityArrayResponseType = HttpResponse<ISectionHistory[]>;
@@ -18,8 +16,6 @@ type EntityArrayResponseType = HttpResponse<ISectionHistory[]>;
 export class SectionHistoryService {
     private resourceUrl = SERVER_API_URL + 'api/section-histories';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/section-histories';
-    private resourceCustomerUrl = SERVER_API_URL + 'api/customer/section-histories';
-    private resourceSectionUrl = SERVER_API_URL + 'api/recent/section-history/';
 
     constructor(private http: HttpClient) {}
 
@@ -41,22 +37,6 @@ export class SectionHistoryService {
         return this.http
             .get<ISectionHistory>(`${this.resourceUrl}/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-    }
-
-    getcustomer(id: number): Observable<ISectionHistory[]> {
-        return this.http.get<ISectionHistory[]>(`${this.resourceCustomerUrl}/${id}`);
-    }
-
-    getpersistance(customerid: number, sectionid: number): Observable<ISectionHistory> {
-        return this.http.get<ISectionHistory>(`${SERVER_API_URL + '/customer'}/${customerid}${'/section-history'}/${sectionid}`);
-    }
-
-    getrecent(id: number): Observable<ISection> {
-        return this.http.get<ISection>(`${this.resourceSectionUrl}/${id}`);
-    }
-
-    getbycustomercourse(customerid: number, sectionid: number): Observable<ISectionHistory> {
-        return this.http.get<ISectionHistory>(`${SERVER_API_URL}/${customerid}${'/section-history'}/${sectionid}`);
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {

@@ -12,10 +12,4 @@ import { SmartCpdSharedLibsModule, SmartCpdSharedCommonModule, JhiLoginModalComp
     exports: [SmartCpdSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SmartCpdSharedModule {
-    static forRoot() {
-        return {
-            ngModule: SmartCpdSharedModule
-        };
-    }
-}
+export class SmartCpdSharedModule {}

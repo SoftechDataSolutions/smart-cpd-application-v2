@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
-import { AccountService, UserService, User } from 'app/core';
+import { Principal, UserService, User } from 'app/core';
 import { UserMgmtDeleteDialogComponent } from 'app/admin';
 
 @Component({
@@ -31,7 +31,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     constructor(
         private userService: UserService,
         private alertService: JhiAlertService,
-        private accountService: AccountService,
+        private principal: Principal,
         private parseLinks: JhiParseLinks,
         private activatedRoute: ActivatedRoute,
         private router: Router,
@@ -48,7 +48,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.accountService.identity().then(account => {
+        this.principal.identity().then(account => {
             this.currentAccount = account;
             this.loadAll();
             this.registerChangeInUsers();

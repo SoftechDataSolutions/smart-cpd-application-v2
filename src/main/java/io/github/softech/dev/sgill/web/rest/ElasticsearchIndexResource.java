@@ -5,7 +5,7 @@ import io.github.softech.dev.sgill.security.AuthoritiesConstants;
 import io.github.softech.dev.sgill.security.SecurityUtils;
 import io.github.softech.dev.sgill.service.ElasticsearchIndexService;
 import io.github.softech.dev.sgill.web.rest.util.HeaderUtil;
-import org.elasticsearch.common.inject.*;
+import org.elasticsearch.common.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

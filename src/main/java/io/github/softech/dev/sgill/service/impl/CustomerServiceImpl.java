@@ -125,8 +125,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         userRepository.delete(user);
         userSearchRepository.delete(user);
-        userService.clearUserCache(user);
-
+        //userService.clearUserCache(user);
     }
 
     @Override

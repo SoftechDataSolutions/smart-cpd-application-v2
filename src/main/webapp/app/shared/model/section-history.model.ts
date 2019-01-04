@@ -7,7 +7,6 @@ export interface ISectionHistory {
     startdate?: Moment;
     lastactivedate?: Moment;
     watched?: boolean;
-    stamp?: number;
     customer?: ICustomer;
     section?: ISection;
 }
@@ -18,7 +17,6 @@ export class SectionHistory implements ISectionHistory {
         public startdate?: Moment,
         public lastactivedate?: Moment,
         public watched?: boolean,
-        public stamp?: number,
         public customer?: ICustomer,
         public section?: ISection
     ) {

@@ -7,7 +7,7 @@ import io.github.softech.dev.sgill.repository.*;
 import io.github.softech.dev.sgill.repository.search.*;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.indices.*;
-import org.elasticsearch.index.IndexShardAlreadyExistsException;
+import org.elasticsearch.index.shard.IllegalIndexShardStateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -191,7 +191,7 @@ public class ElasticsearchIndexService {
         elasticsearchTemplate.deleteIndex(entityClass);
         try {
             elasticsearchTemplate.createIndex(entityClass);
-        } catch (IndexShardAlreadyExistsException e) {
+        } catch (IllegalIndexShardStateException e) {
             // Do nothing. Index was already concurrently recreated by some other service.
         }
         elasticsearchTemplate.putMapping(entityClass);

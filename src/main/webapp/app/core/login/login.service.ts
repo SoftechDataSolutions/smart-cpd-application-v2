@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
+import { JhiLanguageService } from 'ng-jhipster';
 
-import { AccountService } from '../auth/account.service';
+import { Principal } from '../auth/principal.service';
 import { AuthServerProvider } from '../auth/auth-jwt.service';
 import { JhiTrackerService } from '../tracker/tracker.service';
 
 @Injectable({ providedIn: 'root' })
 export class LoginService {
     constructor(
-        private accountService: AccountService,
+        private languageService: JhiLanguageService,
+        private principal: Principal,
         private trackerService: JhiTrackerService,
         private authServerProvider: AuthServerProvider
     ) {}
@@ -18,7 +20,12 @@ export class LoginService {
         return new Promise((resolve, reject) => {
             this.authServerProvider.login(credentials).subscribe(
                 data => {
-                    this.accountService.identity(true).then(account => {
+                    this.principal.identity(true).then(account => {
+                        // After the login the language will be changed to
+                        // the language selected by the user during his registration
+                        if (account !== null) {
+                            this.languageService.changeLanguage(account.langKey);
+                        }
                         this.trackerService.sendActivity();
                         resolve(data);
                     });
@@ -39,6 +46,6 @@ export class LoginService {
 
     logout() {
         this.authServerProvider.logout().subscribe();
-        this.accountService.authenticate(null);
+        this.principal.authenticate(null);
     }
 }

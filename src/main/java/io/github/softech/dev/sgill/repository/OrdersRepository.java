@@ -1,6 +1,5 @@
 package io.github.softech.dev.sgill.repository;
 
-import com.stripe.model.Order;
 import io.github.softech.dev.sgill.domain.Cart;
 import io.github.softech.dev.sgill.domain.Orders;
 import org.springframework.data.jpa.repository.*;

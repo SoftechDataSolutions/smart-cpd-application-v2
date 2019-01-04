@@ -11,21 +11,11 @@ import {
     companyRoute,
     companyPopupRoute
 } from './';
-import { FormsModule } from '@angular/forms';
-import { AgmCoreModule } from '@agm/core';
 
 const ENTITY_STATES = [...companyRoute, ...companyPopupRoute];
 
 @NgModule({
-    imports: [
-        SmartCpdSharedModule,
-        RouterModule.forChild(ENTITY_STATES),
-        FormsModule,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyDLwKI-Tr33ZXmQ-b90c0OcmugQ4qkq3PA',
-            libraries: ['places']
-        })
-    ],
+    imports: [SmartCpdSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
         CompanyComponent,
         CompanyDetailComponent,

@@ -30,7 +30,7 @@ export const topicRoute: Routes = [
         path: 'topic',
         component: TopicComponent,
         data: {
-            authorities: [],
+            authorities: ['ROLE_USER'],
             pageTitle: 'smartCpdApp.topic.home.title'
         },
         canActivate: [UserRouteAccessService]

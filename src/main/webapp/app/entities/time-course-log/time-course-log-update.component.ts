@@ -24,7 +24,8 @@ export class TimeCourseLogUpdateComponent implements OnInit {
     customers: ICustomer[];
 
     courses: ICourse[];
-    recorddate: string;
+    loggedin: string;
+    loggedout: string;
 
     constructor(
         private jhiAlertService: JhiAlertService,
@@ -59,7 +60,8 @@ export class TimeCourseLogUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.timeCourseLog.recorddate = moment(this.recorddate, DATE_TIME_FORMAT);
+        this.timeCourseLog.loggedin = moment(this.loggedin, DATE_TIME_FORMAT);
+        this.timeCourseLog.loggedout = moment(this.loggedout, DATE_TIME_FORMAT);
         if (this.timeCourseLog.id !== undefined) {
             this.subscribeToSaveResponse(this.timeCourseLogService.update(this.timeCourseLog));
         } else {
@@ -97,6 +99,7 @@ export class TimeCourseLogUpdateComponent implements OnInit {
 
     set timeCourseLog(timeCourseLog: ITimeCourseLog) {
         this._timeCourseLog = timeCourseLog;
-        this.recorddate = moment(timeCourseLog.recorddate).format(DATE_TIME_FORMAT);
+        this.loggedin = moment(timeCourseLog.loggedin).format(DATE_TIME_FORMAT);
+        this.loggedout = moment(timeCourseLog.loggedout).format(DATE_TIME_FORMAT);
     }
 }

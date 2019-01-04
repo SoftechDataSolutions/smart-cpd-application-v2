@@ -30,7 +30,7 @@ export const courseRoute: Routes = [
         path: 'course',
         component: CourseComponent,
         data: {
-            authorities: [],
+            authorities: ['ROLE_USER'],
             pageTitle: 'smartCpdApp.course.home.title'
         },
         canActivate: [UserRouteAccessService]
